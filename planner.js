@@ -387,8 +387,8 @@ function addStop() {
 }
 
 // ── Export tripdata.js ────────────────────────────────────────
-function exportTripData() {
-  const header = [
+async function exportTripData() {
+  const content = [
     '/* ============================================================',
     '   tripdata.js  —  South America 2026',
     '   DEFAULT_TRIP_DATA: single source of truth for the trip.',
@@ -401,7 +401,27 @@ function exportTripData() {
     JSON.stringify(tripData, null, 2) + ';',
   ].join('\n');
 
-  const blob = new Blob([header], { type: 'text/javascript' });
+  // File System Access API (Chrome/Edge): lets you navigate to the project
+  // folder and save directly over the existing tripdata.js.
+  if (window.showSaveFilePicker) {
+    try {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: 'tripdata.js',
+        types: [{ description: 'JavaScript file', accept: { 'text/javascript': ['.js'] } }],
+      });
+      const writable = await handle.createWritable();
+      await writable.write(content);
+      await writable.close();
+      showToast('✓ tripdata.js saved! Run: git add tripdata.js && git commit -m "update trip" && git push');
+      return;
+    } catch (e) {
+      if (e.name === 'AbortError') return; // user cancelled
+      // fall through to regular download
+    }
+  }
+
+  // Fallback: standard browser download
+  const blob = new Blob([content], { type: 'text/javascript' });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
   a.href     = url;
@@ -410,8 +430,7 @@ function exportTripData() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-
-  showToast('⬇ tripdata.js downloaded — replace the file in your project folder, then push to GitHub.');
+  showToast('⬇ tripdata.js downloaded — move it to your project folder, then push to GitHub.');
 }
 
 // ── Toast ──────────────────────────────────────────────────────
