@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🗓 Trip Planner · South America 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & root ────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d1117;
+      --surface:   #161b22;
+      --surface2:  #1c2128;
+      --border:    #30363d;
+      --text:      #e6edf3;
+      --muted:     #8b949e;
+      --peru:      #E8834A;
+      --brazil:    #22a447;
+      --argentina: #5b9bd5;
+      --danger:    #f85149;
+      --success:   #3fb950;
+      --radius:    10px;
+      --shadow:    0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a { color: var(--peru); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Header ─────────────────────────────────────────────── */
+    .p-header {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 1.5rem;
+      background: rgba(13,17,23,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .p-header-back {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      white-space: nowrap;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    .p-header-back:hover { color: var(--text); border-color: var(--muted); text-decoration: none; }
+
+    .p-header-title {
+      flex: 1;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .p-header-title span { color: var(--peru); }
+
+    .p-save-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1.25rem;
+      background: linear-gradient(135deg, var(--peru), #d4703a);
+      border: none;
+      border-radius: 999px;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .p-save-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(232,131,74,0.4); }
+
+    .btn-export {
+      padding: 0.55rem 1.1rem;
+      background: transparent;
+      border: 1px solid rgba(88,166,255,0.4);
+      border-radius: 8px;
+      color: #58a6ff;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-export:hover { background: rgba(88,166,255,0.12); border-color: #58a6ff; }
+
+    /* ── Main layout ─────────────────────────────────────────── */
+    .p-main {
+      display: flex;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      gap: 1.5rem;
+      min-height: calc(100vh - 56px);
+    }
+
+    .p-left {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* ── Settings card ────────────────────────────────────────── */
+    .settings-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+    }
+
+    .settings-card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.75rem;
+    }
+
+    .settings-row {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .settings-row label {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .settings-row input[type="date"] {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .settings-row input[type="date"]:focus {
+      outline: none;
+      border-color: var(--peru);
+    }
+
+    .trip-summary { margin-top: 1rem; }
+
+    .summary-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .spill {
+      padding: 0.25rem 0.75rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .summary-dates {
+      font-size: 0.9rem;
+      color: var(--peru);
+      font-weight: 600;
+    }
+
+    /* ── Stop list section ────────────────────────────────────── */
+    .stop-list-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-header h2 span { color: var(--muted); font-weight: 400; font-size: 0.85rem; }
+
+    .btn-add {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.45rem 1rem;
+      background: rgba(232,131,74,0.15);
+      border: 1px solid rgba(232,131,74,0.4);
+      border-radius: 999px;
+      color: var(--peru);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-add:hover { background: rgba(232,131,74,0.25); }
+
+    /* ── Stop rows ────────────────────────────────────────────── */
+    .stop-list { padding: 0.5rem; }
+
+    .stop-row {
+      display: grid;
+      grid-template-columns: 24px 28px 36px 1fr auto auto auto;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+      cursor: default;
+      margin-bottom: 3px;
+    }
+
+    .stop-row:hover { background: var(--surface2); border-color: var(--border); }
+    .stop-row--active { background: rgba(232,131,74,0.08) !important; border-color: rgba(232,131,74,0.3) !important; }
+    .stop-row.dragging { opacity: 0.4; }
+    .stop-row.drag-over { border-color: var(--peru); background: rgba(232,131,74,0.1); }
+
+    .drag-handle {
+      color: var(--muted);
+      cursor: grab;
+      font-size: 1rem;
+      line-height: 1;
+      padding: 2px;
+      user-select: none;
+    }
+    .drag-handle:active { cursor: grabbing; }
+
+    .stop-num {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .stop-emoji { font-size: 1.3rem; text-align: center; line-height: 1; }
+
+    .city-info {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .city-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .leg-badge {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 999px;
+      width: fit-content;
+    }
+
+    /* ── Nights control ───────────────────────────────────────── */
+    .nights-ctrl {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nights-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: all 0.15s;
+    }
+    .nights-btn:hover { border-color: var(--peru); color: var(--peru); }
+
+    .nights-val {
+      font-size: 0.85rem;
+      font-weight: 700;
+      min-width: 28px;
+      text-align: center;
+    }
+
+    .nts-label {
+      font-size: 0.65rem;
+      font-weight: 400;
+      color: var(--muted);
+      margin-left: 1px;
+    }
+
+    /* ── Dates preview ───────────────────────────────────────── */
+    .dates-preview {
+      font-size: 0.75rem;
+      color: var(--muted);
+      white-space: nowrap;
+      font-weight: 500;
+    }
+
+    /* ── Row action buttons ──────────────────────────────────── */
+    .row-actions {
+      display: flex;
+      gap: 4px;
+    }
+
+    .row-edit-btn, .row-del-btn {
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .row-edit-btn:hover { background: rgba(232,131,74,0.15); border-color: var(--peru); }
+    .row-del-btn:hover  { background: rgba(248,81,73,0.15); border-color: var(--danger); }
+
+    /* ── Footer ─────────────────────────────────────────────── */
+    .planner-footer {
+      padding: 0.5rem 0;
+    }
+
+    .btn-danger {
+      padding: 0.5rem 1.25rem;
+      background: transparent;
+      border: 1px solid rgba(248,81,73,0.4);
+      border-radius: 999px;
+      color: var(--danger);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-danger:hover { background: rgba(248,81,73,0.12); }
+
+    /* ── Edit panel ──────────────────────────────────────────── */
+    .edit-panel {
+      position: sticky;
+      top: 72px;
+      width: 400px;
+      min-width: 340px;
+      max-width: 420px;
+      height: calc(100vh - 72px - 3rem);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      /* Hidden by default */
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(20px);
+      transition: opacity 0.25s, transform 0.25s;
+    }
+
+    .edit-panel.open {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateX(0);
+    }
+
+    .edit-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .edit-panel-header h3 {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .edit-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .edit-close:hover { color: var(--text); border-color: var(--muted); }
+
+    .edit-form {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .ef-row {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .ef-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      flex: 1;
+    }
+
+    .ef-field--short { flex: 0 0 70px; }
+    .ef-field--grow  { flex: 1; }
+
+    .ef-field label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .ef-hint-inline { font-weight: 400; text-transform: none; letter-spacing: 0; }
+    .ef-hint { font-size: 0.75rem; color: var(--muted); }
+    .ef-hint a { color: var(--peru); }
+
+    .ef-input {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem 0.65rem;
+      border-radius: 7px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      width: 100%;
+      transition: border-color 0.2s;
+    }
+    .ef-input:focus { outline: none; border-color: var(--peru); box-shadow: 0 0 0 3px rgba(232,131,74,0.15); }
+
+    select.ef-input { cursor: pointer; }
+
+    .ef-textarea {
+      resize: vertical;
+      min-height: 120px;
+      line-height: 1.5;
+    }
+
+    .edit-panel-footer {
+      display: flex;
+      gap: 0.75rem;
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .btn-primary {
+      flex: 1;
+      padding: 0.6rem 1rem;
+      background: linear-gradient(135deg, var(--peru), #d4703a);
+      border: none;
+      border-radius: 999px;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(232,131,74,0.35); }
+
+    .btn-danger-sm {
+      padding: 0.6rem 1rem;
+      background: transparent;
+      border: 1px solid rgba(248,81,73,0.4);
+      border-radius: 999px;
+      color: var(--danger);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-danger-sm:hover { background: rgba(248,81,73,0.12); }
+
+    /* ── Toast ───────────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1c2128;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.65rem 1.5rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 9999;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── Responsive: mobile ─────────────────────────────────── */
+    @media (max-width: 768px) {
+      .p-main { padding: 1rem; flex-direction: column; }
+
+      .edit-panel {
+        position: fixed;
+        inset: 0;
+        top: 56px;
+        width: 100%;
+        max-width: 100%;
+        height: calc(100vh - 56px);
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+        z-index: 300;
+        transform: translateY(100%);
+      }
+
+      .edit-panel.open {
+        transform: translateY(0);
+      }
+
+      .stop-row {
+        grid-template-columns: 24px 28px 32px 1fr auto auto;
+      }
+
+      /* Hide dates on mobile to save space */
+      .dates-preview { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .p-header { padding: 0.6rem 1rem; }
+      .p-header-title { font-size: 1rem; }
+      .stop-row { gap: 0.35rem; padding: 0.5rem 0.5rem; }
+    }
+
+    /* ── Scrollbar ───────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════ HEADER ══════════════════════════════ -->
+  <header class="p-header">
+    <a href="index.html" class="p-header-back">← Back to Trip</a>
+    <div class="p-header-title">🗓 <span>Trip</span> Planner</div>
+    <button id="save-btn" class="p-save-btn">💾 Save Changes</button>
+  </header>
+
+  <!-- ═══════════════ MAIN ════════════════════════════════ -->
+  <main class="p-main">
+
+    <!-- ── Left column: settings + stop list ── -->
+    <div class="p-left">
+
+      <!-- Trip Settings -->
+      <section class="settings-card">
+        <h2>Trip Settings</h2>
+        <div class="settings-row">
+          <label>
+            Start Date
+            <input type="date" id="trip-start-date" />
+          </label>
+        </div>
+        <div id="trip-summary" class="trip-summary"></div>
+      </section>
+
+      <!-- Itinerary stop list -->
+      <section class="stop-list-section">
+        <div class="section-header">
+          <h2>Itinerary <span id="stop-count"></span></h2>
+          <button id="add-stop-btn" class="btn-add">+ Add City</button>
+        </div>
+        <div id="stop-list" class="stop-list"></div>
+      </section>
+
+      <!-- Footer -->
+      <div class="planner-footer">
+        <button id="export-btn" class="btn-export">⬇ Export tripdata.js</button>
+        <button id="reset-btn" class="btn-danger">↺ Reset to Original Defaults</button>
+      </div>
+
+    </div><!-- /.p-left -->
+
+    <!-- ── Right panel: edit a stop ── -->
+    <aside class="edit-panel" id="edit-panel">
+      <div class="edit-panel-header">
+        <h3 id="edit-panel-title">Edit City</h3>
+        <button id="edit-close-btn" class="edit-close" title="Close (Esc)">✕</button>
+      </div>
+      <div id="edit-form" class="edit-form"></div>
+      <div class="edit-panel-footer">
+        <button id="edit-save-btn" class="btn-primary">✓ Save City</button>
+        <button id="edit-delete-btn" class="btn-danger-sm">🗑 Delete</button>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <script src="tripdata.js"></script>
+  <script src="planner.js"></script>
+</body>
+</html>

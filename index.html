@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌎 The Adventure — South America 2026</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       HEADER / NAV
+  ═══════════════════════════════════════════ -->
+  <header id="site-header">
+    <div class="header-inner">
+      <div class="header-logo">
+        <span class="logo-globe">🌎</span>
+        <div class="logo-text">
+          <h1>The Adventure</h1>
+          <p>South America 2026 &nbsp;·&nbsp; Oct 18 – Jan 5</p>
+        </div>
+      </div>
+
+      <nav class="main-nav">
+        <a href="#map-section">The Route</a>
+        <a href="#timeline-section">Timeline</a>
+        <a href="#destinos">Destinations</a>
+        <a href="#amigos">Friends</a>
+        <a href="#notas">Notes</a>
+        <a href="planner.html" class="nav-planner">🗓 Plan</a>
+      </nav>
+
+      <div class="header-flags">🇵🇪 🇧🇷 🇦🇷</div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
+    </div>
+
+    <!-- Mobile dropdown -->
+    <nav class="mobile-nav hidden" id="mobile-nav">
+      <a href="#map-section" onclick="closeMobileNav()">The Route</a>
+      <a href="#timeline-section" onclick="closeMobileNav()">Timeline</a>
+      <a href="#destinos" onclick="closeMobileNav()">Destinations</a>
+      <a href="#amigos" onclick="closeMobileNav()">Friends</a>
+      <a href="#notas" onclick="closeMobileNav()">Notes</a>
+      <a href="planner.html" onclick="closeMobileNav()">🗓 Plan Trip</a>
+    </nav>
+  </header>
+
+  <!-- ═══════════════════════════════════════════
+       HERO MAP
+  ═══════════════════════════════════════════ -->
+  <section id="map-section" class="map-section">
+    <div id="map"></div>
+
+    <div class="map-overlay-title" id="map-overlay-title">
+      <span>🌎</span>
+      <span>80 Days · 3 Countries · 19 Cities</span>
+    </div>
+
+    <button class="tour-play-btn" id="tour-play-btn">▶ Play Route</button>
+
+    <div class="map-legend" id="map-legend">
+      <div class="legend-item"><span class="dot dot-peru"></span>Peru · Oct 18 – Nov 5</div>
+      <div class="legend-item"><span class="dot dot-brazil"></span>Brazil · Nov 5 – Nov 30</div>
+      <div class="legend-item"><span class="dot dot-argentina"></span>Argentina · Dec 1 – Jan 2</div>
+    </div>
+
+    <!-- Compact tour panel — overlaid on map during playback -->
+    <div id="tour-panel" class="tour-panel hidden">
+      <div class="tp-emoji" id="tp-emoji">🏙️</div>
+      <div class="tp-mid">
+        <div class="tp-city" id="tp-city">Lima</div>
+        <div class="tp-sub" id="tp-sub">🇵🇪 Peru · Oct 18 – Oct 20 · 2 nights</div>
+        <div class="tp-act" id="tp-act"></div>
+      </div>
+      <div class="tp-right">
+        <div class="tp-num" id="tp-num">1 / 19</div>
+        <div class="tp-controls">
+          <button class="tp-btn" id="tp-prev" title="Previous">◀</button>
+          <button class="tp-btn tp-btn-main" id="tp-pause" title="Pause">⏸</button>
+          <button class="tp-btn" id="tp-next" title="Next">▶</button>
+          <button class="tp-btn tp-btn-exit" id="tp-exit" title="Exit">✕</button>
+        </div>
+      </div>
+      <div class="tp-progress-bar"><div class="tp-fill" id="tp-fill"></div></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       STATS BAR
+  ═══════════════════════════════════════════ -->
+  <section class="stats-bar" id="stats-bar">
+    <div class="stat">
+      <span class="stat-num">80</span>
+      <span class="stat-label">Travel Days</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">3</span>
+      <span class="stat-label">Countries</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">19</span>
+      <span class="stat-label">Cities</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">~18,500</span>
+      <span class="stat-label">Total km</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">~$45</span>
+      <span class="stat-label">USD / Day (avg)</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num" id="notes-count">0</span>
+      <span class="stat-label">Group Notes</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       TIMELINE
+  ═══════════════════════════════════════════ -->
+  <section id="timeline-section" class="section section-light">
+    <div class="section-header">
+      <h2 class="section-title">📅 Trip Timeline</h2>
+      <p class="section-subtitle">Click any day or week to see what's happening</p>
+    </div>
+
+    <div id="timeline-container" class="timeline-container"></div>
+
+    <div id="timeline-detail" class="timeline-detail hidden">
+      <button class="tl-close" id="tl-close">✕</button>
+      <div id="tl-detail-content"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       DESTINOS / ITINERARY CARDS
+  ═══════════════════════════════════════════ -->
+  <section id="destinos" class="section section-dark">
+    <div class="section-header">
+      <h2 class="section-title">📍 Destinations</h2>
+      <p class="section-subtitle">Full itinerary — city by city</p>
+    </div>
+
+    <div class="leg-tabs">
+      <button class="leg-tab active" data-leg="peru">🇵🇪 Peru</button>
+      <button class="leg-tab" data-leg="brazil">🇧🇷 Brazil</button>
+      <button class="leg-tab" data-leg="argentina">🇦🇷 Argentina</button>
+    </div>
+
+    <div id="cards-container" class="cards-grid"></div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       AMIGOS / FRIENDS PANEL
+  ═══════════════════════════════════════════ -->
+  <section id="amigos" class="section section-light">
+    <div class="section-header">
+      <h2 class="section-title">👫 Travel Buddies</h2>
+      <p class="section-subtitle">Who's joining which leg?</p>
+    </div>
+
+    <div id="friends-container" class="friends-grid"></div>
+
+    <div class="add-area">
+      <button class="btn-primary" id="add-friend-btn">+ Add Friend</button>
+    </div>
+
+    <div id="friend-form" class="friend-form hidden">
+      <h3>New Friend ✈️</h3>
+      <div class="form-row">
+        <input id="f-name" placeholder="Name (e.g. Marco)" />
+        <input id="f-legs" placeholder="Legs joining (e.g. Peru, Brazil)" />
+      </div>
+      <div class="form-row">
+        <input id="f-dates" placeholder="Dates (e.g. Oct 25 – Nov 10)" />
+        <select id="f-color">
+          <option value="#ff6b6b">🔴 Red</option>
+          <option value="#ffd93d">🟡 Yellow</option>
+          <option value="#6bcb77">🟢 Green</option>
+          <option value="#4d96ff">🔵 Blue</option>
+          <option value="#c77dff">🟣 Purple</option>
+          <option value="#ff9f43">🟠 Orange</option>
+        </select>
+      </div>
+      <input id="f-note" placeholder="Any note? (e.g. Joins in Cusco, flies home from Rio)" />
+      <div class="form-actions">
+        <button class="btn-primary" id="save-friend-btn">Save</button>
+        <button class="btn-ghost" id="cancel-friend-btn">Cancel</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       NOTAS / NOTES
+  ═══════════════════════════════════════════ -->
+  <section id="notas" class="section section-dark">
+    <div class="section-header">
+      <h2 class="section-title">📝 Trip Notes</h2>
+      <p class="section-subtitle">Share ideas, reminders & excitement with the crew</p>
+    </div>
+
+    <div class="notes-layout">
+      <!-- Add note form -->
+      <div class="note-form-card">
+        <h3>New Note</h3>
+        <input id="n-author" placeholder="Your name" />
+        <textarea id="n-text" rows="4" placeholder="What's on your mind? Ideas, tips, must-do's..."></textarea>
+        <div class="form-row">
+          <select id="n-leg">
+            <option value="General">🌎 General</option>
+            <option value="Peru">🇵🇪 Peru</option>
+            <option value="Brazil">🇧🇷 Brazil</option>
+            <option value="Argentina">🇦🇷 Argentina</option>
+          </select>
+          <select id="n-type">
+            <option value="idea">💡 Idea</option>
+            <option value="reminder">⏰ Reminder</option>
+            <option value="food">🍽️ Food tip</option>
+            <option value="logistics">✈️ Logistics</option>
+            <option value="excitement">🎉 Hype!</option>
+          </select>
+        </div>
+        <button class="btn-primary full-width" id="save-note-btn">Save Note</button>
+      </div>
+
+      <!-- Notes list -->
+      <div class="notes-list-area">
+        <div class="notes-filter">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="General">🌎 General</button>
+          <button class="filter-btn" data-filter="Peru">🇵🇪 Peru</button>
+          <button class="filter-btn" data-filter="Brazil">🇧🇷 Brazil</button>
+          <button class="filter-btn" data-filter="Argentina">🇦🇷 Argentina</button>
+        </div>
+        <div id="notes-list"></div>
+        <div id="notes-empty" class="notes-empty">
+          <span>💬</span>
+          <p>No notes yet — be the first to add one!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <p>🌎 <strong>The Adventure</strong> · South America 2026</p>
+    <p class="footer-sub">Built with ❤️ by the planner &nbsp;·&nbsp; Notes saved locally (upgrade to Firebase for online sharing)</p>
+  </footer>
+
+  <!-- Leaflet + App scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="tripdata.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
