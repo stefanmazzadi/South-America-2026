@@ -1,25 +1,25 @@
 ﻿/* ============================================================
-   THE ADVENTURE â€” SOUTH AMERICA 2026
-   app.js â€” Map, Timeline, Cards, Notes, Friends, Tour Mode
+   THE ADVENTURE — SOUTH AMERICA 2026
+   app.js — Map, Timeline, Cards, Notes, Friends, Tour Mode
    Trip data lives in tripdata.js (DEFAULT_TRIP_DATA).
    User edits are stored in localStorage key 'la_aventura_trip'.
    ============================================================ */
 
 'use strict';
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 // LEGS METADATA (countries)
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 const LEGS = {
-  peru:      { name: 'Peru',      color: '#E8834A', flag: 'ðŸ‡µðŸ‡ª' },
-  brazil:    { name: 'Brazil',    color: '#22a447', flag: 'ðŸ‡§ðŸ‡·' },
-  argentina: { name: 'Argentina', color: '#5b9bd5', flag: 'ðŸ‡¦ðŸ‡·' },
+  peru:      { name: 'Peru',      color: '#E8834A', flag: '🇵🇪' },
+  brazil:    { name: 'Brazil',    color: '#22a447', flag: '🇧🇷' },
+  argentina: { name: 'Argentina', color: '#5b9bd5', flag: '🇦🇷' },
 };
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// TRIP DATA â€” loaded from localStorage or DEFAULT_TRIP_DATA
+// ─────────────────────────────────────────────────────────────
+// TRIP DATA — loaded from localStorage or DEFAULT_TRIP_DATA
 // computed dates from tripdata.js (loaded before this script)
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 
 /** Build the full TRIP runtime object from raw data (adds computed dates). */
 function computeTrip(raw) {
@@ -51,14 +51,14 @@ window.addEventListener('storage', (e) => {
   if (e.key === 'la_aventura_trip' && !document.getElementById('planner-reload-banner')) {
     const b = document.createElement('div');
     b.id = 'planner-reload-banner';
-    b.innerHTML = 'âœï¸ Trip plan updated! <button onclick="location.reload()" style="margin-left:0.5rem;background:rgba(255,255,255,0.25);border:none;color:#fff;padding:0.2rem 0.8rem;border-radius:999px;cursor:pointer;font-weight:700">â†º Reload</button>';
+    b.innerHTML = '✏️ Trip plan updated! <button onclick="location.reload()" style="margin-left:0.5rem;background:rgba(255,255,255,0.25);border:none;color:#fff;padding:0.2rem 0.8rem;border-radius:999px;cursor:pointer;font-weight:700">↺ Reload</button>';
     b.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#E8834A;color:#fff;text-align:center;padding:0.75rem 1rem;z-index:9999;font-size:0.9rem;';
     document.body.appendChild(b);
   }
 });
 
 // UTILITY HELPERS
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 function parseDate(str) {
   // Returns midnight UTC-safe date
   const [y, m, d] = str.split('-').map(Number);
@@ -81,7 +81,7 @@ function getStopForDate(dateStr) {
     const e = parseDate(stop.endDate);
     if (d >= s && d < e) return stop;
   }
-  // Last day (Jan 2 â€“ Jan 5 = departure)
+  // Last day (Jan 2 – Jan 5 = departure)
   const lastStop = TRIP.stops[TRIP.stops.length - 1];
   const lastEnd  = parseDate(lastStop.endDate);
   const dt       = parseDate(dateStr);
@@ -148,9 +148,9 @@ function populatePageStats() {
   });
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 // MAP INITIALIZATION
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 let map;
 
 function initMap() {
@@ -162,7 +162,7 @@ function initMap() {
 
   // Dark CartoDB tile layer
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution: 'Â© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> Â© <a href="https://carto.com/">CARTO</a>',
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
     subdomains:  'abcd',
     maxZoom:     19,
   }).addTo(map);
@@ -257,10 +257,10 @@ function initMap() {
             <div class="popup-city">${stop.emoji} ${stop.city}</div>
           </div>
         </div>
-        <div class="popup-dates">ðŸ“… ${formatDateShort(parseDate(stop.startDate))} â€“ ${formatDateShort(parseDate(stop.endDate))} Â· ${stop.nights} night${stop.nights !== 1 ? 's' : ''}</div>
+        <div class="popup-dates">📅 ${formatDateShort(parseDate(stop.startDate))} – ${formatDateShort(parseDate(stop.endDate))} · ${stop.nights} night${stop.nights !== 1 ? 's' : ''}</div>
         <ul class="popup-activities">${topActivities}</ul>
         <div class="popup-food">${stop.food}</div>
-        <div class="popup-budget">ðŸ’µ ~$${stop.budgetPerDay}/day Â· ðŸ¨ ${stop.accommodation}</div>
+        <div class="popup-budget">💵 ~$${stop.budgetPerDay}/day · 🏨 ${stop.accommodation}</div>
       </div>
     `;
 
@@ -283,9 +283,9 @@ function initMap() {
   map.fitBounds(L.latLngBounds(routeCoords), { padding: [40, 40] });
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// TOUR MODE â€” geographical route playback on the live map
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
+// TOUR MODE — geographical route playback on the live map
+// ─────────────────────────────────────────────────────────────
 function initTourMode() {
   const STOPS       = TRIP.stops;
   const TOTAL       = STOPS.length;
@@ -323,7 +323,7 @@ function initTourMode() {
   const mapTitle   = document.getElementById('map-overlay-title');
   const mapLegend  = document.getElementById('map-legend');
 
-  // â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Helpers ───────────────────────────────────────────────
 
   /** Compass bearing between two [lat, lng] points, in degrees */
   function getBearing(from, to) {
@@ -339,13 +339,13 @@ function initTourMode() {
   /** Create / update the traveler plane marker */
   function makeTravelerIcon(bearing, color) {
     // Rotate the plane emoji to face the direction of travel.
-    // âœˆï¸ default points right (east â‰ˆ 90Â°), so subtract 90 to align.
+    // ✈️ default points right (east ≈ 90°), so subtract 90 to align.
     const rot = bearing - 90;
     return L.divIcon({
       className:  '',
       iconSize:   [34, 34],
       iconAnchor: [17, 17],
-      html: `<div class="traveler-icon" style="transform:rotate(${rot}deg);--tc:${color}">âœˆï¸</div>`,
+      html: `<div class="traveler-icon" style="transform:rotate(${rot}deg);--tc:${color}">✈️</div>`,
     });
   }
 
@@ -358,7 +358,7 @@ function initTourMode() {
     numEl.textContent  = `${idx + 1} / ${TOTAL}`;
     cityEl.textContent = stop.city;
     cityEl.style.color = color;
-    subEl.textContent  = `${legInfo.flag} ${legInfo.name} Â· ${formatDateShort(parseDate(stop.startDate))} â€“ ${formatDateShort(parseDate(stop.endDate))} Â· ${stop.nights} night${stop.nights !== 1 ? 's' : ''}`;
+    subEl.textContent  = `${legInfo.flag} ${legInfo.name} · ${formatDateShort(parseDate(stop.startDate))} – ${formatDateShort(parseDate(stop.endDate))} · ${stop.nights} night${stop.nights !== 1 ? 's' : ''}`;
     actEl.textContent  = stop.activities[0] || '';
     fillEl.style.width = `${((idx + 1) / TOTAL) * 100}%`;
     fillEl.style.background = color;
@@ -422,8 +422,8 @@ function initTourMode() {
 
   /**
    * Show stop at `idx`.
-   * `animated` = true â†’ animate traveler from previous stop.
-   * `backward`  = true â†’ just jump (no line drawn backwards).
+   * `animated` = true → animate traveler from previous stop.
+   * `backward`  = true → just jump (no line drawn backwards).
    */
   function showStop(idx, animated, backward) {
     const stop    = STOPS[idx];
@@ -441,7 +441,7 @@ function initTourMode() {
       });
       animateTraveler(prev.coords, stop.coords, color);
     } else {
-      // Instant jump â€” update traveler position & icon
+      // Instant jump — update traveler position & icon
       if (travelerMarker) {
         // Point plane towards next stop (or previous if going back)
         const target = backward
@@ -455,25 +455,25 @@ function initTourMode() {
     }
   }
 
-  // â”€â”€ Playback control â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Playback control ──────────────────────────────────────
 
   function startAutoPlay() {
     isPlaying = true;
-    pauseBtn.textContent = 'â¸';
+    pauseBtn.textContent = '⏸';
     pauseBtn.title = 'Pause';
     clearInterval(stepTimer);
     stepTimer = setInterval(() => {
       if (currentIdx < TOTAL - 1) {
         showStop(currentIdx + 1, true, false);
       } else {
-        pauseAutoPlay();   // reached last stop â€” stop
+        pauseAutoPlay();   // reached last stop — stop
       }
     }, STEP_MS);
   }
 
   function pauseAutoPlay() {
     isPlaying = false;
-    pauseBtn.textContent = 'â–¶';
+    pauseBtn.textContent = '▶';
     pauseBtn.title = 'Resume';
     clearInterval(stepTimer);
     stepTimer = null;
@@ -502,7 +502,7 @@ function initTourMode() {
     }, 80);
   }
 
-  // â”€â”€ Entry point â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Entry point ───────────────────────────────────────────
 
   playBtn.addEventListener('click', () => {
     // Clean up any previous tour state
@@ -585,9 +585,9 @@ function initTourMode() {
   });
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 // TIMELINE GENERATION
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 function buildTimeline() {
   const container = document.getElementById('timeline-container');
   const allDates  = generateDateRange(TRIP.startDate, TRIP.endDate);
@@ -595,7 +595,7 @@ function buildTimeline() {
   // We'll build a Monday-aligned calendar grid
   // Find the Monday on or before the start date
   const firstDate = parseDate(TRIP.startDate);
-  const startDay  = firstDate.getDay(); // 0=Sun, 1=Monâ€¦
+  const startDay  = firstDate.getDay(); // 0=Sun, 1=Mon…
   const offset    = (startDay === 0) ? 6 : startDay - 1;
 
   // Create main grid
@@ -615,7 +615,7 @@ function buildTimeline() {
     // Week label
     const weekLabel = makeEl('div', 'tl-week-label', formatDateShort(cur));
 
-    // Week row â€” inject month label before week if month changes
+    // Week row — inject month label before week if month changes
     const monthNum = cur.getMonth();
     if (monthNum !== currentMonth) {
       currentMonth = monthNum;
@@ -657,7 +657,7 @@ function buildTimeline() {
 
       if (stop) {
         cell.classList.add(`leg-${stop.leg}`);
-        cell.title = `${stop.city} â€” ${formatDateShort(dayCur)}`;
+        cell.title = `${stop.city} — ${formatDateShort(dayCur)}`;
 
         // Check if it's a transition day (last day of a stop)
         const stopEnd = parseDate(stop.endDate);
@@ -722,7 +722,7 @@ function showTimelineDetail(dateStr, stop, cellEl) {
       <span style="font-size:2rem">${stop.emoji}</span>
       <div>
         <div class="tl-detail-city" style="color:${color}">${stop.city}</div>
-        <div class="tl-detail-dates">${legInfo.flag} ${legInfo.name} Â· ${formatDateShort(parseDate(stop.startDate))} â€“ ${formatDateShort(parseDate(stop.endDate))} Â· ${stop.nights} nights</div>
+        <div class="tl-detail-dates">${legInfo.flag} ${legInfo.name} · ${formatDateShort(parseDate(stop.startDate))} – ${formatDateShort(parseDate(stop.endDate))} · ${stop.nights} nights</div>
       </div>
     </div>
     <div class="tl-detail-grid">
@@ -735,7 +735,7 @@ function showTimelineDetail(dateStr, stop, cellEl) {
         <p>${stop.food}</p>
         <br>
         <h4>Budget</h4>
-        <p>~$${stop.budgetPerDay} USD/day Â· ${stop.accommodation}</p>
+        <p>~$${stop.budgetPerDay} USD/day · ${stop.accommodation}</p>
         <br>
         <h4>Next Transport</h4>
         <p>${stop.transport}</p>
@@ -747,9 +747,9 @@ function showTimelineDetail(dateStr, stop, cellEl) {
   detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 // DESTINATION CARDS
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 function renderCards(leg) {
   const container = document.getElementById('cards-container');
   container.innerHTML = '';
@@ -769,7 +769,7 @@ function renderCards(leg) {
           <div class="card-city">${stop.city}</div>
           <div class="card-country">${legInfo.flag} ${legInfo.name}</div>
         </div>
-        <span class="card-dates-badge">${formatDateShort(parseDate(stop.startDate))} â€“ ${formatDateShort(parseDate(stop.endDate))}</span>
+        <span class="card-dates-badge">${formatDateShort(parseDate(stop.startDate))} – ${formatDateShort(parseDate(stop.endDate))}</span>
       </div>
       <div class="card-body">
         <div>
@@ -781,12 +781,12 @@ function renderCards(leg) {
           <div class="card-food">${stop.food}</div>
         </div>
         <div class="card-info-row">
-          <div class="card-chip">ðŸ’µ <span>~$${stop.budgetPerDay}/day</span></div>
-          <div class="card-chip">ðŸŒ™ <span>${stop.nights} nights</span></div>
+          <div class="card-chip">💵 <span>~$${stop.budgetPerDay}/day</span></div>
+          <div class="card-chip">🌙 <span>${stop.nights} nights</span></div>
         </div>
         <div>
           <div class="card-section-label">Accommodation</div>
-          <div class="card-chip">ðŸ¨ <span>${stop.accommodation}</span></div>
+          <div class="card-chip">🏨 <span>${stop.accommodation}</span></div>
         </div>
         <div>
           <div class="card-section-label">Onward Transport</div>
@@ -811,9 +811,9 @@ function initTabs() {
   renderCards('peru');
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 // FRIENDS PANEL
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 let friends = [];
 
 // Friends default comes from tripdata.js (shared source of truth)
@@ -846,7 +846,7 @@ function renderFriends() {
     const card = document.createElement('div');
     card.className = 'friend-card';
     card.innerHTML = `
-      <button class="friend-delete" data-id="${f.id}" title="Remove">âœ•</button>
+      <button class="friend-delete" data-id="${f.id}" title="Remove">✕</button>
       <div class="friend-card-header">
         <div class="friend-avatar" style="background:${f.color}">${initials}</div>
         <div>
@@ -854,10 +854,10 @@ function renderFriends() {
           <div class="friend-legs">${escapeHTML(f.legs)}</div>
         </div>
       </div>
-      <div class="friend-dates">ðŸ“… ${escapeHTML(f.dates)}</div>
+      <div class="friend-dates">📅 ${escapeHTML(f.dates)}</div>
       <div class="friend-note-display" id="note-display-${f.id}">
-        ${f.note ? `<div class="friend-note">ðŸ’¬ "${escapeHTML(f.note)}"</div>` : '<div class="friend-note-empty">No note yet</div>'}
-        <button class="friend-edit-note-btn" data-id="${f.id}">âœï¸ Edit note</button>
+        ${f.note ? `<div class="friend-note">💬 "${escapeHTML(f.note)}"</div>` : '<div class="friend-note-empty">No note yet</div>'}
+        <button class="friend-edit-note-btn" data-id="${f.id}">✏️ Edit note</button>
       </div>
       <div class="friend-note-edit hidden" id="note-edit-${f.id}">
         <textarea class="friend-note-textarea" id="note-ta-${f.id}" rows="2">${escapeHTML(f.note || '')}</textarea>
@@ -960,18 +960,18 @@ function clearFriendForm() {
   });
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 // NOTES
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 let notes = [];
 let activeFilter = 'all';
 
 const TYPE_ICONS = {
-  idea:       'ðŸ’¡',
-  reminder:   'â°',
-  food:       'ðŸ½ï¸',
-  logistics:  'âœˆï¸',
-  excitement: 'ðŸŽ‰',
+  idea:       '💡',
+  reminder:   '⏰',
+  food:       '🍽️',
+  logistics:  '✈️',
+  excitement: '🎉',
 };
 
 function loadNotes() {
@@ -1014,16 +1014,16 @@ function renderNotes() {
     card.className = 'note-card';
     card.innerHTML = `
       <div class="note-card-header">
-        <span class="note-author">ðŸ‘¤ ${escapeHTML(note.author || 'Anonymous')}</span>
+        <span class="note-author">👤 ${escapeHTML(note.author || 'Anonymous')}</span>
         <div class="note-badges">
           <span class="note-badge ${legClass}">${note.leg}</span>
-          <span style="font-size:1.1rem">${TYPE_ICONS[note.type] || 'ðŸ“'}</span>
+          <span style="font-size:1.1rem">${TYPE_ICONS[note.type] || '📝'}</span>
         </div>
       </div>
       <div class="note-text">${escapeHTML(note.text)}</div>
       <div class="note-meta">
         <span>${note.date}</span>
-        <button class="note-delete" data-id="${note.id}">âœ• delete</button>
+        <button class="note-delete" data-id="${note.id}">✕ delete</button>
       </div>
     `;
     list.appendChild(card);
@@ -1077,9 +1077,9 @@ function initNotes() {
   });
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 // MOBILE NAV
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 function initMobileNav() {
   document.getElementById('hamburger').addEventListener('click', () => {
     const nav = document.getElementById('mobile-nav');
@@ -1092,9 +1092,9 @@ function closeMobileNav() {
 }
 window.closeMobileNav = closeMobileNav;
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 // SECURITY: HTML escape helper
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 function escapeHTML(str) {
   if (typeof str !== 'string') return '';
   return str
@@ -1105,9 +1105,9 @@ function escapeHTML(str) {
     .replace(/'/g, '&#039;');
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 // HEADER SCROLL EFFECT
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 function initScrollEffect() {
   const header = document.getElementById('site-header');
   window.addEventListener('scroll', () => {
@@ -1119,9 +1119,9 @@ function initScrollEffect() {
   });
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 // MAIN INIT
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   populatePageStats();
   initMap();
@@ -1136,7 +1136,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Wire up the main-page export button
   document.getElementById('export-all-btn')?.addEventListener('click', exportAllData);
 
-  console.log('%cðŸŒŽ The Adventure â€” South America 2026', 'font-size:16px; font-weight:bold; color:#E8834A');
+  console.log('%c🌎 The Adventure — South America 2026', 'font-size:16px; font-weight:bold; color:#E8834A');
   console.log('%cTrip data loaded:', 'color:#22a447', TRIP.stops.length, 'stops across', Object.keys(TRIP.legs).length, 'countries');
   console.log('%cNotes stored in localStorage key: la_aventura_notes', 'color:#5b9bd5');
   console.log('%cTo connect to Firebase/Supabase, replace loadNotes/saveNotesToStorage with API calls.', 'color:#94a3b8');
