@@ -388,6 +388,15 @@ function addStop() {
 
 // ── Export tripdata.js ────────────────────────────────────────
 async function exportTripData() {
+  // Include current friends from localStorage (or defaults) so one export covers everything
+  let friends = DEFAULT_TRIP_DATA.friends || [];
+  try {
+    const stored = localStorage.getItem('la_aventura_friends');
+    if (stored) friends = JSON.parse(stored);
+  } catch { /* use defaults */ }
+
+  const exportData = { ...tripData, friends };
+
   const content = [
     '/* ============================================================',
     '   tripdata.js  —  South America 2026',
@@ -398,7 +407,7 @@ async function exportTripData() {
     '   ============================================================ */',
     '',
     'const DEFAULT_TRIP_DATA =',
-    JSON.stringify(tripData, null, 2) + ';',
+    JSON.stringify(exportData, null, 2) + ';',
   ].join('\n');
 
   // File System Access API (Chrome/Edge): lets you navigate to the project

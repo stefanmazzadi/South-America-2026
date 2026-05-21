@@ -816,40 +816,15 @@ function initTabs() {
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let friends = [];
 
-// Seed with some example friends â€” user can delete & add their own
-const DEFAULT_FRIENDS = [
-  {
-    id: 'f1',
-    name: 'Marco',
-    legs: 'Peru',
-    dates: 'Oct 26 â€“ Nov 5',
-    color: '#6bcb77',
-    note: 'Meeting in Cusco, comes for Machu Picchu & Rainbow Mountain',
-  },
-  {
-    id: 'f2',
-    name: 'Lucia',
-    legs: 'Brazil',
-    dates: 'Nov 17 â€“ Nov 30',
-    color: '#ffd93d',
-    note: 'Joins in Rio â€” local contact knows great samba clubs!',
-  },
-  {
-    id: 'f3',
-    name: 'Diego',
-    legs: 'Argentina',
-    dates: 'Dec 1 â€“ Jan 2',
-    color: '#4d96ff',
-    note: 'Full Argentina leg â€” Patagonian trekking buddy & Buenos Aires family friend',
-  },
-];
+// Friends default comes from tripdata.js (shared source of truth)
+const DEFAULT_FRIENDS = DEFAULT_TRIP_DATA.friends || [];
 
 function loadFriends() {
   try {
     const stored = localStorage.getItem('la_aventura_friends');
-    friends = stored ? JSON.parse(stored) : [...DEFAULT_FRIENDS];
+    friends = stored ? JSON.parse(stored) : JSON.parse(JSON.stringify(DEFAULT_FRIENDS));
   } catch {
-    friends = [...DEFAULT_FRIENDS];
+    friends = JSON.parse(JSON.stringify(DEFAULT_FRIENDS));
   }
 }
 

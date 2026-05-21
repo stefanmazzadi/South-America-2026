@@ -428,5 +428,31 @@ const DEFAULT_TRIP_DATA =
       "budgetPerDay": 45,
       "transport": "✈️ International flight home from Ezeiza (EZE) airport 🏡"
     }
+  ],
+  "friends": [
+    {
+      "id": "f1",
+      "name": "Marco",
+      "legs": "Peru",
+      "dates": "Oct 26 – Nov 5",
+      "color": "#6bcb77",
+      "note": "Meeting in Cusco, comes for Machu Picchu & Rainbow Mountain"
+    },
+    {
+      "id": "f2",
+      "name": "Lucia",
+      "legs": "Brazil",
+      "dates": "Nov 17 – Nov 30",
+      "color": "#ffd93d",
+      "note": "Joins in Rio – local contact knows great samba clubs!"
+    },
+    {
+      "id": "f3",
+      "name": "Diego",
+      "legs": "Argentina",
+      "dates": "Dec 1 – Jan 2",
+      "color": "#4d96ff",
+      "note": "Full Argentina leg – Patagonian trekking buddy & Buenos Aires family friend"
+    }
   ]
 };
