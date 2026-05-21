@@ -109,6 +109,45 @@ function getLegColor(leg) {
   return TRIP.legs[leg]?.color || '#555';
 }
 
+function fmtShortDate(str) {
+  const [y, m, d] = str.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function populatePageStats() {
+  const stops    = TRIP.stops;
+  const totalNights = stops.reduce((s, c) => s + c.nights, 0);
+  const countries   = [...new Set(stops.map(s => s.leg))].length;
+  const avgBudget   = stops.length ? Math.round(stops.reduce((s, c) => s + (c.budgetPerDay || 0), 0) / stops.length) : 45;
+
+  // Header date range
+  const el = document.getElementById('header-date-range');
+  if (el) el.textContent = `${fmtShortDate(TRIP.startDate)} \u2013 ${fmtShortDate(TRIP.endDate)}`;
+
+  // Map overlay stats
+  const mo = document.getElementById('map-overlay-stats');
+  if (mo) mo.textContent = `${totalNights} Days \u00b7 ${countries} Countries \u00b7 ${stops.length} Cities`;
+
+  // Stats bar
+  const sd = document.getElementById('stat-days');      if (sd) sd.textContent = totalNights;
+  const sc = document.getElementById('stat-countries'); if (sc) sc.textContent = countries;
+  const si = document.getElementById('stat-cities');    if (si) si.textContent = stops.length;
+
+  // Map legend — compute first/last date per leg
+  ['peru', 'brazil', 'argentina'].forEach(leg => {
+    const legStops = stops.filter(s => s.leg === leg);
+    if (!legStops.length) return;
+    const first = legStops[0].startDate;
+    const last  = legStops[legStops.length - 1].endDate;
+    const el = document.getElementById('legend-' + leg);
+    if (el) {
+      const name = TRIP.legs[leg]?.name || leg;
+      const flag = TRIP.legs[leg]?.flag || '';
+      el.innerHTML = `<span class="dot dot-${leg}"></span>${flag} ${name} \u00b7 ${fmtShortDate(first)} \u2013 ${fmtShortDate(last)}`;
+    }
+  });
+}
+
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // MAP INITIALIZATION
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -1109,6 +1148,7 @@ function initScrollEffect() {
 // MAIN INIT
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 document.addEventListener('DOMContentLoaded', () => {
+  populatePageStats();
   initMap();
   buildTimeline();
   initTabs();

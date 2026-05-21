@@ -19,7 +19,7 @@
         <span class="logo-globe">🌎</span>
         <div class="logo-text">
           <h1>The Adventure</h1>
-          <p>South America 2026 &nbsp;·&nbsp; Oct 18 – Jan 5</p>
+          <p>South America 2026 &nbsp;·&nbsp; <span id="header-date-range">Oct 18 – Jan 5</span></p>
         </div>
       </div>
 
@@ -55,15 +55,15 @@
 
     <div class="map-overlay-title" id="map-overlay-title">
       <span>🌎</span>
-      <span>80 Days · 3 Countries · 19 Cities</span>
+      <span id="map-overlay-stats">80 Days · 3 Countries · 19 Cities</span>
     </div>
 
     <button class="tour-play-btn" id="tour-play-btn">▶ Play Route</button>
 
     <div class="map-legend" id="map-legend">
-      <div class="legend-item"><span class="dot dot-peru"></span>Peru · Oct 18 – Nov 5</div>
-      <div class="legend-item"><span class="dot dot-brazil"></span>Brazil · Nov 5 – Nov 30</div>
-      <div class="legend-item"><span class="dot dot-argentina"></span>Argentina · Dec 1 – Jan 2</div>
+      <div class="legend-item" id="legend-peru"><span class="dot dot-peru"></span>Peru · Oct 18 – Nov 5</div>
+      <div class="legend-item" id="legend-brazil"><span class="dot dot-brazil"></span>Brazil · Nov 5 – Nov 30</div>
+      <div class="legend-item" id="legend-argentina"><span class="dot dot-argentina"></span>Argentina · Dec 1 – Jan 2</div>
     </div>
 
     <!-- Compact tour panel — overlaid on map during playback -->
@@ -92,15 +92,15 @@
   ═══════════════════════════════════════════ -->
   <section class="stats-bar" id="stats-bar">
     <div class="stat">
-      <span class="stat-num">80</span>
+      <span class="stat-num" id="stat-days">80</span>
       <span class="stat-label">Travel Days</span>
     </div>
     <div class="stat">
-      <span class="stat-num">3</span>
+      <span class="stat-num" id="stat-countries">3</span>
       <span class="stat-label">Countries</span>
     </div>
     <div class="stat">
-      <span class="stat-num">19</span>
+      <span class="stat-num" id="stat-cities">19</span>
       <span class="stat-label">Cities</span>
     </div>
     <div class="stat">
