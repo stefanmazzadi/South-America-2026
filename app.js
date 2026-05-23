@@ -222,6 +222,61 @@ function initMap() {
     legPolylines.forEach(({ pl, delay }) => animatePathDraw(pl, 2200, delay));
   }, 800);
 
+  // ── Curved Bezier flight arcs for inter-leg flights ─────────
+  // Identify consecutive stops where the leg changes (= a flight)
+  function curvedArc(startLatLng, endLatLng, segments = 60, curvature = 0.25) {
+    const [lat1, lng1] = startLatLng;
+    const [lat2, lng2] = endLatLng;
+    // midpoint perpendicular-offset gives a nice arc
+    const midLat = (lat1 + lat2) / 2;
+    const midLng = (lng1 + lng2) / 2;
+    const dLat = lat2 - lat1;
+    const dLng = lng2 - lng1;
+    const dist = Math.hypot(dLat, dLng);
+    // perpendicular vector
+    const perpLat = -dLng / dist;
+    const perpLng =  dLat / dist;
+    const offset  = dist * curvature;
+    const ctrlLat = midLat + perpLat * offset;
+    const ctrlLng = midLng + perpLng * offset;
+    // quadratic bezier
+    const pts = [];
+    for (let t = 0; t <= 1; t += 1 / segments) {
+      const u = 1 - t;
+      const lat = u*u*lat1 + 2*u*t*ctrlLat + t*t*lat2;
+      const lng = u*u*lng1 + 2*u*t*ctrlLng + t*t*lng2;
+      pts.push([lat, lng]);
+    }
+    return pts;
+  }
+
+  const flightArcs = [];
+  for (let i = 0; i < TRIP.stops.length - 1; i++) {
+    const a = TRIP.stops[i], b = TRIP.stops[i + 1];
+    if (a.leg !== b.leg) {
+      const pts = curvedArc(a.coords, b.coords, 60, 0.2);
+      const arc = L.polyline(pts, {
+        color:     '#f59e0b',
+        weight:    2,
+        opacity:   0.85,
+        dashArray: '6, 6',
+        lineCap:   'round',
+      }).addTo(map);
+      // ✈️ marker at midpoint
+      const mid = pts[Math.floor(pts.length / 2)];
+      const planeIcon = L.divIcon({
+        className: '',
+        iconSize:  [22, 22],
+        iconAnchor:[11, 11],
+        html: `<div style="font-size:1.1rem;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.6));pointer-events:none;">✈️</div>`,
+      });
+      L.marker(mid, { icon: planeIcon, interactive: false }).addTo(map);
+      flightArcs.push(arc);
+      // animate this flight arc with extra delay
+      animatePathDraw(arc, 1800, 6000 + i * 300);
+    }
+  }
+
   // Add markers for each stop
   TRIP.stops.forEach((stop, idx) => {
     const color  = getLegColor(stop.leg);
