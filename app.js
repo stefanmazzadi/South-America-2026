@@ -282,6 +282,13 @@ function initMap() {
   // Fit map to route bounds with padding
   map.fitBounds(L.latLngBounds(routeCoords), { padding: [40, 40] });
 
+  // Bug fix: ensure we never end up at world-zoom (sometimes fitBounds races tile load)
+  setTimeout(() => {
+    if (!map.getZoom() || map.getZoom() < 3) {
+      map.setView([-20, -60], 4);
+    }
+  }, 250);
+
   // ── Map style switcher ────────────────────────────────────
   const TILE_LAYERS = {
     dark:      { url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', opts: { subdomains:'abcd', maxZoom:19 } },
