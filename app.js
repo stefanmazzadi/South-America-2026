@@ -1119,6 +1119,19 @@ function initScrollEffect() {
   });
 }
 
+function initTimelineToggle() {
+  const toggleHeader = document.getElementById('timeline-toggle-header');
+  const body         = document.getElementById('timeline-body');
+  const icon         = toggleHeader.querySelector('.tl-toggle-icon');
+  let collapsed = false;
+
+  toggleHeader.addEventListener('click', () => {
+    collapsed = !collapsed;
+    body.classList.toggle('collapsed', collapsed);
+    icon.style.transform = collapsed ? 'rotate(180deg)' : '';
+  });
+}
+
 // ─────────────────────────────────────────────────────────────
 // MAIN INIT
 // ─────────────────────────────────────────────────────────────
@@ -1126,6 +1139,7 @@ document.addEventListener('DOMContentLoaded', () => {
   populatePageStats();
   initMap();
   buildTimeline();
+  initTimelineToggle();
   initTabs();
   initFriends();
   initNotes();

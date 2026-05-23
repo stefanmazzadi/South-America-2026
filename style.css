@@ -429,36 +429,36 @@ input, textarea, select {
 
 .timeline-grid {
   display: grid;
-  grid-template-columns: 80px repeat(7, 1fr);
-  gap: 3px;
-  min-width: 600px;
+  grid-template-columns: 52px repeat(7, 1fr);
+  gap: 2px;
+  min-width: 420px;
 }
 
 .tl-week-label {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding-right: 8px;
-  font-size: 0.7rem;
+  padding-right: 6px;
+  font-size: 0.6rem;
   color: #64748b;
   font-weight: 600;
 }
 
 .tl-day {
   aspect-ratio: 1;
-  border-radius: 6px;
+  border-radius: 4px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 0.65rem;
+  font-size: 0.55rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
   position: relative;
   overflow: hidden;
-  min-width: 36px;
-  min-height: 36px;
+  min-width: 26px;
+  min-height: 26px;
 }
 
 .tl-day:hover {
@@ -474,8 +474,8 @@ input, textarea, select {
   z-index: 10;
 }
 
-.tl-day-num  { font-size: 0.7rem; font-weight: 700; }
-.tl-day-mon  { font-size: 0.55rem; opacity: 0.8; }
+.tl-day-num  { font-size: 0.6rem; font-weight: 700; }
+.tl-day-mon  { font-size: 0.48rem; opacity: 0.8; }
 
 .tl-day.leg-peru      { background: var(--peru);      color: #fff; }
 .tl-day.leg-brazil    { background: var(--brazil);    color: #fff; }
@@ -484,6 +484,32 @@ input, textarea, select {
 .tl-day.leg-empty     { background: transparent; cursor: default; }
 
 .tl-day.transition-day { border: 2px dashed rgba(255,255,255,0.5); }
+
+/* Timeline collapse */
+#timeline-body {
+  overflow: hidden;
+  max-height: 2000px;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  opacity: 1;
+}
+
+#timeline-body.collapsed {
+  max-height: 0;
+  opacity: 0;
+}
+
+.tl-toggle-icon {
+  font-size: 0.65rem;
+  margin-left: 0.5rem;
+  display: inline-block;
+  transition: transform 0.3s ease;
+  vertical-align: middle;
+  color: var(--text-muted);
+}
+
+#timeline-toggle-header:hover .section-title { color: var(--peru); }
+
+.section-light #timeline-toggle-header:hover .section-subtitle { opacity: 0.8; }
 
 /* Day header row (Mon-Sun) */
 .tl-col-header {

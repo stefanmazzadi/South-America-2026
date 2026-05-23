@@ -121,16 +121,20 @@
        TIMELINE
   ═══════════════════════════════════════════ -->
   <section id="timeline-section" class="section section-light">
-    <div class="section-header">
-      <h2 class="section-title">📅 Trip Timeline</h2>
-      <p class="section-subtitle">Click any day or week to see what's happening</p>
+    <div class="section-header" style="cursor:pointer;user-select:none" id="timeline-toggle-header">
+      <div>
+        <h2 class="section-title">📅 Trip Timeline <span class="tl-toggle-icon">▲</span></h2>
+        <p class="section-subtitle">Click any day to see what's happening</p>
+      </div>
     </div>
 
-    <div id="timeline-container" class="timeline-container"></div>
+    <div id="timeline-body">
+      <div id="timeline-container" class="timeline-container"></div>
 
-    <div id="timeline-detail" class="timeline-detail hidden">
-      <button class="tl-close" id="tl-close">✕</button>
-      <div id="tl-detail-content"></div>
+      <div id="timeline-detail" class="timeline-detail hidden">
+        <button class="tl-close" id="tl-close">✕</button>
+        <div id="tl-detail-content"></div>
+      </div>
     </div>
   </section>
 
