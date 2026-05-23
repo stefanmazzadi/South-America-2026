@@ -281,6 +281,29 @@ function initMap() {
 
   // Fit map to route bounds with padding
   map.fitBounds(L.latLngBounds(routeCoords), { padding: [40, 40] });
+
+  // ── Map style switcher ────────────────────────────────────
+  const TILE_LAYERS = {
+    dark:      { url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', opts: { subdomains:'abcd', maxZoom:19 } },
+    light:     { url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', opts: { subdomains:'abcd', maxZoom:19 } },
+    satellite: { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', opts: { maxZoom:19, attribution:'Tiles © Esri' } },
+  };
+  let currentTileLayer = null;
+
+  function setTileLayer(style) {
+    if (currentTileLayer) map.removeLayer(currentTileLayer);
+    const cfg = TILE_LAYERS[style] || TILE_LAYERS.dark;
+    currentTileLayer = L.tileLayer(cfg.url, cfg.opts).addTo(map);
+    currentTileLayer.bringToBack();
+  }
+
+  document.querySelectorAll('.map-style-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.map-style-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      setTileLayer(btn.dataset.style);
+    });
+  });
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -582,6 +605,11 @@ function initTourMode() {
     if (e.key === 'ArrowRight')  nextBtn.click();
     if (e.key === 'ArrowLeft')   prevBtn.click();
     if (e.key === ' ')           { e.preventDefault(); pauseBtn.click(); }
+  });
+
+  // Page Visibility API — pause tour when tab is hidden
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && isPlaying) pauseAutoPlay();
   });
 }
 
@@ -949,8 +977,140 @@ function initFriends() {
     });
     saveFriendsToStorage();
     renderFriends();
+    renderFriendOverlap();
     form.classList.add('hidden');
     clearFriendForm();
+    showToast(`${name} added to the crew! ✈️`, 'success');
+  });
+}
+
+// ─────────────────────────────────────────────────────────────
+// FRIEND OVERLAP CHART
+// ─────────────────────────────────────────────────────────────
+function renderFriendOverlap() {
+  const chartEl = document.getElementById('friend-overlap-chart');
+  if (!chartEl) return;
+  if (!friends.length) {
+    chartEl.innerHTML = '<p style="color:#94a3b8;font-size:0.85rem;text-align:center;padding:1rem">Add friends above to see the overlap chart</p>';
+    return;
+  }
+
+  // Trip overall range
+  const tripStart = parseDate(TRIP.startDate);
+  const lastStop  = TRIP.stops[TRIP.stops.length - 1];
+  const tripEnd   = parseDate(lastStop.endDate);
+  const totalMs   = tripEnd - tripStart;
+
+  // Leg boundaries as % of total
+  const legRanges = {};
+  let legStopMap = { peru: [], brazil: [], argentina: [] };
+  TRIP.stops.forEach(s => { if (legStopMap[s.leg]) legStopMap[s.leg].push(s); });
+  ['peru', 'brazil', 'argentina'].forEach(leg => {
+    const stops = legStopMap[leg];
+    if (!stops.length) return;
+    const start = parseDate(stops[0].startDate);
+    const end   = parseDate(stops[stops.length - 1].endDate);
+    legRanges[leg] = {
+      left:  ((start - tripStart) / totalMs * 100).toFixed(1),
+      width: ((end   - start)    / totalMs * 100).toFixed(1),
+      color: ({ peru:'#E8834A', brazil:'#22a447', argentina:'#5b9bd5' })[leg]
+    };
+  });
+
+  // Axis labels
+  const axisHTML = `<div class="foc-leg-labels"><div></div><div class="foc-axis">
+    ${['peru','brazil','argentina'].filter(l => legRanges[l]).map(l =>
+      `<span style="color:${legRanges[l].color}">${{peru:'🇵🇪 Peru',brazil:'🇧🇷 Brazil',argentina:'🇦🇷 Argentina'}[l]}</span>`
+    ).join('')}
+  </div></div>`;
+
+  const rowsHTML = friends.map(f => {
+    // Try to parse dates from friend data
+    let barLeft = 0, barWidth = 100;
+    const datesStr = f.dates || '';
+    const m = datesStr.match(/(\w+\s+\d+)\s*[–\-]\s*(\w+\s+\d+)/);
+    if (m) {
+      try {
+        const s = new Date(m[1] + ' 2026');
+        const e = new Date(m[2] + ' 2026');
+        if (!isNaN(s) && !isNaN(e)) {
+          barLeft  = Math.max(0, (s - tripStart) / totalMs * 100);
+          barWidth = Math.min(100 - barLeft, (e - s) / totalMs * 100);
+        }
+      } catch { /**/ }
+    }
+    return `<div class="foc-row">
+      <div class="foc-name" title="${escapeHTML(f.name)}">${escapeHTML(f.name)}</div>
+      <div class="foc-track">
+        <div class="foc-bar" style="left:${barLeft.toFixed(1)}%;width:${Math.max(barWidth,2).toFixed(1)}%;background:${f.color || '#888'}">
+          ${barWidth > 5 ? escapeHTML(f.legs || '') : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  chartEl.innerHTML = axisHTML + rowsHTML;
+}
+
+// ─────────────────────────────────────────────────────────────
+// SHARE CARD GENERATOR
+// ─────────────────────────────────────────────────────────────
+function initShareCard() {
+  const btn   = document.getElementById('share-card-btn');
+  const modal = document.getElementById('share-modal');
+  if (!btn || !modal) return;
+
+  function openShareModal() {
+    // Populate stats
+    const statsEl = document.getElementById('sc-stats');
+    const datesEl = document.getElementById('sc-dates');
+    if (statsEl) {
+      const items = [
+        { num: TRIP.stops.length, lbl: 'Cities' },
+        { num: Object.keys(TRIP.legs).length, lbl: 'Countries' },
+        { num: TRIP.stats?.totalNights || 80, lbl: 'Nights' },
+      ];
+      statsEl.innerHTML = items.map(i =>
+        `<div class="sc-stat"><div class="sc-num" style="background:linear-gradient(90deg,#E8834A,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent">${i.num}</div><div class="sc-lbl">${i.lbl}</div></div>`
+      ).join('');
+    }
+    if (datesEl) {
+      const first = TRIP.stops[0];
+      const last  = TRIP.stops[TRIP.stops.length - 1];
+      datesEl.textContent = `${formatDateShort(parseDate(first.startDate))} – ${formatDateShort(parseDate(last.endDate))}`;
+    }
+    modal.classList.remove('hidden');
+  }
+
+  btn.addEventListener('click', openShareModal);
+  document.getElementById('share-overlay')?.addEventListener('click', () => modal.classList.add('hidden'));
+  document.getElementById('share-close')?.addEventListener('click', () => modal.classList.add('hidden'));
+
+  document.getElementById('share-download-btn')?.addEventListener('click', async () => {
+    const card = document.querySelector('.share-card');
+    if (!card) return;
+    try {
+      if (typeof html2canvas !== 'undefined') {
+        const canvas = await html2canvas(card, { scale: 2, useCORS: true, backgroundColor: '#0d1117' });
+        const link = document.createElement('a');
+        link.download = 'south-america-2026-share.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      } else {
+        alert('html2canvas not loaded. Try refreshing the page.');
+      }
+    } catch (e) {
+      console.error('Share card error:', e);
+    }
+  });
+
+  document.getElementById('share-copy-btn')?.addEventListener('click', () => {
+    const url = 'https://stefanmazzadi.github.io/South-America-2026';
+    navigator.clipboard?.writeText(url).then(() => {
+      const btn2 = document.getElementById('share-copy-btn');
+      if (btn2) { btn2.textContent = '✓ Copied!'; setTimeout(() => { btn2.textContent = '📋 Copy Link'; }, 2000); }
+      showToast('Link copied to clipboard!', 'success');
+    });
   });
 }
 
@@ -1140,6 +1300,42 @@ function initScrollAnimations() {
   document.querySelectorAll('.anim-ready').forEach(el => observer.observe(el));
 }
 
+// ─────────────────────────────────────────────────────────────
+// TOAST NOTIFICATIONS
+// ─────────────────────────────────────────────────────────────
+function showToast(message, type = 'info', duration = 3000) {
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    container.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;z-index:99999;display:flex;flex-direction:column;gap:0.5rem;pointer-events:none;';
+    document.body.appendChild(container);
+  }
+
+  const icons = { info: 'ℹ️', success: '✅', error: '❌', warning: '⚠️' };
+  const colors = { info: '#5b9bd5', success: '#22a447', error: '#ef4444', warning: '#f59e0b' };
+
+  const toast = document.createElement('div');
+  toast.style.cssText = `background:rgba(22,27,34,0.95);backdrop-filter:blur(8px);border:1px solid ${colors[type]};border-radius:12px;padding:0.75rem 1.1rem;display:flex;align-items:center;gap:0.6rem;font-size:0.87rem;color:#e2e8f0;max-width:320px;box-shadow:0 8px 24px rgba(0,0,0,0.4);animation:toastIn 0.25s ease;pointer-events:auto;`;
+  toast.innerHTML = `<span>${icons[type]}</span><span>${message}</span>`;
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.animation = 'toastOut 0.25s ease forwards';
+    setTimeout(() => toast.remove(), 280);
+  }, duration);
+}
+
+// Add toast keyframes once
+(function addToastCSS() {
+  const s = document.createElement('style');
+  s.textContent = `
+    @keyframes toastIn  { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes toastOut { from { opacity:1; transform:translateY(0); } to { opacity:0; transform:translateY(12px); } }
+  `;
+  document.head.appendChild(s);
+})();
+
 function initBackToTop() {
   const btn = document.getElementById('back-to-top');
   if (!btn) return;
@@ -1155,6 +1351,8 @@ function initBackToTop() {
   });
   btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 }
+
+function initScrollEffect() {
   const header = document.getElementById('site-header');
   window.addEventListener('scroll', () => {
     if (window.scrollY > 60) {
@@ -1163,6 +1361,383 @@ function initBackToTop() {
       header.style.boxShadow = 'none';
     }
   });
+}
+
+// ─────────────────────────────────────────────────────────────
+// COUNTDOWN WIDGET
+// ─────────────────────────────────────────────────────────────
+function initCountdown() {
+  const widget = document.getElementById('countdown-widget');
+  if (!widget) return;
+
+  const tripStart = new Date('2026-10-23T00:00:00');
+  const tripEnd   = new Date('2026-01-11T00:00:00'); // ~80 days later
+
+  // Compute end from TRIP data if available
+  const tripEndComputed = (() => {
+    try {
+      const stops = TRIP.stops;
+      const last  = stops[stops.length - 1];
+      const d = new Date(last.end + 'T00:00:00');
+      d.setDate(d.getDate() + 1);
+      return d;
+    } catch { return new Date('2027-01-11T00:00:00'); }
+  })();
+
+  function update() {
+    const now  = new Date();
+    const diff = tripStart - now;
+
+    if (diff > 0) {
+      // Before trip
+      const totalSec = Math.floor(diff / 1000);
+      const d = Math.floor(totalSec / 86400);
+      const h = Math.floor((totalSec % 86400) / 3600);
+      const m = Math.floor((totalSec % 3600) / 60);
+      const s = totalSec % 60;
+      widget.textContent = `✈️ Departs in ${d}d ${h}h ${m}m ${s}s`;
+    } else {
+      const elapsed = now - tripStart;
+      if (now < tripEndComputed) {
+        // During trip
+        const dayNum = Math.floor(elapsed / 86400000) + 1;
+        const totalDays = Math.round((tripEndComputed - tripStart) / 86400000);
+        const stop = getStopForDate(dateToStr(now)) || { city: '?' };
+        widget.textContent = `🌎 Day ${dayNum} of ${totalDays} — ${stop.city}`;
+      } else {
+        // After trip
+        widget.textContent = '✅ Trip complete — what an adventure!';
+        return; // no need to keep ticking
+      }
+    }
+  }
+
+  update();
+  if (new Date() < tripEndComputed) setInterval(update, 1000);
+}
+
+// ─────────────────────────────────────────────────────────────
+// BUDGET TRACKER
+// ─────────────────────────────────────────────────────────────
+const BUDGET_KEY = 'la_aventura_expenses';
+
+// Per-country estimated daily costs (USD)
+const BUDGET_ESTIMATES = {
+  peru:      { dailyCost: 45, color: '#E8834A' },
+  brazil:    { dailyCost: 60, color: '#22a447' },
+  argentina: { dailyCost: 50, color: '#5b9bd5' }
+};
+
+function loadExpenses() {
+  try { return JSON.parse(localStorage.getItem(BUDGET_KEY) || '[]'); }
+  catch { return []; }
+}
+
+function saveExpenses(list) {
+  localStorage.setItem(BUDGET_KEY, JSON.stringify(list));
+}
+
+function calcBudgetEstimates() {
+  const rows = [];
+  let total = 0;
+  if (!TRIP || !TRIP.stops) return { rows, total };
+  TRIP.stops.forEach(stop => {
+    const nights = stop.nights || 0;
+    const leg    = stop.leg || 'general';
+    const daily  = (BUDGET_ESTIMATES[leg] || { dailyCost: 50 }).dailyCost;
+    const sub    = nights * daily;
+    total += sub;
+    rows.push({ city: stop.city, leg, nights, daily, sub });
+  });
+  return { rows, total };
+}
+
+function renderBudget() {
+  const expenses = loadExpenses();
+  const { rows, total } = calcBudgetEstimates();
+
+  // Total card
+  const totalEl = document.getElementById('budget-total');
+  if (totalEl) totalEl.textContent = '$' + total.toLocaleString();
+
+  // Per-leg bar chart
+  const barsEl = document.getElementById('budget-leg-bars');
+  if (barsEl) {
+    const legTotals = {};
+    rows.forEach(r => { legTotals[r.leg] = (legTotals[r.leg] || 0) + r.sub; });
+    const maxVal = Math.max(...Object.values(legTotals), 1);
+    barsEl.innerHTML = '';
+    const legNames = { peru: '🇵🇪 Peru', brazil: '🇧🇷 Brazil', argentina: '🇦🇷 Argentina' };
+    Object.entries(legTotals).forEach(([leg, val]) => {
+      const pct = Math.round((val / maxVal) * 100);
+      const color = (BUDGET_ESTIMATES[leg] || {}).color || '#888';
+      const row = document.createElement('div');
+      row.className = 'budget-leg-row';
+      row.innerHTML = `<div class="budget-leg-header"><span>${legNames[leg] || leg}</span><span>$${val.toLocaleString()}</span></div>
+        <div class="budget-bar-track"><div class="budget-bar-fill" style="width:${pct}%;background:${color}"></div></div>`;
+      barsEl.appendChild(row);
+    });
+  }
+
+  // Table
+  const tbody = document.getElementById('budget-table-body');
+  if (tbody) {
+    tbody.innerHTML = rows.map(r =>
+      `<tr><td>${escapeHTML(r.city)}</td><td>${r.nights}</td><td>$${r.daily}</td><td>$${r.sub.toLocaleString()}</td></tr>`
+    ).join('');
+    const tfoot = document.getElementById('budget-table-total');
+    if (tfoot) tfoot.textContent = '$' + total.toLocaleString();
+  }
+
+  // Expenses list
+  const listEl = document.getElementById('expenses-list');
+  if (listEl) {
+    const catIcons = { accommodation: '🏨', food: '🍽️', transport: '🚌', activities: '🧗', misc: '📦', general: '🌎' };
+    listEl.innerHTML = expenses.length ? expenses.map((e, i) =>
+      `<div class="expense-item">
+        <span class="exp-cat">${catIcons[e.cat] || '📦'} ${e.cat}</span>
+        <span class="exp-name">${escapeHTML(e.name)}</span>
+        <span class="exp-amount">$${Number(e.amount).toLocaleString()}</span>
+        <button class="exp-delete btn-ghost" data-idx="${i}" title="Delete">✕</button>
+      </div>`).join('') : '<p style="color:#94a3b8;font-size:0.88rem;text-align:center;padding:1rem">No expenses added yet</p>';
+
+    listEl.querySelectorAll('.exp-delete').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const list = loadExpenses();
+        list.splice(Number(btn.dataset.idx), 1);
+        saveExpenses(list);
+        renderBudget();
+      });
+    });
+  }
+
+  // Actual vs estimate cards
+  const totalsEl = document.getElementById('budget-actual-totals');
+  if (totalsEl) {
+    const legTotals = {};
+    expenses.forEach(e => { legTotals[e.leg] = (legTotals[e.leg] || 0) + Number(e.amount); });
+    const legNames = { peru: '🇵🇪 Peru', brazil: '🇧🇷 Brazil', argentina: '🇦🇷 Argentina', general: '🌎 General' };
+    const legEst = {};
+    rows.forEach(r => { legEst[r.leg] = (legEst[r.leg] || 0) + r.sub; });
+    const allLegs = new Set([...Object.keys(legTotals), ...Object.keys(legEst)]);
+    totalsEl.innerHTML = '';
+    allLegs.forEach(leg => {
+      const actual = legTotals[leg] || 0;
+      const est    = legEst[leg] || 0;
+      if (actual === 0 && est === 0) return;
+      const cls = est > 0 ? (actual > est ? 'over' : 'under') : '';
+      const card = document.createElement('div');
+      card.className = 'budget-vs-card ' + cls;
+      card.innerHTML = `<div class="bvc-label">${legNames[leg] || leg}</div>
+        <div class="bvc-amount">$${actual.toLocaleString()} <span style="font-size:0.72rem;color:#94a3b8">/ est $${est.toLocaleString()}</span></div>`;
+      totalsEl.appendChild(card);
+    });
+  }
+}
+
+function initBudget() {
+  renderBudget();
+  const addBtn = document.getElementById('exp-add-btn');
+  if (!addBtn) return;
+  addBtn.addEventListener('click', () => {
+    const name   = document.getElementById('exp-name').value.trim();
+    const amount = parseFloat(document.getElementById('exp-amount').value);
+    const leg    = document.getElementById('exp-leg').value;
+    const cat    = document.getElementById('exp-cat').value;
+    if (!name || isNaN(amount) || amount <= 0) return;
+    const list = loadExpenses();
+    list.push({ name, amount, leg, cat, date: new Date().toISOString() });
+    saveExpenses(list);
+    document.getElementById('exp-name').value  = '';
+    document.getElementById('exp-amount').value = '';
+    renderBudget();
+    showToast(`Added $${amount} — ${name}`, 'success');
+  });
+}
+
+// ─────────────────────────────────────────────────────────────
+// PACKING LIST
+// ─────────────────────────────────────────────────────────────
+const PACKING_KEY = 'la_aventura_packing';
+
+const DEFAULT_PACKING = {
+  general: ['Passport & copies','Travel insurance docs','Debit/credit cards','First aid kit','Sunscreen SPF 50+','Insect repellent (DEET)','Power adapter','Portable charger','Headlamp','Padlock for hostel','Quick-dry towel','Rain jacket','Sandals','Comfortable walking shoes','Sunglasses','Water bottle (filter)','Earplugs','Neck pillow','VPN app installed'],
+  peru:    ['Altitude sickness pills (Diamox)','Warm layers (Cusco cold nights)','Sleeping bag liner','Machu Picchu tickets','Bus/train to Aguas Calientes','Trekking poles (optional)','Spanish phrasebook'],
+  brazil:  ['Yellow fever certificate','Bikini / boardshorts','Flip flops','Carnival outfit (if applicable)','Caipirinha mix recipe 😄','Portuguese basics','PIX / cash for street food'],
+  argentina: ['Tango shoes (optional)','Mate cup & bombilla','Dulce de leche supply','Warm jacket for Patagonia','Pesos cash (ATMs vary)','Good offline map (Patagonia signal)']
+};
+
+function loadPacking() {
+  try {
+    const stored = localStorage.getItem(PACKING_KEY);
+    if (stored) return JSON.parse(stored);
+  } catch { /**/ }
+  // Deep-copy defaults with checked=false
+  const init = {};
+  Object.entries(DEFAULT_PACKING).forEach(([tab, items]) => {
+    init[tab] = items.map(text => ({ text, checked: false, custom: false }));
+  });
+  return init;
+}
+
+function savePacking(data) {
+  localStorage.setItem(PACKING_KEY, JSON.stringify(data));
+}
+
+function renderPackingList(tab) {
+  const data   = loadPacking();
+  const items  = data[tab] || [];
+  const listEl = document.getElementById('packing-list');
+  if (!listEl) return;
+
+  const all     = Object.values(data).flat();
+  const done    = all.filter(i => i.checked).length;
+  const pct     = all.length ? Math.round(done / all.length * 100) : 0;
+  const countEl = document.getElementById('pack-count');
+  const pctEl   = document.getElementById('pack-pct');
+  const barEl   = document.getElementById('packing-bar-fill');
+  if (countEl) countEl.textContent = `${done} / ${all.length} items packed`;
+  if (pctEl)   pctEl.textContent   = pct + '%';
+  if (barEl)   barEl.style.width   = pct + '%';
+
+  listEl.innerHTML = '';
+  items.forEach((item, idx) => {
+    const div = document.createElement('div');
+    div.className = 'pack-item' + (item.checked ? ' checked' : '');
+    div.innerHTML = `<input type="checkbox" ${item.checked ? 'checked' : ''} data-idx="${idx}" data-tab="${tab}">
+      <span>${escapeHTML(item.text)}</span>
+      ${item.custom ? `<button class="pack-delete btn-ghost" data-idx="${idx}" data-tab="${tab}" title="Remove">✕</button>` : ''}`;
+
+    div.querySelector('input').addEventListener('change', e => {
+      const d2 = loadPacking();
+      d2[tab][idx].checked = e.target.checked;
+      savePacking(d2);
+      renderPackingList(tab);
+    });
+
+    if (item.custom) {
+      div.querySelector('.pack-delete').addEventListener('click', () => {
+        const d2 = loadPacking();
+        d2[tab].splice(idx, 1);
+        savePacking(d2);
+        renderPackingList(tab);
+      });
+    }
+    listEl.appendChild(div);
+  });
+}
+
+function initPacking() {
+  let currentTab = 'general';
+  const tabs = document.querySelectorAll('.pack-tab');
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      currentTab = btn.dataset.tab;
+      renderPackingList(currentTab);
+    });
+  });
+
+  const addBtn = document.getElementById('pack-add-btn');
+  if (addBtn) {
+    addBtn.addEventListener('click', () => {
+      const input = document.getElementById('pack-new-item');
+      const text  = input.value.trim();
+      if (!text) return;
+      const data = loadPacking();
+      if (!data[currentTab]) data[currentTab] = [];
+      data[currentTab].push({ text, checked: false, custom: true });
+      savePacking(data);
+      input.value = '';
+      renderPackingList(currentTab);
+    });
+  }
+
+  renderPackingList(currentTab);
+}
+
+// ─────────────────────────────────────────────────────────────
+// MEMORY WALL
+// ─────────────────────────────────────────────────────────────
+const MEMORIES_KEY = 'la_aventura_memories';
+
+function loadMemories() {
+  try { return JSON.parse(localStorage.getItem(MEMORIES_KEY) || '[]'); }
+  catch { return []; }
+}
+
+function saveMemories(list) {
+  localStorage.setItem(MEMORIES_KEY, JSON.stringify(list));
+}
+
+function renderMemories() {
+  const grid = document.getElementById('memory-grid');
+  if (!grid) return;
+  const mems = loadMemories();
+  if (!mems.length) {
+    grid.innerHTML = '<div class="memory-grid-empty">No memories yet — add a photo URL above to get started! 📷</div>';
+    return;
+  }
+  const legFlags = { peru: '🇵🇪', brazil: '🇧🇷', argentina: '🇦🇷' };
+  grid.innerHTML = mems.map((m, i) => `
+    <div class="memory-card" data-idx="${i}">
+      <img src="${escapeHTML(m.url)}" alt="${escapeHTML(m.caption)}" loading="lazy" onerror="this.parentElement.style.display='none'">
+      <div class="mem-card-footer">
+        <span>${legFlags[m.leg] || ''} ${escapeHTML(m.caption)}</span>
+        <button class="mem-delete btn-ghost" data-idx="${i}" title="Delete">✕</button>
+      </div>
+    </div>`).join('');
+
+  grid.querySelectorAll('.memory-card img').forEach(img => {
+    img.addEventListener('click', () => openLightbox(img.src, img.alt));
+  });
+
+  grid.querySelectorAll('.mem-delete').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const list = loadMemories();
+      list.splice(Number(btn.dataset.idx), 1);
+      saveMemories(list);
+      renderMemories();
+    });
+  });
+}
+
+function openLightbox(src, caption) {
+  const lb = document.getElementById('mem-lightbox');
+  if (!lb) return;
+  document.getElementById('mem-lb-img').src      = src;
+  document.getElementById('mem-lb-caption').textContent = caption;
+  lb.classList.remove('hidden');
+}
+
+function closeLightbox() {
+  const lb = document.getElementById('mem-lightbox');
+  if (lb) lb.classList.add('hidden');
+}
+
+function initMemories() {
+  renderMemories();
+  const addBtn = document.getElementById('mem-add-btn');
+  if (addBtn) {
+    addBtn.addEventListener('click', () => {
+      const url     = document.getElementById('mem-url').value.trim();
+      const caption = document.getElementById('mem-caption').value.trim();
+      const leg     = document.getElementById('mem-leg').value;
+      if (!url) return;
+      const list = loadMemories();
+      list.unshift({ url, caption: caption || 'Memory', leg, date: new Date().toISOString() });
+      saveMemories(list);
+      document.getElementById('mem-url').value     = '';
+      document.getElementById('mem-caption').value = '';
+      renderMemories();
+      showToast('Memory added to the wall! 📸', 'success');
+    });
+  }
+  document.getElementById('mem-lb-close')?.addEventListener('click', closeLightbox);
+  document.getElementById('mem-lb-close-btn')?.addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 }
 
 function initTimelineToggle() {
@@ -1204,12 +1779,21 @@ document.addEventListener('DOMContentLoaded', () => {
   initCollapsible('amigos-toggle-header', 'amigos-body');
   initTabs();
   initFriends();
+  renderFriendOverlap();
   initNotes();
   initMobileNav();
   initScrollEffect();
   initThemeToggle();
   initScrollAnimations();
   initBackToTop();
+  initCountdown();
+  initCollapsible('budget-toggle-header', 'budget-body');
+  initBudget();
+  initCollapsible('packing-toggle-header', 'packing-body');
+  initPacking();
+  initCollapsible('memories-toggle-header', 'memories-body');
+  initMemories();
+  initShareCard();
   initTourMode();
 
   // Wire up the main-page export button

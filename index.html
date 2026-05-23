@@ -65,7 +65,15 @@
       <span id="map-overlay-stats">80 Days · 3 Countries · 19 Cities</span>
     </div>
 
+    <div id="countdown-widget" class="countdown-widget"></div>
+
     <button class="tour-play-btn" id="tour-play-btn">▶ Play Route</button>
+
+    <div class="map-style-toggle" id="map-style-toggle">
+      <button class="map-style-btn active" data-style="dark" title="Dark map">🌑</button>
+      <button class="map-style-btn" data-style="light" title="Light map">☀️</button>
+      <button class="map-style-btn" data-style="satellite" title="Satellite">🛰️</button>
+    </div>
 
     <div class="map-legend" id="map-legend">
       <div class="legend-item" id="legend-peru"><span class="dot dot-peru"></span>Peru · Oct 18 – Nov 5</div>
@@ -168,6 +176,57 @@
   </section>
 
   <!-- ═══════════════════════════════════════════
+       BUDGET TRACKER
+  ═══════════════════════════════════════════ -->
+  <section id="budget" class="section section-light anim-ready">
+    <div class="section-header collapsible-header" id="budget-toggle-header">
+      <div>
+        <h2 class="section-title">💰 Budget Tracker <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
+        <p class="section-subtitle">Estimated costs &amp; actual expenses per leg</p>
+      </div>
+    </div>
+    <div id="budget-body" class="collapsed">
+      <div class="budget-overview">
+        <div class="budget-total-card">
+          <div class="budget-total-label">Total Estimated</div>
+          <div class="budget-total-num" id="budget-total">$0</div>
+        </div>
+        <div class="budget-leg-bars" id="budget-leg-bars"></div>
+      </div>
+      <div class="budget-table-wrap">
+        <table class="budget-table">
+          <thead><tr><th>City</th><th>Nights</th><th>$/day</th><th>Subtotal</th></tr></thead>
+          <tbody id="budget-table-body"></tbody>
+          <tfoot><tr><td colspan="3"><strong>Total</strong></td><td id="budget-table-total"></td></tr></tfoot>
+        </table>
+      </div>
+      <div class="budget-expenses-section">
+        <h3 class="budget-section-head">🧾 Actual Expenses</h3>
+        <div class="budget-add-form">
+          <input id="exp-name" placeholder="Description (e.g. Hostel Lima)" />
+          <input id="exp-amount" type="number" placeholder="Amount (USD)" min="0" />
+          <select id="exp-leg">
+            <option value="peru">🇵🇪 Peru</option>
+            <option value="brazil">🇧🇷 Brazil</option>
+            <option value="argentina">🇦🇷 Argentina</option>
+            <option value="general">🌎 General</option>
+          </select>
+          <select id="exp-cat">
+            <option value="accommodation">🏨 Accommodation</option>
+            <option value="food">🍽️ Food</option>
+            <option value="transport">🚌 Transport</option>
+            <option value="activities">🧗 Activities</option>
+            <option value="misc">📦 Misc</option>
+          </select>
+          <button class="btn-primary" id="exp-add-btn">+ Add</button>
+        </div>
+        <div id="expenses-list" class="expenses-list"></div>
+        <div class="budget-actual-totals" id="budget-actual-totals"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
        AMIGOS / FRIENDS PANEL
   ═══════════════════════════════════════════ -->
   <section id="amigos" class="section section-light anim-ready">
@@ -208,6 +267,82 @@
         <button class="btn-ghost" id="cancel-friend-btn">Cancel</button>
       </div>
     </div>
+
+    <!-- Friend overlap timeline -->
+    <div class="friend-overlap-wrap" id="friend-overlap-wrap">
+      <h3 class="friend-overlap-title">📊 Trip Overlap Timeline</h3>
+      <div id="friend-overlap-chart" class="friend-overlap-chart">
+        <p style="color:#94a3b8;font-size:0.85rem;text-align:center;padding:1rem">Add friends above to see the overlap chart</p>
+      </div>
+    </div>
+    </div>
+  </section>
+  ═══════════════════════════════════════════ -->
+  <section id="packing" class="section section-light anim-ready">
+    <div class="section-header collapsible-header" id="packing-toggle-header">
+      <div>
+        <h2 class="section-title">🎒 Packing List <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
+        <p class="section-subtitle">Check off what's packed — saved in your browser</p>
+      </div>
+    </div>
+    <div id="packing-body" class="collapsed">
+      <div class="packing-tabs" id="packing-tabs">
+        <button class="pack-tab active" data-tab="general">General</button>
+        <button class="pack-tab" data-tab="peru">🇵🇪 Peru</button>
+        <button class="pack-tab" data-tab="brazil">🇧🇷 Brazil</button>
+        <button class="pack-tab" data-tab="argentina">🇦🇷 Argentina</button>
+      </div>
+      <div class="packing-progress-wrap">
+        <div class="packing-progress-label">
+          <span id="pack-count">0 / 0 items packed</span>
+          <span id="pack-pct">0%</span>
+        </div>
+        <div class="packing-bar-track"><div class="packing-bar-fill" id="packing-bar-fill"></div></div>
+      </div>
+      <div id="packing-list" class="packing-list"></div>
+      <div class="packing-add-form">
+        <input id="pack-new-item" placeholder="Add custom item…" />
+        <button class="btn-primary" id="pack-add-btn">+ Add</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       MEMORY WALL
+  ═══════════════════════════════════════════ -->
+  <section id="memories" class="section section-dark anim-ready">
+    <div class="section-header collapsible-header" id="memories-toggle-header">
+      <div>
+        <h2 class="section-title">📸 Memory Wall <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
+        <p class="section-subtitle">Photos, videos and moments from the road</p>
+      </div>
+    </div>
+    <div id="memories-body" class="collapsed">
+      <div class="memories-add-form">
+        <div class="mem-add-row">
+          <input id="mem-caption" placeholder="Caption (e.g. Sunset over Machu Picchu)" />
+          <select id="mem-leg">
+            <option value="peru">🇵🇪 Peru</option>
+            <option value="brazil">🇧🇷 Brazil</option>
+            <option value="argentina">🇦🇷 Argentina</option>
+          </select>
+        </div>
+        <div class="mem-add-row">
+          <input id="mem-url" placeholder="Image or video URL (or paste a data URL)" />
+          <button class="btn-primary" id="mem-add-btn">+ Add Memory</button>
+        </div>
+        <p class="mem-hint">Tip: paste an Imgur, Google Photos, or direct image URL. For local photos, use a free host like <strong>imgbb.com</strong>.</p>
+      </div>
+      <div id="memory-grid" class="memory-grid"></div>
+      <!-- Lightbox -->
+      <div id="mem-lightbox" class="mem-lightbox hidden">
+        <div class="mem-lightbox-overlay" id="mem-lb-close"></div>
+        <div class="mem-lightbox-content">
+          <img id="mem-lb-img" src="" alt="" />
+          <p id="mem-lb-caption"></p>
+          <button class="mem-lb-close-btn" id="mem-lb-close-btn">✕ Close</button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -274,9 +409,39 @@
         <strong>Ready to share your updates?</strong>
         <span>Captures your trip plan, travel buddies &amp; notes — save over <code>tripdata.js</code> then push to GitHub.</span>
       </div>
-      <button id="export-all-btn" class="export-all-btn">⬇ Export tripdata.js</button>
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center">
+        <button id="export-all-btn" class="export-all-btn">⬇ Export tripdata.js</button>
+        <button id="share-card-btn" class="export-all-btn" style="background:linear-gradient(135deg,#5b9bd5,#22a447)">📸 Share Card</button>
+      </div>
     </div>
   </section>
+
+  <!-- Share Card Modal -->
+  <div id="share-modal" class="share-modal hidden">
+    <div class="share-modal-overlay" id="share-overlay"></div>
+    <div class="share-modal-content">
+      <button class="share-close-btn" id="share-close">✕</button>
+      <h3 style="margin:0 0 1rem;font-family:var(--font-head)">📸 Your Trip Share Card</h3>
+      <div id="share-card-preview" class="share-card-preview">
+        <div class="share-card">
+          <div class="sc-header">
+            <div class="sc-flags">🇵🇪 🇧🇷 🇦🇷</div>
+            <h2 class="sc-title">South America 2026</h2>
+            <p class="sc-subtitle" id="sc-subtitle">80 Days · 3 Countries · 19 Cities</p>
+          </div>
+          <div class="sc-stats" id="sc-stats"></div>
+          <div class="sc-footer">
+            <span id="sc-dates"></span>
+            <span>la-aventura.app</span>
+          </div>
+        </div>
+      </div>
+      <div class="share-actions">
+        <button class="btn-primary" id="share-download-btn">⬇ Download PNG</button>
+        <button class="btn-secondary" id="share-copy-btn">📋 Copy Link</button>
+      </div>
+    </div>
+  </div>
 
   <!-- ═══════════════════════════════════════════
        FOOTER

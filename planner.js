@@ -153,8 +153,9 @@ function renderStopList() {
       </div>
       <div class="dates-preview">${fmtShort(parseDate(d.startDate))} → ${fmtShort(parseDate(d.endDate))}</div>
       <div class="row-actions">
-        <button class="row-edit-btn" data-id="${stop.id}" title="Edit details">✏️</button>
-        <button class="row-del-btn"  data-id="${stop.id}" title="Remove stop">🗑</button>
+        <button class="row-edit-btn"  data-id="${stop.id}" title="Edit details">✏️</button>
+        <button class="row-dup-btn"   data-id="${stop.id}" title="Duplicate stop">⧉</button>
+        <button class="row-del-btn"   data-id="${stop.id}" title="Remove stop">🗑</button>
       </div>
     `;
 
@@ -180,6 +181,11 @@ function renderStopList() {
   // Edit buttons
   container.querySelectorAll('.row-edit-btn').forEach(btn => {
     btn.addEventListener('click', () => openEditPanel(btn.dataset.id));
+  });
+
+  // Duplicate buttons
+  container.querySelectorAll('.row-dup-btn').forEach(btn => {
+    btn.addEventListener('click', () => duplicateStop(btn.dataset.id));
   });
 
   // Delete buttons
@@ -348,14 +354,57 @@ function saveEditPanel() {
   showToast('City updated — click Save Changes to apply.');
 }
 
+// ── Undo delete state ──────────────────────────────────────────
+let deletedStopUndo = null;
+
 function deleteStop(id) {
   const stop = tripData.stops.find(s => s.id === id);
   if (!stop) return;
-  if (!confirm(`Remove "${stop.city}" from the itinerary?`)) return;
+  const idx = tripData.stops.indexOf(stop);
+  deletedStopUndo = { stop: JSON.parse(JSON.stringify(stop)), idx };
   tripData.stops = tripData.stops.filter(s => s.id !== id);
   if (editingId === id) closeEditPanel();
   markDirty();
   renderStopList();
+  showUndoToast(`Removed "${stop.city}"`, () => {
+    tripData.stops.splice(deletedStopUndo.idx, 0, deletedStopUndo.stop);
+    deletedStopUndo = null;
+    markDirty();
+    renderStopList();
+  });
+}
+
+function showUndoToast(message, undoFn) {
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    container.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;z-index:99999;display:flex;flex-direction:column;gap:0.5rem;pointer-events:none;';
+    document.body.appendChild(container);
+  }
+  const toast = document.createElement('div');
+  toast.style.cssText = 'background:rgba(22,27,34,0.95);backdrop-filter:blur(8px);border:1px solid #ef4444;border-radius:12px;padding:0.75rem 1.1rem;display:flex;align-items:center;gap:0.75rem;font-size:0.87rem;color:#e2e8f0;max-width:360px;box-shadow:0 8px 24px rgba(0,0,0,0.4);pointer-events:auto;';
+  toast.innerHTML = `<span>🗑️ ${esc(message)}</span><button style="background:rgba(239,68,68,0.2);color:#f87171;border-radius:8px;padding:0.2rem 0.6rem;font-size:0.82rem;font-weight:700;flex-shrink:0">Undo</button>`;
+  const undoBtn = toast.querySelector('button');
+  let dismissed = false;
+  const dismiss = () => { if (!dismissed) { dismissed = true; toast.remove(); } };
+  undoBtn.addEventListener('click', () => { undoFn(); dismiss(); });
+  container.appendChild(toast);
+  setTimeout(dismiss, 6000);
+}
+
+// ── Duplicate stop ─────────────────────────────────────────────
+function duplicateStop(id) {
+  const stop = tripData.stops.find(s => s.id === id);
+  if (!stop) return;
+  const idx = tripData.stops.indexOf(stop);
+  const clone = JSON.parse(JSON.stringify(stop));
+  clone.id   = 'stop_' + Date.now();
+  clone.city = clone.city + ' (copy)';
+  tripData.stops.splice(idx + 1, 0, clone);
+  markDirty();
+  renderStopList();
+  showToast(`✔ Duplicated "${stop.city}"`);
 }
 
 // ── Add new city ───────────────────────────────────────────────
