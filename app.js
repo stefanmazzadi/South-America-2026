@@ -1665,9 +1665,102 @@ function calcBudgetEstimates() {
   return { rows, total };
 }
 
+function renderBudgetCharts(rows, total, expenses) {
+  const COLORS = { peru: '#E8834A', brazil: '#22a447', argentina: '#5b9bd5' };
+  const NAMES  = { peru: '🇵🇪 Peru', brazil: '🇧🇷 Brazil', argentina: '🇦🇷 Argentina' };
+  const legTotals = { peru: 0, brazil: 0, argentina: 0 };
+  rows.forEach(r => { legTotals[r.leg] = (legTotals[r.leg]||0) + r.sub; });
+
+  // ───── Donut ─────
+  const donut = document.getElementById('bc-donut');
+  if (donut) {
+    const cx=100, cy=100, r=72, stroke=24;
+    const C = 2 * Math.PI * r;
+    let offset = 0;
+    const parts = Object.entries(legTotals).filter(([,v]) => v > 0);
+    const sum = parts.reduce((s,[,v]) => s+v, 0) || 1;
+    let svg = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#f0f0f0" stroke-width="${stroke}"/>`;
+    parts.forEach(([leg, val]) => {
+      const frac = val / sum;
+      const dash = C * frac;
+      svg += `<circle class="bc-donut-arc" cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${COLORS[leg]}" stroke-width="${stroke}" stroke-dasharray="${dash} ${C}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})" />`;
+      offset += dash;
+    });
+    svg += `<text x="${cx}" y="${cy-4}" text-anchor="middle" font-size="14" fill="#666" font-family="Inter">Total</text>`;
+    svg += `<text x="${cx}" y="${cy+18}" text-anchor="middle" font-size="22" fill="#1a1a1a" font-family="Playfair Display" font-weight="700">$${total.toLocaleString()}</text>`;
+    donut.innerHTML = svg;
+    const legend = document.getElementById('bc-donut-legend');
+    if (legend) {
+      legend.innerHTML = parts.map(([leg,val]) => {
+        const pct = Math.round(val/sum*100);
+        return `<span><i style="background:${COLORS[leg]}"></i>${NAMES[leg]} ${pct}%</span>`;
+      }).join('');
+    }
+  }
+
+  // ───── Pace bar ─────
+  const pace = document.getElementById('bc-pace');
+  if (pace) {
+    const start = new Date('2026-10-23T00:00:00');
+    const totalDays = rows.reduce((s,r)=>s+(r.nights||0),0) || 80;
+    const now = new Date();
+    const dayNum = Math.max(0, Math.min(totalDays, Math.ceil((now - start)/86400000)));
+    const tripPct = Math.round(dayNum/totalDays*100);
+    const spent = expenses.reduce((s,e)=>s+(Number(e.amount)||0), 0);
+    const spentPct = Math.min(100, Math.round(spent/(total||1)*100));
+    pace.innerHTML = `
+      <text x="10" y="20" font-size="11" fill="#666" font-family="Inter">Trip progress: ${tripPct}% (Day ${dayNum}/${totalDays})</text>
+      <rect x="10" y="28" width="300" height="14" rx="7" fill="#f0f0f0"/>
+      <rect class="bc-pace-bar" x="10" y="28" width="${tripPct*3}" height="14" rx="7" fill="#5b9bd5"/>
+      <text x="10" y="68" font-size="11" fill="#666" font-family="Inter">Budget spent: ${spentPct}% ($${spent.toLocaleString()} of $${total.toLocaleString()})</text>
+      <rect x="10" y="76" width="300" height="14" rx="7" fill="#f0f0f0"/>
+      <rect class="bc-pace-bar" x="10" y="76" width="${spentPct*3}" height="14" rx="7" fill="${spentPct > tripPct + 10 ? '#e74c3c' : '#22a447'}"/>
+      <text x="10" y="108" font-size="10" fill="#999" font-family="Inter" font-style="italic">${spentPct > tripPct + 10 ? '⚠ Spending faster than trip pace' : '✓ On pace or under-budget'}</text>
+    `;
+  }
+
+  // ───── Timeline ─────
+  const tl = document.getElementById('bc-timeline');
+  if (tl) {
+    // Group expenses by day
+    const byDay = {};
+    expenses.forEach(e => {
+      const d = (e.date || '').slice(0,10);
+      if (!d) return;
+      byDay[d] = (byDay[d]||0) + (Number(e.amount)||0);
+    });
+    const days = Object.keys(byDay).sort();
+    if (!days.length) {
+      tl.innerHTML = `<text x="300" y="70" text-anchor="middle" font-size="12" fill="#999" font-family="Inter" font-style="italic">Add expenses to see your daily spending curve</text>`;
+    } else {
+      const W=600, H=140, pad=30;
+      const maxVal = Math.max(...Object.values(byDay));
+      const x = i => pad + (i/(Math.max(1, days.length-1))) * (W - pad*2);
+      const y = v => H - pad - (v/maxVal) * (H - pad*2);
+      const pts = days.map((d,i) => `${x(i)},${y(byDay[d])}`).join(' ');
+      const area = `M${pad},${H-pad} L${pts.split(' ').join(' L')} L${W-pad},${H-pad} Z`;
+      tl.innerHTML = `
+        <defs><linearGradient id="bcGrad" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.05"/>
+        </linearGradient></defs>
+        <line class="bc-tl-axis" x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}"/>
+        <line class="bc-tl-axis" x1="${pad}" y1="${pad}" x2="${pad}" y2="${H-pad}"/>
+        <path class="bc-tl-area" d="${area}"/>
+        <polyline class="bc-tl-line" points="${pts}"/>
+        ${days.map((d,i) => `<circle cx="${x(i)}" cy="${y(byDay[d])}" r="3" fill="#f59e0b"/>`).join('')}
+        <text x="${pad}" y="${H-8}" font-size="9" fill="#999" font-family="Inter">${days[0]}</text>
+        <text x="${W-pad}" y="${H-8}" text-anchor="end" font-size="9" fill="#999" font-family="Inter">${days[days.length-1]}</text>
+        <text x="${pad-4}" y="${pad+4}" text-anchor="end" font-size="9" fill="#999" font-family="Inter">$${maxVal.toFixed(0)}</text>
+      `;
+    }
+  }
+}
+
 function renderBudget() {
   const expenses = loadExpenses();
   const { rows, total } = calcBudgetEstimates();
+  renderBudgetCharts(rows, total, expenses);
 
   // Total card
   const totalEl = document.getElementById('budget-total');

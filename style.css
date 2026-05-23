@@ -2086,3 +2086,40 @@ body.tour-active #map-section {
 }
 #offline-banner.hidden { display: none; }
 @keyframes bannerSlide { from { transform: translateY(-100%);} to { transform: translateY(0);} }
+
+/* ─── Animated Budget Charts ─── */
+.budget-charts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+.bc-chart {
+  background: var(--light);
+  padding: 1rem 1.25rem 1.25rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.bc-chart-wide { grid-column: 1 / -1; }
+.bc-title {
+  font-family: var(--font-head);
+  font-size: 1.05rem;
+  margin: 0 0 0.75rem;
+  color: var(--text-dark);
+}
+.bc-legend {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem;
+  margin-top: 0.5rem;
+  font-size: 0.82rem;
+}
+.bc-legend span { display: inline-flex; align-items: center; gap: 0.35rem; }
+.bc-legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.bc-donut-arc { transition: stroke-dashoffset 1.4s cubic-bezier(.4,1.4,.6,1); }
+.bc-pace-bar { transition: width 1.2s ease; }
+.bc-tl-line { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 2000; stroke-dashoffset: 2000; animation: bcDraw 2s ease forwards; }
+.bc-tl-area { fill: url(#bcGrad); opacity: 0; animation: bcFade 1.2s ease 1s forwards; }
+.bc-tl-axis { stroke: #ddd; stroke-width: 1; }
+.bc-tl-tick text { font-size: 9px; fill: var(--text-muted); }
+@keyframes bcDraw { to { stroke-dashoffset: 0; } }
+@keyframes bcFade { to { opacity: 0.4; } }

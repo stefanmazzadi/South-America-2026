@@ -318,6 +318,23 @@
         </div>
         <div class="budget-leg-bars" id="budget-leg-bars"></div>
       </div>
+
+      <!-- Animated SVG charts -->
+      <div class="budget-charts">
+        <div class="bc-chart">
+          <h4 class="bc-title">Spending by Country</h4>
+          <svg id="bc-donut" viewBox="0 0 200 200" width="200" height="200"></svg>
+          <div id="bc-donut-legend" class="bc-legend"></div>
+        </div>
+        <div class="bc-chart">
+          <h4 class="bc-title">Budget Pace</h4>
+          <svg id="bc-pace" viewBox="0 0 320 120" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+        <div class="bc-chart bc-chart-wide">
+          <h4 class="bc-title">Daily Spending Timeline</h4>
+          <svg id="bc-timeline" viewBox="0 0 600 140" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+      </div>
       <div class="budget-table-wrap">
         <table class="budget-table">
           <thead><tr><th>City</th><th>Nights</th><th>$/day</th><th>Subtotal</th></tr></thead>
