@@ -7,6 +7,12 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0d1117" />
+  <meta property="og:title" content="South America 2026 🌎" />
+  <meta property="og:description" content="80 days backpacking Peru, Brazil & Argentina — Oct 2026" />
+  <meta property="og:url" content="https://stefanmazzadi.github.io/South-America-2026/" />
+  <meta property="og:type" content="website" />
 </head>
 <body>
 
@@ -33,11 +39,12 @@
       </nav>
 
       <div class="header-flags">🇵🇪 🇧🇷 🇦🇷</div>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
       <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
     </div>
 
     <!-- Mobile dropdown -->
-    <nav class="mobile-nav hidden" id="mobile-nav">
+    <nav class="mobile-nav" id="mobile-nav">
       <a href="#map-section" onclick="closeMobileNav()">The Route</a>
       <a href="#timeline-section" onclick="closeMobileNav()">Timeline</a>
       <a href="#destinos" onclick="closeMobileNav()">Destinations</a>
@@ -120,7 +127,7 @@
   <!-- ═══════════════════════════════════════════
        TIMELINE
   ═══════════════════════════════════════════ -->
-  <section id="timeline-section" class="section section-light">
+  <section id="timeline-section" class="section section-light anim-ready">
     <div class="section-header" style="cursor:pointer;user-select:none" id="timeline-toggle-header">
       <div>
         <h2 class="section-title">📅 Trip Timeline <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
@@ -141,7 +148,7 @@
   <!-- ═══════════════════════════════════════════
        DESTINOS / ITINERARY CARDS
   ═══════════════════════════════════════════ -->
-  <section id="destinos" class="section section-dark">
+  <section id="destinos" class="section section-dark anim-ready">
     <div class="section-header collapsible-header" id="destinos-toggle-header">
       <div>
         <h2 class="section-title">📍 Destinations <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
@@ -163,7 +170,7 @@
   <!-- ═══════════════════════════════════════════
        AMIGOS / FRIENDS PANEL
   ═══════════════════════════════════════════ -->
-  <section id="amigos" class="section section-light">
+  <section id="amigos" class="section section-light anim-ready">
     <div class="section-header collapsible-header" id="amigos-toggle-header">
       <div>
         <h2 class="section-title">👫 Travel Buddies <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
@@ -207,7 +214,7 @@
   <!-- ═══════════════════════════════════════════
        NOTAS / NOTES
   ═══════════════════════════════════════════ -->
-  <section id="notas" class="section section-dark">
+  <section id="notas" class="section section-dark anim-ready">
     <div class="section-header">
       <h2 class="section-title">📝 Trip Notes</h2>
       <p class="section-subtitle">Share ideas, reminders & excitement with the crew</p>
@@ -255,6 +262,9 @@
     </div>
   </section>
 
+  <!-- Back to top -->
+  <button id="back-to-top" class="back-to-top" aria-label="Back to top">↑</button>
+
   <!-- ═══════════════════════════════════════════
        EXPORT BANNER
   ═══════════════════════════════════════════ -->
@@ -278,6 +288,7 @@
 
   <!-- Leaflet + App scripts -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   <script src="tripdata.js"></script>
   <script src="app.js"></script>
 </body>

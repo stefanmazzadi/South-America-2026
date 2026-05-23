@@ -1,0 +1,16 @@
+{
+  "name": "South America 2026",
+  "short_name": "SA 2026",
+  "description": "80 days backpacking Peru, Brazil & Argentina",
+  "start_url": "/South-America-2026/",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#0d1117",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌎</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

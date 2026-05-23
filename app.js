@@ -1081,14 +1081,20 @@ function initNotes() {
 // MOBILE NAV
 // ─────────────────────────────────────────────────────────────
 function initMobileNav() {
-  document.getElementById('hamburger').addEventListener('click', () => {
-    const nav = document.getElementById('mobile-nav');
-    nav.classList.toggle('hidden');
+  const hamburger = document.getElementById('hamburger');
+  const nav       = document.getElementById('mobile-nav');
+
+  hamburger.addEventListener('click', () => {
+    const isOpen = nav.classList.toggle('open');
+    hamburger.textContent = isOpen ? '✕' : '☰';
   });
 }
 
 function closeMobileNav() {
-  document.getElementById('mobile-nav').classList.add('hidden');
+  const nav = document.getElementById('mobile-nav');
+  nav.classList.remove('open');
+  const hamburger = document.getElementById('hamburger');
+  if (hamburger) hamburger.textContent = '☰';
 }
 window.closeMobileNav = closeMobileNav;
 
@@ -1108,7 +1114,47 @@ function escapeHTML(str) {
 // ─────────────────────────────────────────────────────────────
 // HEADER SCROLL EFFECT
 // ─────────────────────────────────────────────────────────────
-function initScrollEffect() {
+function initThemeToggle() {
+  const btn = document.getElementById('theme-toggle');
+  if (!btn) return;
+  const isLight = localStorage.getItem('la_aventura_theme') === 'light';
+  if (isLight) { document.body.classList.add('light-mode'); btn.textContent = '☀️'; }
+
+  btn.addEventListener('click', () => {
+    const light = document.body.classList.toggle('light-mode');
+    btn.textContent = light ? '☀️' : '🌙';
+    localStorage.setItem('la_aventura_theme', light ? 'light' : 'dark');
+  });
+}
+
+function initScrollAnimations() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('anim-visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.anim-ready').forEach(el => observer.observe(el));
+}
+
+function initBackToTop() {
+  const btn = document.getElementById('back-to-top');
+  if (!btn) return;
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        btn.classList.toggle('visible', window.scrollY > 300);
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+}
   const header = document.getElementById('site-header');
   window.addEventListener('scroll', () => {
     if (window.scrollY > 60) {
@@ -1161,6 +1207,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initNotes();
   initMobileNav();
   initScrollEffect();
+  initThemeToggle();
+  initScrollAnimations();
+  initBackToTop();
   initTourMode();
 
   // Wire up the main-page export button
