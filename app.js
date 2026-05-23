@@ -363,6 +363,7 @@ function initMap() {
 
   // Fit map to route bounds with padding
   map.fitBounds(L.latLngBounds(routeCoords), { padding: [40, 40] });
+  window._mapInstance = map;  // expose for fly-to from flip cards
 
   // Bug fix: ensure we never end up at world-zoom (sometimes fitBounds races tile load)
   setTimeout(() => {
@@ -966,40 +967,70 @@ function renderCards(leg) {
     const activities = stop.activities.map(a => `<li>${a}</li>`).join('');
 
     const card = document.createElement('div');
-    card.className = `dest-card card-${stop.leg}`;
+    card.className = `dest-card card-${stop.leg} flip-card`;
     card.innerHTML = `
-      <div class="card-header">
-        <span class="card-emoji">${stop.emoji}</span>
-        <div class="card-meta">
-          <div class="card-city">${stop.city}</div>
-          <div class="card-country">${legInfo.flag} ${legInfo.name}</div>
+      <div class="flip-inner">
+        <div class="flip-front">
+          <div class="card-header">
+            <span class="card-emoji">${stop.emoji}</span>
+            <div class="card-meta">
+              <div class="card-city">${stop.city}</div>
+              <div class="card-country">${legInfo.flag} ${legInfo.name}</div>
+            </div>
+            <span class="card-dates-badge">${formatDateShort(parseDate(stop.startDate))} – ${formatDateShort(parseDate(stop.endDate))}</span>
+          </div>
+          <div class="card-body">
+            <div>
+              <div class="card-section-label">Top Activities</div>
+              <ul class="card-activities">${activities}</ul>
+            </div>
+            <div>
+              <div class="card-section-label">Food Recommendation</div>
+              <div class="card-food">${stop.food}</div>
+            </div>
+            <div class="card-info-row">
+              <div class="card-chip">💵 <span>~$${stop.budgetPerDay}/day</span></div>
+              <div class="card-chip">🌙 <span>${stop.nights} nights</span></div>
+            </div>
+            <div class="flip-hint">Click for more →</div>
+          </div>
         </div>
-        <span class="card-dates-badge">${formatDateShort(parseDate(stop.startDate))} – ${formatDateShort(parseDate(stop.endDate))}</span>
-      </div>
-      <div class="card-body">
-        <div>
-          <div class="card-section-label">Top Activities</div>
-          <ul class="card-activities">${activities}</ul>
-        </div>
-        <div>
-          <div class="card-section-label">Food Recommendation</div>
-          <div class="card-food">${stop.food}</div>
-        </div>
-        <div class="card-info-row">
-          <div class="card-chip">💵 <span>~$${stop.budgetPerDay}/day</span></div>
-          <div class="card-chip">🌙 <span>${stop.nights} nights</span></div>
-        </div>
-        <div>
-          <div class="card-section-label">Accommodation</div>
-          <div class="card-chip">🏨 <span>${stop.accommodation}</span></div>
-        </div>
-        <div>
-          <div class="card-section-label">Onward Transport</div>
-          <div class="card-transport">${stop.transport}</div>
+        <div class="flip-back" style="border-top:4px solid ${legInfo.color};">
+          <div class="flip-back-head">
+            <span style="font-size:1.6rem">${stop.emoji}</span>
+            <div>
+              <div class="flip-back-city">${stop.city}</div>
+              <div class="flip-back-sub">${legInfo.flag} ${stop.nights} nights · ~$${stop.budgetPerDay}/day</div>
+            </div>
+          </div>
+          <div class="flip-back-row"><strong>🏨 Stay</strong><span>${stop.accommodation}</span></div>
+          <div class="flip-back-row"><strong>🚌 Onward</strong><span>${stop.transport}</span></div>
+          <div class="flip-back-row"><strong>📍 Coords</strong><span>${stop.coords[0].toFixed(2)}, ${stop.coords[1].toFixed(2)}</span></div>
+          <button class="flip-fly-btn" data-coords="${stop.coords[0]},${stop.coords[1]}" data-city="${stop.city}">🗺️ Fly to on map</button>
+          <div class="flip-hint">← Click to flip back</div>
         </div>
       </div>
     `;
+    // Toggle flip on click (ignore button clicks)
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.flip-fly-btn')) return;
+      card.classList.toggle('flipped');
+    });
     container.appendChild(card);
+  });
+
+  // Wire fly-to buttons
+  container.querySelectorAll('.flip-fly-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const [lat, lng] = btn.dataset.coords.split(',').map(parseFloat);
+      const mapSection = document.getElementById('map-section');
+      mapSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => {
+        if (window._mapInstance) window._mapInstance.flyTo([lat, lng], 8, { duration: 1.5 });
+      }, 600);
+      showToast?.(`✈️ Flying to ${btn.dataset.city}`, 'info', 1500);
+    });
   });
 }
 

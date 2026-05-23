@@ -578,6 +578,26 @@ body.light-mode #ambient-bg { background: radial-gradient(ellipse at top left, v
 /* Parallax on map overlay title */
 .map-overlay-title { will-change: transform; transition: transform 0.1s linear; }
 
+/* ── 3D Flip Destination Cards ─────────────────────────── */
+.flip-card { perspective: 1500px; min-height: 480px; cursor: pointer; background: transparent !important; border: none !important; padding: 0 !important; box-shadow: none !important; }
+.flip-inner { position: relative; width: 100%; min-height: 480px; transform-style: preserve-3d; transition: transform 0.7s cubic-bezier(0.4, 0.0, 0.2, 1); }
+.flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+.flip-front, .flip-back { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: var(--radius); padding: 1.25rem; background: var(--dark-2); border: 1px solid rgba(255,255,255,0.06); box-shadow: var(--shadow); overflow: auto; }
+body.light-mode .flip-front, body.light-mode .flip-back { background: #fff; border-color: var(--light-2); color: var(--text-dark); }
+.flip-back { transform: rotateY(180deg); display: flex; flex-direction: column; gap: 0.6rem; }
+.flip-back-head { display: flex; align-items: center; gap: 0.75rem; padding-bottom: 0.6rem; border-bottom: 1px dashed rgba(255,255,255,0.1); }
+body.light-mode .flip-back-head { border-color: rgba(0,0,0,0.1); }
+.flip-back-city { font-family: var(--font-head); font-size: 1.4rem; font-weight: 700; color: var(--accent); }
+.flip-back-sub { font-size: 0.78rem; color: var(--text-muted); }
+.flip-back-row { display: flex; justify-content: space-between; gap: 0.5rem; padding: 0.4rem 0; font-size: 0.88rem; border-bottom: 1px solid rgba(255,255,255,0.04); }
+body.light-mode .flip-back-row { border-color: rgba(0,0,0,0.05); }
+.flip-back-row strong { color: var(--accent); min-width: 80px; }
+.flip-back-row span { text-align: right; color: var(--light); }
+body.light-mode .flip-back-row span { color: var(--text-dark); }
+.flip-fly-btn { margin-top: auto; background: var(--accent); color: #fff; border: none; padding: 0.65rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; transition: transform 0.15s; }
+.flip-fly-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(245,158,11,0.4); }
+.flip-hint { text-align: center; font-size: 0.72rem; color: var(--text-muted); opacity: 0.7; margin-top: 0.5rem; font-style: italic; }
+
 /* ── 3D Globe overlay ──────────────────────────────────── */
 #globe-container {
   position: absolute; inset: 0; z-index: 600;
