@@ -183,17 +183,44 @@ function initMap() {
   const brazilStops = TRIP.stops.filter(s => s.leg === 'brazil');
   const argStops   = TRIP.stops.filter(s => s.leg === 'argentina');
 
-  // Draw colored segments per leg
-  [[peruStops, '#E8834A'], [brazilStops, '#22a447'], [argStops, '#5b9bd5']].forEach(([stops, color]) => {
+  // Draw colored segments per leg — keep refs for self-drawing animation
+  const legPolylines = [];
+  [['peru', peruStops, '#E8834A', 1200], ['brazil', brazilStops, '#22a447', 3000], ['argentina', argStops, '#5b9bd5', 5000]].forEach(([legKey, stops, color, delay]) => {
     if (stops.length > 1) {
-      L.polyline(stops.map(s => s.coords), {
+      const pl = L.polyline(stops.map(s => s.coords), {
         color,
         weight:   3,
         opacity:  0.7,
         lineJoin: 'round',
       }).addTo(map);
+      legPolylines.push({ pl, color, delay, leg: legKey });
     }
   });
+
+  // ── Self-drawing route animation ────────────────────────────
+  // After tiles render, animate the SVG stroke-dashoffset of each polyline path
+  function animatePathDraw(polyline, durationMs, delay) {
+    setTimeout(() => {
+      try {
+        const path = polyline._path;
+        if (!path || !path.getTotalLength) return;
+        const len = path.getTotalLength();
+        path.style.strokeDasharray  = len;
+        path.style.strokeDashoffset = len;
+        path.style.transition       = `stroke-dashoffset ${durationMs}ms ease-in-out`;
+        // Force reflow then animate
+        void path.getBoundingClientRect();
+        requestAnimationFrame(() => { path.style.strokeDashoffset = '0'; });
+        // Clear inline transition once finished so map redraws work normally
+        setTimeout(() => { path.style.transition = ''; }, durationMs + delay + 50);
+      } catch (e) { /* fallback: leave drawn */ }
+    }, delay);
+  }
+
+  setTimeout(() => {
+    animatePathDraw(routeLine, 1500, 0);                  // dashed line first (relative offset)
+    legPolylines.forEach(({ pl, delay }) => animatePathDraw(pl, 2200, delay));
+  }, 800);
 
   // Add markers for each stop
   TRIP.stops.forEach((stop, idx) => {
