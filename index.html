@@ -73,6 +73,14 @@
       <button class="map-style-btn active" data-style="dark" title="Dark map">🌑</button>
       <button class="map-style-btn" data-style="light" title="Light map">☀️</button>
       <button class="map-style-btn" data-style="satellite" title="Satellite">🛰️</button>
+      <button class="map-style-btn" id="globe-toggle-btn" title="3D globe view">🌐</button>
+    </div>
+
+    <!-- 3D Globe overlay (hidden until toggled) -->
+    <div id="globe-container" class="hidden">
+      <div id="globe-canvas"></div>
+      <button id="globe-close-btn" title="Back to map">✕ Close 3D</button>
+      <div id="globe-hint">Drag to rotate · Scroll to zoom</div>
     </div>
 
     <div class="map-legend" id="map-legend">
@@ -454,6 +462,8 @@
   <!-- Leaflet + App scripts -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script src="https://unpkg.com/globe.gl@2.27.2/dist/globe.gl.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
   <script src="tripdata.js"></script>
   <script src="app.js"></script>
 </body>

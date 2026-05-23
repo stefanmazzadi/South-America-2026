@@ -1802,6 +1802,117 @@ function initCollapsible(headerId, bodyId) {
 }
 
 // ─────────────────────────────────────────────────────────────
+// 3D GLOBE VIEW (globe.gl)
+// ─────────────────────────────────────────────────────────────
+let _globeInstance = null;
+let _globeClickCount = 0;  // for easter-egg confetti
+function initGlobe() {
+  const btn       = document.getElementById('globe-toggle-btn');
+  const closeBtn  = document.getElementById('globe-close-btn');
+  const container = document.getElementById('globe-container');
+  const canvas    = document.getElementById('globe-canvas');
+  if (!btn || !container || !canvas) return;
+
+  function buildGlobe() {
+    if (_globeInstance) return _globeInstance;
+    if (typeof Globe === 'undefined') {
+      showToast?.('Globe library not loaded yet — try again', 'warn');
+      return null;
+    }
+
+    // Arc data: each consecutive stop pair
+    const arcs = [];
+    for (let i = 0; i < TRIP.stops.length - 1; i++) {
+      const a = TRIP.stops[i], b = TRIP.stops[i + 1];
+      arcs.push({
+        startLat: a.coords[0], startLng: a.coords[1],
+        endLat:   b.coords[0], endLng:   b.coords[1],
+        color: [getLegColor(a.leg), getLegColor(b.leg)],
+      });
+    }
+
+    // City points
+    const points = TRIP.stops.map(s => ({
+      lat: s.coords[0], lng: s.coords[1],
+      label: `${s.emoji || '📍'} ${s.city}`,
+      color: getLegColor(s.leg),
+      size:  0.45,
+    }));
+
+    _globeInstance = Globe()(canvas)
+      .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-night.jpg')
+      .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
+      .backgroundColor('rgba(0,0,0,0)')
+      .arcsData(arcs)
+      .arcColor('color')
+      .arcDashLength(0.4)
+      .arcDashGap(0.15)
+      .arcDashAnimateTime(2500)
+      .arcStroke(0.5)
+      .arcAltitudeAutoScale(0.35)
+      .pointsData(points)
+      .pointAltitude(0.012)
+      .pointColor('color')
+      .pointRadius('size')
+      .pointLabel('label')
+      .atmosphereColor('#5b9bd5')
+      .atmosphereAltitude(0.18);
+
+    // Auto-rotate + initial view: center on South America
+    _globeInstance.pointOfView({ lat: -20, lng: -60, altitude: 1.8 }, 0);
+    const controls = _globeInstance.controls();
+    if (controls) {
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = 0.5;
+    }
+
+    // Easter-egg: 5 clicks on the globe → confetti
+    canvas.addEventListener('click', () => {
+      _globeClickCount++;
+      if (_globeClickCount === 5 && typeof confetti === 'function') {
+        confetti({ particleCount: 200, spread: 90, origin: { y: 0.5 } });
+        showToast?.('🎉 You found the secret! Adventure mode unlocked.', 'success', 3500);
+        _globeClickCount = 0;
+      }
+    });
+
+    return _globeInstance;
+  }
+
+  function openGlobe() {
+    container.classList.remove('hidden');
+    setTimeout(() => {
+      const g = buildGlobe();
+      if (g) {
+        // Re-size to current container
+        const rect = canvas.getBoundingClientRect();
+        g.width(rect.width).height(rect.height);
+      }
+    }, 50);
+    // De-activate other map-style buttons visually
+    document.querySelectorAll('.map-style-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function closeGlobe() {
+    container.classList.add('hidden');
+    document.querySelector('.map-style-btn[data-style="dark"]')?.classList.add('active');
+    btn.classList.remove('active');
+  }
+
+  btn.addEventListener('click', openGlobe);
+  closeBtn?.addEventListener('click', closeGlobe);
+
+  // Resize when window resizes
+  window.addEventListener('resize', () => {
+    if (_globeInstance && !container.classList.contains('hidden')) {
+      const rect = canvas.getBoundingClientRect();
+      _globeInstance.width(rect.width).height(rect.height);
+    }
+  });
+}
+
+// ─────────────────────────────────────────────────────────────
 // MAIN INIT
 // ─────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -1829,6 +1940,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMemories();
   initShareCard();
   initTourMode();
+  initGlobe();
 
   // Wire up the main-page export button
   document.getElementById('export-all-btn')?.addEventListener('click', exportAllData);
