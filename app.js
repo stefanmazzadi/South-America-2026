@@ -2056,6 +2056,89 @@ function initGlobe() {
 }
 
 // ─────────────────────────────────────────────────────────────
+// LIVE CURRENCY CONVERTER (open.er-api.com, no auth)
+// ─────────────────────────────────────────────────────────────
+const FALLBACK_RATES = { USD: 1, EUR: 0.92, PEN: 3.75, BRL: 5.70, ARS: 1020, GBP: 0.79 };
+
+async function fetchRates() {
+  const KEY = 'la_aventura_rates';
+  try {
+    const cached = sessionStorage.getItem(KEY);
+    if (cached) {
+      const { ts, rates } = JSON.parse(cached);
+      if (Date.now() - ts < 60 * 60 * 1000) return { rates, live: true, cachedAt: ts };
+    }
+  } catch {}
+  try {
+    const res = await fetch('https://open.er-api.com/v6/latest/USD');
+    if (!res.ok) throw new Error(res.status);
+    const data = await res.json();
+    if (data?.rates) {
+      sessionStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), rates: data.rates }));
+      return { rates: data.rates, live: true, cachedAt: Date.now() };
+    }
+    throw new Error('No rates');
+  } catch (e) {
+    return { rates: FALLBACK_RATES, live: false, cachedAt: null };
+  }
+}
+
+function initCurrencyConverter() {
+  const amount = document.getElementById('cc-amount');
+  const from   = document.getElementById('cc-from');
+  const out    = document.getElementById('cc-results');
+  const credit = document.getElementById('cc-credit');
+  if (!amount || !from || !out) return;
+
+  let cache = null;
+
+  function render() {
+    if (!cache) return;
+    const { rates, live, cachedAt } = cache;
+    const amt = parseFloat(amount.value) || 0;
+    // Convert: first to USD, then to each target
+    const usd = amt / (rates[from.value] || 1);
+    const fmt = (n, dp = 2) => n.toLocaleString('en-US', { minimumFractionDigits: dp, maximumFractionDigits: dp });
+    out.innerHTML = `
+      <div class="cc-pill">🇵🇪 ${fmt(usd * (rates.PEN || FALLBACK_RATES.PEN))} PEN</div>
+      <div class="cc-pill">🇧🇷 ${fmt(usd * (rates.BRL || FALLBACK_RATES.BRL))} BRL</div>
+      <div class="cc-pill">🇦🇷 ${fmt(usd * (rates.ARS || FALLBACK_RATES.ARS), 0)} ARS</div>
+    `;
+    credit.textContent = live
+      ? `Live · ${new Date(cachedAt).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' })} · open.er-api.com`
+      : `⚠ Offline — using fallback rates`;
+  }
+
+  fetchRates().then(r => { cache = r; render(); });
+  amount.addEventListener('input', render);
+  from.addEventListener('change', render);
+}
+
+// ─────────────────────────────────────────────────────────────
+// WORLD CLOCKS (Lima · São Paulo · Buenos Aires)
+// ─────────────────────────────────────────────────────────────
+function initWorldClocks() {
+  const cards = document.querySelectorAll('.wc-card');
+  if (!cards.length) return;
+
+  function tick() {
+    cards.forEach(card => {
+      const tz = card.dataset.tz;
+      if (!tz) return;
+      try {
+        const now = new Date();
+        const time = now.toLocaleTimeString('en-GB', { timeZone: tz, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const date = now.toLocaleDateString('en-US', { timeZone: tz, weekday: 'short', month: 'short', day: 'numeric' });
+        card.querySelector('.wc-time').textContent = time;
+        card.querySelector('.wc-date').textContent = date;
+      } catch {}
+    });
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+// ─────────────────────────────────────────────────────────────
 // MAIN INIT
 // ─────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -2084,6 +2167,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initShareCard();
   initTourMode();
   initGlobe();
+  initCurrencyConverter();
+  initWorldClocks();
 
   // Wire up the main-page export button
   document.getElementById('export-all-btn')?.addEventListener('click', exportAllData);

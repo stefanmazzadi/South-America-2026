@@ -463,6 +463,32 @@ body.light-mode .site-footer { background: var(--dark-2); color: #64748b; }
 .section-light .tlw-day { background: rgba(0,0,0,0.04); }
 .section-light .tlw-day-hl { color: var(--text-dark); }
 
+/* ── Live tools strip (currency + clocks) ──────────────── */
+.live-tools-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+@media (max-width: 700px) { .live-tools-strip { grid-template-columns: 1fr; } }
+.live-tool { background: #fff; border-radius: var(--radius); padding: 1rem 1.1rem; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.06); }
+.live-tool h4 { margin: 0 0 0.6rem; font-family: var(--font-head); font-size: 1.05rem; color: var(--text-dark); }
+body.dark-mode .live-tool { background: var(--dark-2); border-color: rgba(255,255,255,0.06); }
+body.dark-mode .live-tool h4 { color: var(--light); }
+
+.cc-row { display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.6rem; }
+.cc-row input, .cc-row select { padding: 0.45rem 0.55rem; border: 1px solid var(--light-2); border-radius: 6px; font-size: 0.9rem; }
+.cc-row input { flex: 1; min-width: 0; }
+.cc-arrow { color: var(--accent); font-weight: 700; }
+.cc-results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
+.cc-pill { background: var(--light); border-radius: 8px; padding: 0.45rem 0.4rem; font-size: 0.82rem; text-align: center; font-weight: 600; color: var(--text-dark); border: 1px solid var(--light-2); }
+body.dark-mode .cc-pill { background: var(--dark-3); color: var(--light); border-color: rgba(255,255,255,0.06); }
+.cc-credit { font-size: 0.65rem; color: var(--text-muted); margin-top: 0.5rem; text-align: right; opacity: 0.8; }
+
+.wc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+.wc-card { background: var(--light); border-radius: 10px; padding: 0.6rem 0.4rem; text-align: center; border: 1px solid var(--light-2); transition: transform 0.2s; }
+.wc-card:hover { transform: translateY(-2px); }
+body.dark-mode .wc-card { background: var(--dark-3); border-color: rgba(255,255,255,0.06); }
+.wc-flag { font-size: 1.1rem; }
+.wc-city { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; }
+.wc-time { font-family: var(--font-head); font-size: 1.15rem; font-weight: 700; color: var(--accent); letter-spacing: 0.02em; }
+.wc-date { font-size: 0.62rem; color: var(--text-muted); }
+
 /* ── 3D Globe overlay ──────────────────────────────────── */
 #globe-container {
   position: absolute; inset: 0; z-index: 600;

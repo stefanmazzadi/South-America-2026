@@ -194,6 +194,54 @@
       </div>
     </div>
     <div id="budget-body" class="collapsed">
+      <!-- ── Live tools strip: currency + world clocks ── -->
+      <div class="live-tools-strip">
+        <div class="live-tool currency-converter">
+          <h4>💱 Live Currency</h4>
+          <div class="cc-row">
+            <input type="number" id="cc-amount" value="100" min="0" step="1" />
+            <select id="cc-from">
+              <option value="USD" selected>USD 🇺🇸</option>
+              <option value="EUR">EUR 🇪🇺</option>
+              <option value="PEN">PEN 🇵🇪</option>
+              <option value="BRL">BRL 🇧🇷</option>
+              <option value="ARS">ARS 🇦🇷</option>
+            </select>
+            <span class="cc-arrow">→</span>
+          </div>
+          <div class="cc-results" id="cc-results">
+            <div class="cc-pill">🇵🇪 — PEN</div>
+            <div class="cc-pill">🇧🇷 — BRL</div>
+            <div class="cc-pill">🇦🇷 — ARS</div>
+          </div>
+          <div class="cc-credit" id="cc-credit">Loading rates…</div>
+        </div>
+
+        <div class="live-tool world-clocks">
+          <h4>🕒 World Clocks</h4>
+          <div class="wc-grid">
+            <div class="wc-card" data-tz="America/Lima">
+              <div class="wc-flag">🇵🇪</div>
+              <div class="wc-city">Lima</div>
+              <div class="wc-time">--:--</div>
+              <div class="wc-date">--</div>
+            </div>
+            <div class="wc-card" data-tz="America/Sao_Paulo">
+              <div class="wc-flag">🇧🇷</div>
+              <div class="wc-city">São Paulo</div>
+              <div class="wc-time">--:--</div>
+              <div class="wc-date">--</div>
+            </div>
+            <div class="wc-card" data-tz="America/Argentina/Buenos_Aires">
+              <div class="wc-flag">🇦🇷</div>
+              <div class="wc-city">Buenos Aires</div>
+              <div class="wc-time">--:--</div>
+              <div class="wc-date">--</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="budget-overview">
         <div class="budget-total-card">
           <div class="budget-total-label">Total Estimated</div>
