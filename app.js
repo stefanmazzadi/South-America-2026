@@ -1132,6 +1132,20 @@ function initTimelineToggle() {
   });
 }
 
+function initCollapsible(headerId, bodyId) {
+  const header = document.getElementById(headerId);
+  const body   = document.getElementById(bodyId);
+  if (!header || !body) return;
+  const icon = header.querySelector('.tl-toggle-icon');
+  let collapsed = false;
+
+  header.addEventListener('click', () => {
+    collapsed = !collapsed;
+    body.classList.toggle('collapsed', collapsed);
+    if (icon) icon.style.transform = collapsed ? 'rotate(180deg)' : '';
+  });
+}
+
 // ─────────────────────────────────────────────────────────────
 // MAIN INIT
 // ─────────────────────────────────────────────────────────────
@@ -1140,6 +1154,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initMap();
   buildTimeline();
   initTimelineToggle();
+  initCollapsible('destinos-toggle-header', 'destinos-body');
+  initCollapsible('amigos-toggle-header', 'amigos-body');
   initTabs();
   initFriends();
   initNotes();
