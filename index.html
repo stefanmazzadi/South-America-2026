@@ -568,11 +568,14 @@
        NOTAS / NOTES
   ═══════════════════════════════════════════ -->
   <section id="notas" class="section section-dark anim-ready">
-    <div class="section-header">
-      <h2 class="section-title">📝 Trip Notes</h2>
-      <p class="section-subtitle">Share ideas, reminders & excitement with the crew</p>
+    <div class="section-header collapsible-header" id="notes-toggle-header">
+      <div>
+        <h2 class="section-title">📝 Trip Notes <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
+        <p class="section-subtitle">Share ideas, reminders &amp; excitement with the crew</p>
+      </div>
     </div>
 
+    <div id="notes-body" class="collapsed">
     <div class="notes-layout">
       <!-- Add note form -->
       <div class="note-form-card">
@@ -613,6 +616,7 @@
         </div>
       </div>
     </div>
+    </div><!-- /notes-body -->
   </section>
 
   <!-- Back to top -->

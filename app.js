@@ -3141,6 +3141,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initPacking();
   initCollapsible('memories-toggle-header', 'memories-body');
   initMemories();
+  initCollapsible('notes-toggle-header', 'notes-body');
   initShareCard();
   initTourMode();
   initGlobe();

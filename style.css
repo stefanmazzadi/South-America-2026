@@ -992,29 +992,33 @@ body.dark-mode .mb-track { background: rgba(255,255,255,0.05); }
 
 .collapsible-header:hover .section-title { color: var(--accent); }
 
+/* Universal section-body collapse — covers every *-body section */
+#timeline-body,
+#stats-body,
+#journal-body,
 #destinos-body,
-#amigos-body {
+#budget-body,
+#culture-body,
+#amigos-body,
+#packing-body,
+#memories-body,
+#notes-body {
   overflow: hidden;
-  max-height: 4000px;
-  transition: max-height 0.4s ease, opacity 0.3s ease;
+  max-height: 6000px;
+  transition: max-height 0.45s ease, opacity 0.3s ease;
   opacity: 1;
 }
 
+#timeline-body.collapsed,
+#stats-body.collapsed,
+#journal-body.collapsed,
 #destinos-body.collapsed,
-#amigos-body.collapsed {
-  max-height: 0;
-  opacity: 0;
-}
-
-/* Timeline collapse */
-#timeline-body {
-  overflow: hidden;
-  max-height: 2000px;
-  transition: max-height 0.4s ease, opacity 0.3s ease;
-  opacity: 1;
-}
-
-#timeline-body.collapsed {
+#budget-body.collapsed,
+#culture-body.collapsed,
+#amigos-body.collapsed,
+#packing-body.collapsed,
+#memories-body.collapsed,
+#notes-body.collapsed {
   max-height: 0;
   opacity: 0;
 }
