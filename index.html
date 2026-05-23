@@ -547,6 +547,10 @@
         </div>
         <p class="mem-hint">Tip: paste an Imgur, Google Photos, or direct image URL. For local photos, use a free host like <strong>imgbb.com</strong>.</p>
       </div>
+      <div class="memories-view-toggle">
+        <button class="mv-btn active" data-mode="grid">▦ Grid</button>
+        <button class="mv-btn" data-mode="slideshow">▶ Slideshow</button>
+      </div>
       <div id="memory-grid" class="memory-grid"></div>
       <!-- Lightbox -->
       <div id="mem-lightbox" class="mem-lightbox hidden">
@@ -665,8 +669,18 @@
     <p class="footer-sub">Built with ❤️ by the planner</p>
   </footer>
 
-  <!-- Story Mode overlay -->
-  <div id="story-mode" class="hidden">
+  <!-- Memory Slideshow overlay -->
+  <div id="mem-slideshow" class="hidden">
+    <button id="mss-close" class="mss-btn">✕</button>
+    <button id="mss-prev" class="mss-nav mss-nav-prev">‹</button>
+    <button id="mss-next" class="mss-nav mss-nav-next">›</button>
+    <button id="mss-auto" class="mss-btn mss-auto">▶ Auto</button>
+    <img id="mss-image" src="" alt="" />
+    <div id="mss-caption"></div>
+    <div id="mss-counter"></div>
+  </div>
+
+  <!-- Story Mode overlay -->  <div id="story-mode" class="hidden">
     <button id="story-close" class="story-btn">✕</button>
     <button id="story-prev" class="story-nav story-nav-prev">‹</button>
     <button id="story-next" class="story-nav story-nav-next">›</button>

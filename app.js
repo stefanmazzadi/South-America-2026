@@ -3048,6 +3048,74 @@ function initStoryMode() {
 }
 
 // ─────────────────────────────────────────────────────────────
+// MEMORY SLIDESHOW
+// ─────────────────────────────────────────────────────────────
+function initMemoriesSlideshow() {
+  const modal   = document.getElementById('mem-slideshow');
+  const imgEl   = document.getElementById('mss-image');
+  const capEl   = document.getElementById('mss-caption');
+  const countEl = document.getElementById('mss-counter');
+  if (!modal || !imgEl) return;
+  let idx = 0;
+  let timer = null;
+  let items = [];
+
+  function show(i) {
+    if (!items.length) return;
+    idx = (i + items.length) % items.length;
+    imgEl.style.animation = 'none';
+    void imgEl.offsetWidth;
+    imgEl.style.animation = '';
+    imgEl.src = items[idx].url;
+    capEl.textContent = items[idx].caption || '';
+    countEl.textContent = `${idx+1} / ${items.length}`;
+  }
+  function open() {
+    items = (typeof loadMemories === 'function' ? loadMemories() : []);
+    if (!items.length) { showToast?.('No memories yet — add some first', 'warning'); return; }
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    show(0);
+  }
+  function close() {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+    stopAuto();
+  }
+  function startAuto() {
+    stopAuto();
+    timer = setInterval(() => show(idx + 1), 4000);
+    document.getElementById('mss-auto').textContent = '⏸ Pause';
+  }
+  function stopAuto() {
+    if (timer) clearInterval(timer);
+    timer = null;
+    const a = document.getElementById('mss-auto');
+    if (a) a.textContent = '▶ Auto';
+  }
+
+  document.querySelectorAll('.mv-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.mv-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      if (b.dataset.mode === 'slideshow') open();
+    });
+  });
+  document.getElementById('mss-close').addEventListener('click', close);
+  document.getElementById('mss-prev').addEventListener('click', () => { stopAuto(); show(idx - 1); });
+  document.getElementById('mss-next').addEventListener('click', () => { stopAuto(); show(idx + 1); });
+  document.getElementById('mss-auto').addEventListener('click', () => {
+    timer ? stopAuto() : startAuto();
+  });
+  document.addEventListener('keydown', e => {
+    if (modal.classList.contains('hidden')) return;
+    if (e.key === 'ArrowRight') { stopAuto(); show(idx + 1); }
+    if (e.key === 'ArrowLeft')  { stopAuto(); show(idx - 1); }
+    if (e.key === 'Escape')     close();
+  });
+}
+
+// ─────────────────────────────────────────────────────────────
 // MAIN INIT
 // ─────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -3087,6 +3155,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initJournal();
   initInsights();
   initStoryMode();
+  initMemoriesSlideshow();
   // Wire up the main-page export button
   document.getElementById('export-all-btn')?.addEventListener('click', exportAllData);
 
