@@ -283,6 +283,70 @@
   </section>
 
   <!-- ═══════════════════════════════════════════
+       CULTURE HUB — phrases, food, music, SOS, climate
+  ═══════════════════════════════════════════ -->
+  <section id="culture" class="section section-light anim-ready">
+    <div class="section-header collapsible-header" id="culture-toggle-header">
+      <div>
+        <h2 class="section-title">🎭 Culture Hub <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
+        <p class="section-subtitle">Phrases · Food · Music · Emergency · Climate — all in one place</p>
+      </div>
+    </div>
+    <div id="culture-body" class="collapsed">
+      <div class="culture-country-tabs">
+        <button class="culture-tab active" data-country="peru">🇵🇪 Peru</button>
+        <button class="culture-tab" data-country="brazil">🇧🇷 Brazil</button>
+        <button class="culture-tab" data-country="argentina">🇦🇷 Argentina</button>
+      </div>
+
+      <!-- Panel A · Phrasebook flashcards -->
+      <div class="culture-panel">
+        <div class="cp-head">
+          <h3>📖 Essential Phrases</h3>
+          <button class="btn-ghost" id="phrases-shuffle">🔀 Shuffle</button>
+        </div>
+        <div class="phrase-grid" id="phrase-grid"></div>
+      </div>
+
+      <!-- Panel B · Food tracker -->
+      <div class="culture-panel">
+        <div class="cp-head">
+          <h3>🍽️ Foods to Try</h3>
+          <span class="cp-sub" id="food-progress">0 / 0 tasted</span>
+        </div>
+        <div class="food-grid" id="food-grid"></div>
+      </div>
+
+      <!-- Panel C · Music -->
+      <div class="culture-panel">
+        <div class="cp-head"><h3>🎵 Sounds of the Region</h3></div>
+        <div class="music-grid" id="music-grid"></div>
+      </div>
+
+      <!-- Panel D · Emergency -->
+      <div class="culture-panel">
+        <div class="cp-head"><h3>🚨 Emergency Info</h3></div>
+        <div class="emergency-grid" id="emergency-grid"></div>
+        <div class="emergency-personal">
+          <h4>Your Personal Info (stored locally)</h4>
+          <div class="ep-form">
+            <input id="ep-blood" placeholder="Blood type (e.g. O+)" />
+            <input id="ep-allergies" placeholder="Allergies / meds" />
+            <input id="ep-insurance" placeholder="Travel insurance #" />
+            <input id="ep-contact" placeholder="Emergency contact" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel E · Climate strip -->
+      <div class="culture-panel">
+        <div class="cp-head"><h3>🌡️ Seasonal Climate (Oct–Jan)</h3></div>
+        <div class="climate-grid" id="climate-grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
        AMIGOS / FRIENDS PANEL
   ═══════════════════════════════════════════ -->
   <section id="amigos" class="section section-light anim-ready">

@@ -2139,6 +2139,309 @@ function initWorldClocks() {
 }
 
 // ─────────────────────────────────────────────────────────────
+// CULTURE HUB (phrases · food · music · emergency · climate)
+// ─────────────────────────────────────────────────────────────
+const CULTURE_DATA = {
+  peru: {
+    phrases: [
+      { en: 'Hello',           es: 'Hola',                  pr: 'OH-lah' },
+      { en: 'Thank you',       es: 'Gracias',               pr: 'GRAH-syas' },
+      { en: 'Please',          es: 'Por favor',             pr: 'por fah-VOR' },
+      { en: 'How much?',       es: '¿Cuánto cuesta?',       pr: 'KWAN-toh KWES-tah' },
+      { en: 'Where is...?',    es: '¿Dónde está...?',       pr: 'DON-deh es-TAH' },
+      { en: 'The bill, please',es: 'La cuenta, por favor',  pr: 'lah KWEN-tah' },
+      { en: 'Help!',           es: '¡Ayuda!',               pr: 'ah-YOO-dah' },
+      { en: 'Delicious',       es: 'Delicioso',             pr: 'deh-lee-SYOH-soh' },
+      { en: 'Cheers!',         es: '¡Salud!',               pr: 'sah-LOOD' },
+      { en: 'I don\'t speak Spanish', es: 'No hablo español',pr: 'noh AH-bloh es-pahn-YOL' },
+      { en: 'Yes / No',        es: 'Sí / No',               pr: 'see / noh' },
+      { en: 'Good morning',    es: 'Buenos días',           pr: 'BWAY-nos DEE-as' },
+    ],
+    foods: [
+      { e:'🐟', n:'Ceviche', d:'Citrus-cured fresh fish — national dish' },
+      { e:'🥩', n:'Lomo Saltado', d:'Stir-fry beef with onion + chips' },
+      { e:'🐟', n:'Tiradito', d:'Sashimi-style Peruvian raw fish' },
+      { e:'🌽', n:'Choclo con Queso', d:'Giant Andean corn with cheese' },
+      { e:'🍗', n:'Pollo a la Brasa', d:'Charcoal rotisserie chicken' },
+      { e:'🍠', n:'Causa', d:'Yellow potato terrine with avocado' },
+      { e:'🥟', n:'Empanadas', d:'Beef or cheese hand pies' },
+      { e:'🍹', n:'Pisco Sour', d:'Cocktail of pisco, lime, egg white' },
+      { e:'🍫', n:'Chocolate from Cusco', d:'Bean-to-bar from Quillabamba' },
+      { e:'🌶️', n:'Ají de Gallina', d:'Creamy yellow chili chicken stew' },
+    ],
+    music: [
+      { genre:'Andean Folk', title:'Susana Baca — Afro-Peruvian queen', q:'Susana Baca María Landó', yt:'OTakQy_smVk' },
+      { genre:'Cumbia',      title:'Los Mirlos — psychedelic Amazon', q:'Los Mirlos La Danza de los Mirlos', yt:'OdRYxg-LhT0' },
+      { genre:'Modern',      title:'Bareto — fusion icons',           q:'Bareto Ya Se Ha Muerto Mi Abuelo', yt:'EBoSWeKj5GU' },
+      { genre:'Folk',        title:'Yma Sumac — 5-octave legend',     q:'Yma Sumac Gopher Mambo', yt:'BAdb0wF7Pdc' },
+    ],
+    emergency: [
+      { label:'Police', num:'105' },
+      { label:'Ambulance', num:'117' },
+      { label:'Fire', num:'116' },
+      { label:'Tourist Police', num:'(01) 460-1060' },
+      { label:'🇨🇦 Embassy Lima', num:'(01) 319-3200' },
+      { label:'🇺🇸 Embassy Lima', num:'(01) 618-2000' },
+    ],
+  },
+  brazil: {
+    phrases: [
+      { en: 'Hello',           es: 'Olá',                pr: 'oh-LAH' },
+      { en: 'Thank you',       es: 'Obrigado/a',         pr: 'oh-bree-GAH-doo/dah' },
+      { en: 'Please',          es: 'Por favor',          pr: 'por fah-VOR' },
+      { en: 'How much?',       es: 'Quanto custa?',      pr: 'KWAN-toh KOOS-tah' },
+      { en: 'Where is...?',    es: 'Onde fica...?',      pr: 'ON-jee FEE-kah' },
+      { en: 'The bill, please',es: 'A conta, por favor', pr: 'ah KON-tah' },
+      { en: 'Help!',           es: 'Socorro!',           pr: 'soh-KOH-hoo' },
+      { en: 'Delicious',       es: 'Delicioso',          pr: 'deh-lee-SYOH-zoh' },
+      { en: 'Cheers!',         es: 'Saúde!',             pr: 'sah-OO-jee' },
+      { en: 'I don\'t speak Portuguese', es: 'Não falo português', pr: 'now FAH-loo por-too-GES' },
+      { en: 'Yes / No',        es: 'Sim / Não',          pr: 'seen / now' },
+      { en: 'Good morning',    es: 'Bom dia',            pr: 'bohn JEE-ah' },
+    ],
+    foods: [
+      { e:'🥩', n:'Picanha', d:'Top sirloin BBQ — Brazilian icon' },
+      { e:'🍲', n:'Feijoada', d:'Black bean + pork stew, Saturdays' },
+      { e:'🧀', n:'Pão de Queijo', d:'Cheese balls of pure joy' },
+      { e:'🍤', n:'Moqueca', d:'Bahian seafood coconut stew' },
+      { e:'🌽', n:'Açaí Bowl', d:'Amazonian berry + granola + banana' },
+      { e:'🍹', n:'Caipirinha', d:'Cachaça + lime + sugar' },
+      { e:'🥟', n:'Coxinha', d:'Teardrop chicken croquette' },
+      { e:'🐟', n:'Tucunaré', d:'Amazon peacock bass grilled' },
+      { e:'🍰', n:'Brigadeiro', d:'Chocolate truffle — birthday classic' },
+      { e:'🌶️', n:'Vatapá', d:'Bahian shrimp-bread-coconut paste' },
+    ],
+    music: [
+      { genre:'Samba',      title:'Cartola — old-school samba master',  q:'Cartola As Rosas Não Falam', yt:'qIxCWv6JtRQ' },
+      { genre:'Bossa Nova', title:'João Gilberto — invented bossa',     q:'João Gilberto Chega de Saudade', yt:'mDvxqUOQ4-w' },
+      { genre:'MPB',        title:'Caetano Veloso — Tropicalia',        q:'Caetano Veloso Sozinho', yt:'kxJJpsNzCkY' },
+      { genre:'Funk Carioca',title:'Anitta — modern pop-funk',          q:'Anitta Vai Malandra', yt:'JsnNiTacqLk' },
+    ],
+    emergency: [
+      { label:'Police', num:'190' },
+      { label:'Ambulance', num:'192' },
+      { label:'Fire', num:'193' },
+      { label:'Tourist Police Rio', num:'(21) 2334-6802' },
+      { label:'🇨🇦 Embassy Brasilia', num:'(61) 3424-5400' },
+      { label:'🇺🇸 Embassy Brasilia', num:'(61) 3312-7000' },
+    ],
+  },
+  argentina: {
+    phrases: [
+      { en: 'Hello',           es: 'Hola / Che',          pr: 'OH-lah / cheh' },
+      { en: 'Thank you',       es: 'Gracias',             pr: 'GRAH-syas' },
+      { en: 'Please',          es: 'Por favor',           pr: 'por fah-VOR' },
+      { en: 'How much?',       es: '¿Cuánto sale?',       pr: 'KWAN-toh SAH-leh' },
+      { en: 'Where is...?',    es: '¿Dónde queda...?',    pr: 'DON-deh KEH-dah' },
+      { en: 'The bill, please',es: 'La cuenta, porfa',    pr: 'lah KWEN-tah POR-fah' },
+      { en: 'Help!',           es: '¡Ayuda!',             pr: 'ah-YOO-dah' },
+      { en: 'Awesome / cool',  es: 'Bárbaro / copado',    pr: 'BAR-bah-roh / koh-PAH-doh' },
+      { en: 'Cheers!',         es: '¡Salud!',             pr: 'sah-LOOD' },
+      { en: 'I don\'t speak Spanish', es: 'No hablo castellano', pr: 'noh AH-bloh kas-teh-SHAH-noh' },
+      { en: 'Yes / No',        es: 'Sí / No',             pr: 'see / noh' },
+      { en: 'Dude (informal)', es: 'Boludo',              pr: 'boh-LOO-doh' },
+    ],
+    foods: [
+      { e:'🥩', n:'Asado', d:'Wood-fire grilled meat feast' },
+      { e:'🥟', n:'Empanadas Salteñas', d:'Spicy beef from Salta' },
+      { e:'🍝', n:'Milanesa Napolitana', d:'Breaded steak + ham + cheese' },
+      { e:'🧀', n:'Provoleta', d:'Grilled provolone with oregano' },
+      { e:'🍷', n:'Malbec', d:'Mendoza red wine — the world\'s best' },
+      { e:'🥧', n:'Choripán', d:'Chorizo sandwich, street legend' },
+      { e:'🍦', n:'Helado Artesanal', d:'Italian-style ice cream perfection' },
+      { e:'🧉', n:'Mate', d:'The shared green tea ritual' },
+      { e:'🍰', n:'Alfajores', d:'Dulce de leche cookie sandwiches' },
+      { e:'🍮', n:'Dulce de Leche', d:'Argentine caramel — on everything' },
+    ],
+    music: [
+      { genre:'Tango',       title:'Carlos Gardel — the voice of tango', q:'Carlos Gardel Por Una Cabeza', yt:'JjReWNmrEsQ' },
+      { genre:'Tango Nuevo', title:'Astor Piazzolla — Libertango',       q:'Astor Piazzolla Libertango', yt:'PJXzJyM3iIE' },
+      { genre:'Rock Nacional',title:'Soda Stereo — rock icons',          q:'Soda Stereo De Música Ligera', yt:'YqRgfp3pQzU' },
+      { genre:'Cuarteto',    title:'Mona Giménez — Córdoba dance',       q:'Mona Giménez Quién Se Ha Tomado', yt:'2zPzPMxYZcs' },
+    ],
+    emergency: [
+      { label:'Police', num:'911' },
+      { label:'Ambulance', num:'107' },
+      { label:'Fire', num:'100' },
+      { label:'Tourist Police BA', num:'(11) 4346-5748' },
+      { label:'🇨🇦 Embassy BA', num:'(11) 4808-1000' },
+      { label:'🇺🇸 Embassy BA', num:'(11) 5777-4533' },
+    ],
+  },
+};
+
+const CLIMATE_DATA = [
+  // Peru — dry season ending → start of wet
+  { city:'Lima',           leg:'peru', e:'☁️', hi:22, lo:17, note:'Misty (garúa)' },
+  { city:'Paracas',        leg:'peru', e:'☀️', hi:23, lo:16, note:'Coastal desert' },
+  { city:'Huacachina',     leg:'peru', e:'🌵', hi:30, lo:14, note:'Dry & sunny' },
+  { city:'Arequipa',       leg:'peru', e:'☀️', hi:23, lo:8,  note:'Cool nights' },
+  { city:'Puno',           leg:'peru', e:'❄️', hi:17, lo:2,  note:'Altitude · cold' },
+  { city:'Cusco',          leg:'peru', e:'⛅', hi:20, lo:6,  note:'Sun + showers' },
+  { city:'Machu Picchu',   leg:'peru', e:'🌧️', hi:21, lo:11, note:'Cloud forest rain' },
+  // Brazil — late spring → summer
+  { city:'Rio',            leg:'brazil', e:'☀️', hi:30, lo:22, note:'Hot beach days' },
+  { city:'Iguazu',         leg:'brazil', e:'⛅', hi:32, lo:21, note:'Humid · waterfalls' },
+  { city:'São Paulo',      leg:'brazil', e:'🌦️', hi:28, lo:19, note:'Summer storms' },
+  { city:'Salvador',       leg:'brazil', e:'☀️', hi:31, lo:24, note:'Tropical heat' },
+  { city:'Florianópolis',  leg:'brazil', e:'☀️', hi:28, lo:22, note:'Beach paradise' },
+  // Argentina — early summer
+  { city:'Buenos Aires',   leg:'argentina', e:'☀️', hi:29, lo:18, note:'Warm & lively' },
+  { city:'Mendoza',        leg:'argentina', e:'☀️', hi:31, lo:16, note:'Wine harvest soon' },
+  { city:'Bariloche',      leg:'argentina', e:'⛅', hi:21, lo:7,  note:'Alpine summer' },
+  { city:'El Calafate',    leg:'argentina', e:'🌬️', hi:18, lo:5,  note:'Windy Patagonia' },
+  { city:'El Chaltén',     leg:'argentina', e:'⛅', hi:17, lo:4,  note:'Trekking weather' },
+  { city:'Ushuaia',        leg:'argentina', e:'🌧️', hi:13, lo:4,  note:'End of world chill' },
+  { city:'Puerto Iguazu',  leg:'argentina', e:'⛅', hi:32, lo:21, note:'Falls humidity' },
+];
+
+let _activeCultureCountry = 'peru';
+
+function initCulture() {
+  const tabs = document.querySelectorAll('.culture-tab');
+  if (!tabs.length) return;
+
+  tabs.forEach(t => t.addEventListener('click', () => {
+    tabs.forEach(b => b.classList.remove('active'));
+    t.classList.add('active');
+    _activeCultureCountry = t.dataset.country;
+    renderCulture();
+  }));
+
+  document.getElementById('phrases-shuffle')?.addEventListener('click', () => {
+    const data = CULTURE_DATA[_activeCultureCountry];
+    data.phrases = data.phrases.sort(() => Math.random() - 0.5);
+    renderPhrases();
+  });
+
+  // Personal emergency info persistence
+  ['ep-blood','ep-allergies','ep-insurance','ep-contact'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    try {
+      const saved = JSON.parse(localStorage.getItem('la_aventura_emergency') || '{}');
+      el.value = saved[id] || '';
+    } catch {}
+    el.addEventListener('input', () => {
+      let cur = {};
+      try { cur = JSON.parse(localStorage.getItem('la_aventura_emergency') || '{}'); } catch {}
+      cur[id] = el.value;
+      localStorage.setItem('la_aventura_emergency', JSON.stringify(cur));
+    });
+  });
+
+  renderCulture();
+}
+
+function renderCulture() {
+  renderPhrases();
+  renderFood();
+  renderMusic();
+  renderEmergency();
+  renderClimate();
+}
+
+function renderPhrases() {
+  const grid = document.getElementById('phrase-grid');
+  if (!grid) return;
+  const data = CULTURE_DATA[_activeCultureCountry];
+  grid.innerHTML = data.phrases.map(p => `
+    <div class="phrase-card">
+      <div class="phrase-inner">
+        <div class="phrase-face phrase-front">${p.en}</div>
+        <div class="phrase-face phrase-back">${p.es}<div class="phrase-pron">/${p.pr}/</div></div>
+      </div>
+    </div>`).join('');
+  grid.querySelectorAll('.phrase-card').forEach(card => {
+    card.addEventListener('click', () => card.classList.toggle('flipped'));
+  });
+}
+
+function renderFood() {
+  const grid = document.getElementById('food-grid');
+  const prog = document.getElementById('food-progress');
+  if (!grid) return;
+  const data    = CULTURE_DATA[_activeCultureCountry];
+  let ratings   = {};
+  try { ratings = JSON.parse(localStorage.getItem('la_aventura_food_ratings') || '{}'); } catch {}
+  const key     = name => `${_activeCultureCountry}::${name}`;
+  let tasted    = 0;
+  grid.innerHTML = data.foods.map(f => {
+    const r = ratings[key(f.n)] || 0;
+    if (r > 0) tasted++;
+    const stars = [1,2,3,4,5].map(i => `<span class="food-star ${i <= r ? 'on':''}" data-name="${f.n}" data-val="${i}">★</span>`).join('');
+    return `
+      <div class="food-card ${r > 0 ? 'tasted':''}">
+        <div class="food-emoji">${f.e}</div>
+        <div class="food-name">${f.n}</div>
+        <div class="food-desc">${f.d}</div>
+        <div class="food-stars">${stars}</div>
+      </div>`;
+  }).join('');
+  if (prog) prog.textContent = `${tasted} / ${data.foods.length} tasted`;
+  grid.querySelectorAll('.food-star').forEach(star => {
+    star.addEventListener('click', () => {
+      let cur = {};
+      try { cur = JSON.parse(localStorage.getItem('la_aventura_food_ratings') || '{}'); } catch {}
+      const k = key(star.dataset.name);
+      const v = parseInt(star.dataset.val, 10);
+      cur[k] = cur[k] === v ? 0 : v;  // tap same → clear
+      localStorage.setItem('la_aventura_food_ratings', JSON.stringify(cur));
+      renderFood();
+    });
+  });
+}
+
+function renderMusic() {
+  const grid = document.getElementById('music-grid');
+  if (!grid) return;
+  const data = CULTURE_DATA[_activeCultureCountry];
+  grid.innerHTML = data.music.map(m => `
+    <div class="music-card">
+      <div class="music-genre">${m.genre}</div>
+      <div class="music-title">${m.title}</div>
+      <div class="music-actions">
+        <a class="music-btn" target="_blank" rel="noopener" href="https://open.spotify.com/search/${encodeURIComponent(m.q)}">▶ Spotify</a>
+        <a class="music-btn" target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=${m.yt}">▶ YouTube</a>
+      </div>
+    </div>`).join('');
+}
+
+function renderEmergency() {
+  const grid = document.getElementById('emergency-grid');
+  if (!grid) return;
+  const data = CULTURE_DATA[_activeCultureCountry];
+  grid.innerHTML = data.emergency.map(e => `
+    <div class="em-card" data-copy="${e.num}" title="Click to copy">
+      <div class="em-label">${e.label}</div>
+      <div class="em-num">${e.num}</div>
+    </div>`).join('');
+  grid.querySelectorAll('.em-card').forEach(card => {
+    card.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(card.dataset.copy);
+        showToast?.(`📋 Copied ${card.dataset.copy}`, 'success', 1500);
+      } catch {
+        showToast?.('Could not copy', 'error');
+      }
+    });
+  });
+}
+
+function renderClimate() {
+  const grid = document.getElementById('climate-grid');
+  if (!grid) return;
+  const cities = CLIMATE_DATA.filter(c => c.leg === _activeCultureCountry);
+  grid.innerHTML = cities.map(c => `
+    <div class="climate-card">
+      <div class="cl-city">${c.city}</div>
+      <div class="cl-emoji">${c.e}</div>
+      <div class="cl-temp">${c.hi}° / ${c.lo}°</div>
+      <div class="cl-note">${c.note}</div>
+    </div>`).join('');
+}
+
+// ─────────────────────────────────────────────────────────────
 // MAIN INIT
 // ─────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -2169,6 +2472,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initGlobe();
   initCurrencyConverter();
   initWorldClocks();
+  initCollapsible('culture-toggle-header', 'culture-body');
+  initCulture();
 
   // Wire up the main-page export button
   document.getElementById('export-all-btn')?.addEventListener('click', exportAllData);

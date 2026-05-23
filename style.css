@@ -489,6 +489,83 @@ body.dark-mode .wc-card { background: var(--dark-3); border-color: rgba(255,255,
 .wc-time { font-family: var(--font-head); font-size: 1.15rem; font-weight: 700; color: var(--accent); letter-spacing: 0.02em; }
 .wc-date { font-size: 0.62rem; color: var(--text-muted); }
 
+/* ── Culture Hub ──────────────────────────────────────── */
+.culture-country-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; justify-content: center; flex-wrap: wrap; }
+.culture-tab { padding: 0.55rem 1.1rem; border: 2px solid var(--light-2); background: #fff; border-radius: 999px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.92rem; }
+.culture-tab:hover { transform: translateY(-1px); }
+.culture-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 4px 12px rgba(245,158,11,0.3); }
+body.dark-mode .culture-tab { background: var(--dark-2); color: var(--light); border-color: rgba(255,255,255,0.1); }
+body.dark-mode .culture-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.culture-panel { background: #fff; border-radius: var(--radius); padding: 1.25rem 1.3rem; margin-bottom: 1rem; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.05); }
+body.dark-mode .culture-panel { background: var(--dark-2); border-color: rgba(255,255,255,0.05); }
+.cp-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.5rem; }
+.cp-head h3 { margin: 0; font-family: var(--font-head); font-size: 1.15rem; color: var(--text-dark); }
+body.dark-mode .cp-head h3 { color: var(--light); }
+.cp-sub { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; }
+
+/* Phrases flashcards */
+.phrase-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.7rem; perspective: 800px; }
+.phrase-card { height: 100px; cursor: pointer; perspective: 800px; }
+.phrase-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.6s; }
+.phrase-card.flipped .phrase-inner { transform: rotateY(180deg); }
+.phrase-face { position: absolute; inset: 0; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 0.6rem; border-radius: 10px; text-align: center; font-weight: 600; font-size: 0.95rem; }
+.phrase-front { background: linear-gradient(135deg, #fef3c7, #fed7aa); color: #92400e; border: 1px solid #fbbf24; }
+.phrase-back  { background: linear-gradient(135deg, #dbeafe, #bfdbfe); color: #1e40af; border: 1px solid #60a5fa; transform: rotateY(180deg); font-size: 0.85rem; }
+.phrase-pron { font-size: 0.7rem; font-style: italic; opacity: 0.75; margin-top: 0.2rem; }
+
+/* Food tracker */
+.food-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.7rem; }
+.food-card { background: var(--light); border-radius: 10px; padding: 0.7rem 0.85rem; border: 1px solid var(--light-2); transition: all 0.2s; }
+.food-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+body.dark-mode .food-card { background: var(--dark-3); border-color: rgba(255,255,255,0.06); }
+.food-card.tasted { background: #ecfdf5; border-color: #6ee7b7; }
+body.dark-mode .food-card.tasted { background: rgba(34,164,71,0.18); border-color: #22a447; }
+.food-emoji { font-size: 1.6rem; }
+.food-name { font-weight: 700; font-size: 0.95rem; color: var(--text-dark); margin-top: 0.25rem; }
+body.dark-mode .food-name { color: var(--light); }
+.food-desc { font-size: 0.78rem; color: var(--text-muted); margin: 0.25rem 0 0.45rem; }
+.food-stars { display: flex; gap: 2px; }
+.food-star { cursor: pointer; font-size: 1.05rem; color: #d1d5db; transition: transform 0.15s; }
+.food-star:hover { transform: scale(1.2); }
+.food-star.on { color: #f59e0b; }
+
+/* Music */
+.music-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.7rem; }
+.music-card { background: linear-gradient(135deg, #1db95450, #15803d50); border-radius: 12px; padding: 0.85rem 1rem; color: #fff; }
+.music-genre { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.85; font-weight: 600; }
+.music-title { font-family: var(--font-head); font-size: 1.05rem; margin: 0.2rem 0 0.45rem; }
+.music-actions { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.music-btn { background: rgba(0,0,0,0.35); border: none; color: #fff; padding: 0.35rem 0.7rem; border-radius: 999px; font-size: 0.78rem; cursor: pointer; text-decoration: none; transition: background 0.2s; }
+.music-btn:hover { background: rgba(0,0,0,0.55); }
+
+/* Emergency */
+.emergency-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.55rem; margin-bottom: 1rem; }
+.em-card { background: linear-gradient(135deg, #fee2e2, #fecaca); border-radius: 10px; padding: 0.65rem 0.8rem; cursor: pointer; transition: all 0.2s; border: 1px solid #fca5a5; }
+.em-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+body.dark-mode .em-card { background: linear-gradient(135deg, #7f1d1d, #991b1b); border-color: #ef4444; color: var(--light); }
+.em-label { font-size: 0.72rem; color: #991b1b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+body.dark-mode .em-label { color: #fca5a5; }
+.em-num { font-family: var(--font-head); font-size: 1.25rem; font-weight: 700; color: #7f1d1d; margin-top: 0.15rem; }
+body.dark-mode .em-num { color: #fff; }
+.emergency-personal { padding-top: 1rem; border-top: 1px dashed rgba(0,0,0,0.1); }
+body.dark-mode .emergency-personal { border-color: rgba(255,255,255,0.1); }
+.emergency-personal h4 { margin: 0 0 0.6rem; font-size: 0.9rem; color: var(--text-dark); }
+body.dark-mode .emergency-personal h4 { color: var(--light); }
+.ep-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.5rem; }
+.ep-form input { padding: 0.5rem 0.6rem; border: 1px solid var(--light-2); border-radius: 6px; font-size: 0.88rem; }
+body.dark-mode .ep-form input { background: var(--dark-3); color: var(--light); border-color: rgba(255,255,255,0.1); }
+
+/* Climate */
+.climate-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.5rem; }
+.climate-card { background: var(--light); border-radius: 8px; padding: 0.55rem 0.7rem; text-align: center; border: 1px solid var(--light-2); }
+body.dark-mode .climate-card { background: var(--dark-3); border-color: rgba(255,255,255,0.06); }
+.cl-city { font-weight: 700; font-size: 0.82rem; color: var(--text-dark); }
+body.dark-mode .cl-city { color: var(--light); }
+.cl-emoji { font-size: 1.5rem; margin: 0.2rem 0; }
+.cl-temp { font-family: var(--font-head); font-weight: 700; color: var(--accent); }
+.cl-note { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.15rem; }
+
 /* ── 3D Globe overlay ──────────────────────────────────── */
 #globe-container {
   position: absolute; inset: 0; z-index: 600;
