@@ -1123,7 +1123,7 @@ function initTimelineToggle() {
   const toggleHeader = document.getElementById('timeline-toggle-header');
   const body         = document.getElementById('timeline-body');
   const icon         = toggleHeader.querySelector('.tl-toggle-icon');
-  let collapsed = false;
+  let collapsed = body.classList.contains('collapsed');
 
   toggleHeader.addEventListener('click', () => {
     collapsed = !collapsed;
@@ -1137,7 +1137,7 @@ function initCollapsible(headerId, bodyId) {
   const body   = document.getElementById(bodyId);
   if (!header || !body) return;
   const icon = header.querySelector('.tl-toggle-icon');
-  let collapsed = false;
+  let collapsed = body.classList.contains('collapsed');
 
   header.addEventListener('click', () => {
     collapsed = !collapsed;

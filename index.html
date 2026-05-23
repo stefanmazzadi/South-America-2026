@@ -18,7 +18,7 @@
       <div class="header-logo">
         <span class="logo-globe">🌎</span>
         <div class="logo-text">
-          <h1>South America 2026 &nbsp;🇵🇪&thinsp;🇧🇷&thinsp;🇦🇷</h1>
+          <h1>South America 2026 &nbsp;<span style="-webkit-text-fill-color:initial;background:none">🇵🇪🇧🇷🇦🇷</span></h1>
           <p><span id="header-date-range">Oct 18 – Jan 5</span></p>
         </div>
       </div>
@@ -123,12 +123,12 @@
   <section id="timeline-section" class="section section-light">
     <div class="section-header" style="cursor:pointer;user-select:none" id="timeline-toggle-header">
       <div>
-        <h2 class="section-title">📅 Trip Timeline <span class="tl-toggle-icon">▲</span></h2>
+        <h2 class="section-title">📅 Trip Timeline <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
         <p class="section-subtitle">Click any day to see what's happening</p>
       </div>
     </div>
 
-    <div id="timeline-body">
+    <div id="timeline-body" class="collapsed">
       <div id="timeline-container" class="timeline-container"></div>
 
       <div id="timeline-detail" class="timeline-detail hidden">
@@ -144,12 +144,12 @@
   <section id="destinos" class="section section-dark">
     <div class="section-header collapsible-header" id="destinos-toggle-header">
       <div>
-        <h2 class="section-title">📍 Destinations <span class="tl-toggle-icon">▲</span></h2>
+        <h2 class="section-title">📍 Destinations <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
         <p class="section-subtitle">Full itinerary — city by city</p>
       </div>
     </div>
 
-    <div id="destinos-body">
+    <div id="destinos-body" class="collapsed">
       <div class="leg-tabs">
         <button class="leg-tab active" data-leg="peru">🇵🇪 Peru</button>
         <button class="leg-tab" data-leg="brazil">🇧🇷 Brazil</button>
@@ -166,12 +166,12 @@
   <section id="amigos" class="section section-light">
     <div class="section-header collapsible-header" id="amigos-toggle-header">
       <div>
-        <h2 class="section-title">👫 Travel Buddies <span class="tl-toggle-icon">▲</span></h2>
+        <h2 class="section-title">👫 Travel Buddies <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
         <p class="section-subtitle">Who's joining which leg?</p>
       </div>
     </div>
 
-    <div id="amigos-body">
+    <div id="amigos-body" class="collapsed">
     <div id="friends-container" class="friends-grid"></div>
 
     <div class="add-area">
