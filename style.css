@@ -566,6 +566,18 @@ body.dark-mode .cl-city { color: var(--light); }
 .cl-temp { font-family: var(--font-head); font-weight: 700; color: var(--accent); }
 .cl-note { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.15rem; }
 
+/* ── Ambient bg gradient that shifts per section in view ── */
+#ambient-bg {
+  position: fixed; inset: 0; z-index: -2; pointer-events: none;
+  background: radial-gradient(ellipse at top left, var(--amb1, #0d1117) 0%, var(--amb2, #161b22) 60%, #000 100%);
+  transition: background 1.4s ease;
+  opacity: 0.95;
+}
+body.light-mode #ambient-bg { background: radial-gradient(ellipse at top left, var(--amb1-light, #fef7ed) 0%, var(--amb2-light, #fff) 70%); }
+
+/* Parallax on map overlay title */
+.map-overlay-title { will-change: transform; transition: transform 0.1s linear; }
+
 /* ── 3D Globe overlay ──────────────────────────────────── */
 #globe-container {
   position: absolute; inset: 0; z-index: 600;

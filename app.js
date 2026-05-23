@@ -2442,6 +2442,51 @@ function renderClimate() {
 }
 
 // ─────────────────────────────────────────────────────────────
+// AMBIENT BACKGROUND — cinematic color shift per section
+// ─────────────────────────────────────────────────────────────
+const AMBIENT_PALETTES = {
+  'map-section':      ['#0d1117', '#161b22', '#fef7ed', '#fff5ea'],
+  'timeline-section': ['#1a1a2e', '#16213e', '#f0f4ff', '#ffffff'],
+  'destinos':         ['#2d1b3d', '#1a1424', '#fff7ed', '#ffeacc'],
+  'budget':           ['#1e3a2f', '#0f1f1a', '#ecfdf5', '#d1fae5'],
+  'culture':          ['#3d1b2f', '#241420', '#fff1f2', '#ffe4e6'],
+  'amigos':           ['#1e293b', '#0f172a', '#eff6ff', '#dbeafe'],
+  'packing':          ['#2d2a1a', '#1c1a0f', '#fefce8', '#fef9c3'],
+  'memories':         ['#3d1b1b', '#241010', '#fef2f2', '#ffe4e4'],
+  'notas':            ['#1a2d3d', '#0f1c24', '#f0f9ff', '#e0f2fe'],
+};
+
+function initAmbient() {
+  const root = document.documentElement;
+  const sections = Object.keys(AMBIENT_PALETTES).map(id => document.getElementById(id)).filter(Boolean);
+  if (!sections.length) return;
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting && en.intersectionRatio > 0.4) {
+        const p = AMBIENT_PALETTES[en.target.id];
+        if (p) {
+          root.style.setProperty('--amb1', p[0]);
+          root.style.setProperty('--amb2', p[1]);
+          root.style.setProperty('--amb1-light', p[2]);
+          root.style.setProperty('--amb2-light', p[3]);
+        }
+      }
+    });
+  }, { threshold: [0.4, 0.6] });
+  sections.forEach(s => io.observe(s));
+
+  // Parallax on map title
+  const mapTitle = document.getElementById('map-overlay-title');
+  if (mapTitle) {
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      if (y < 800) mapTitle.style.transform = `translateY(${y * 0.3}px)`;
+    }, { passive: true });
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
 // MAIN INIT
 // ─────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -2474,6 +2519,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initWorldClocks();
   initCollapsible('culture-toggle-header', 'culture-body');
   initCulture();
+  initAmbient();
 
   // Wire up the main-page export button
   document.getElementById('export-all-btn')?.addEventListener('click', exportAllData);
