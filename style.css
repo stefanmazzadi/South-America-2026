@@ -445,6 +445,24 @@ body.light-mode .site-footer { background: var(--dark-2); color: #64748b; }
 .hidden { display: none !important; }
 .flag-noclip { -webkit-text-fill-color: initial !important; background: none !important; background-clip: initial !important; -webkit-background-clip: initial !important; font-style: normal; }
 
+/* ── Live Weather widget in timeline detail ─────────────── */
+.tl-weather-box { min-height: 80px; }
+.tl-weather-now { display:flex; align-items:center; gap:0.6rem; margin-bottom:0.6rem; }
+.tlw-emoji { font-size: 2rem; line-height: 1; }
+.tlw-temp { font-family: var(--font-head); font-size: 1.4rem; font-weight: 700; color: var(--accent); }
+.tlw-label { font-size: 0.78rem; color: var(--text-muted); }
+.tl-weather-5day { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.3rem; }
+.tlw-day { text-align:center; padding: 0.4rem 0.2rem; background: rgba(255,255,255,0.04); border-radius: 6px; font-size: 0.72rem; }
+.tlw-day-name { font-weight: 600; color: var(--text-muted); margin-bottom: 0.15rem; }
+.tlw-day-icon { font-size: 1.05rem; margin: 0.15rem 0; }
+.tlw-day-hl { font-size: 0.7rem; color: var(--light); }
+.tlw-day-pp { font-size: 0.65rem; color: var(--argentina); margin-top: 0.1rem; }
+.tl-weather-credit { font-size: 0.62rem; color: var(--text-muted); text-align: right; margin-top: 0.4rem; opacity: 0.7; }
+.loading-pulse { animation: loadingPulse 1.5s ease-in-out infinite; color: var(--text-muted); font-size: 0.85rem; }
+@keyframes loadingPulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+.section-light .tlw-day { background: rgba(0,0,0,0.04); }
+.section-light .tlw-day-hl { color: var(--text-dark); }
+
 /* ── 3D Globe overlay ──────────────────────────────────── */
 #globe-container {
   position: absolute; inset: 0; z-index: 600;

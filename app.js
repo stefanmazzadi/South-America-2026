@@ -857,11 +857,99 @@ function showTimelineDetail(dateStr, stop, cellEl) {
         <h4>Next Transport</h4>
         <p>${stop.transport}</p>
       </div>
+      <div class="tl-detail-item">
+        <h4>Weather Forecast</h4>
+        <div id="tl-weather-box" class="tl-weather-box">
+          <span class="loading-pulse">⏳ Loading live forecast…</span>
+        </div>
+      </div>
     </div>
   `;
 
   detail.classList.remove('hidden');
   detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  // Fetch live weather for this stop's coords (cached 30 min)
+  fetchAndRenderWeather(stop, document.getElementById('tl-weather-box'));
+}
+
+// ─────────────────────────────────────────────────────────────
+// LIVE WEATHER (Open-Meteo, no auth, free)
+// ─────────────────────────────────────────────────────────────
+const WMO_EMOJI = {
+  0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',
+  51:'🌦️',53:'🌦️',55:'🌦️',56:'🌧️',57:'🌧️',
+  61:'🌧️',63:'🌧️',65:'🌧️',66:'🌧️',67:'🌧️',
+  71:'🌨️',73:'🌨️',75:'❄️',77:'❄️',
+  80:'🌦️',81:'🌧️',82:'⛈️',85:'🌨️',86:'❄️',
+  95:'⛈️',96:'⛈️',99:'⛈️',
+};
+const WMO_LABEL = {
+  0:'Clear',1:'Mostly clear',2:'Partly cloudy',3:'Cloudy',45:'Fog',48:'Fog',
+  51:'Drizzle',53:'Drizzle',55:'Drizzle',56:'Freezing drizzle',57:'Freezing drizzle',
+  61:'Light rain',63:'Rain',65:'Heavy rain',66:'Freezing rain',67:'Freezing rain',
+  71:'Light snow',73:'Snow',75:'Heavy snow',77:'Snow grains',
+  80:'Showers',81:'Rain showers',82:'Heavy showers',85:'Snow showers',86:'Snow showers',
+  95:'Thunderstorm',96:'Thunderstorm',99:'Severe storm',
+};
+
+async function fetchWeatherForCoords(lat, lng) {
+  const key = `weather_${lat.toFixed(2)}_${lng.toFixed(2)}`;
+  try {
+    const cached = sessionStorage.getItem(key);
+    if (cached) {
+      const { ts, data } = JSON.parse(cached);
+      if (Date.now() - ts < 30 * 60 * 1000) return data;  // 30-min TTL
+    }
+  } catch { /* ignore cache errors */ }
+
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_max&timezone=auto&forecast_days=5`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Weather API ${res.status}`);
+  const data = await res.json();
+  try { sessionStorage.setItem(key, JSON.stringify({ ts: Date.now(), data })); } catch {}
+  return data;
+}
+
+async function fetchAndRenderWeather(stop, container) {
+  if (!container) return;
+  try {
+    const [lat, lng] = stop.coords;
+    const data = await fetchWeatherForCoords(lat, lng);
+    const cur  = data.current || {};
+    const days = data.daily   || {};
+    const curCode = cur.weather_code;
+    const curTemp = Math.round(cur.temperature_2m ?? 0);
+
+    let html = `
+      <div class="tl-weather-now">
+        <span class="tlw-emoji">${WMO_EMOJI[curCode] || '🌡️'}</span>
+        <div>
+          <div class="tlw-temp">${curTemp}°C</div>
+          <div class="tlw-label">${WMO_LABEL[curCode] || 'Current'}</div>
+        </div>
+      </div>
+      <div class="tl-weather-5day">`;
+    const times = days.time || [];
+    for (let i = 0; i < Math.min(5, times.length); i++) {
+      const d  = new Date(times[i]);
+      const wd = d.toLocaleDateString('en-US', { weekday: 'short' });
+      const hi = Math.round(days.temperature_2m_max[i]);
+      const lo = Math.round(days.temperature_2m_min[i]);
+      const wc = days.weather_code[i];
+      const pp = days.precipitation_probability_max?.[i] ?? null;
+      html += `
+        <div class="tlw-day" title="${WMO_LABEL[wc]||''}">
+          <div class="tlw-day-name">${wd}</div>
+          <div class="tlw-day-icon">${WMO_EMOJI[wc] || '·'}</div>
+          <div class="tlw-day-hl">${hi}° / ${lo}°</div>
+          ${pp != null ? `<div class="tlw-day-pp">💧${pp}%</div>` : ''}
+        </div>`;
+    }
+    html += `</div><div class="tl-weather-credit">Live · Open-Meteo</div>`;
+    container.innerHTML = html;
+  } catch (e) {
+    container.innerHTML = `<p style="color:var(--text-muted);font-size:0.85rem;">Couldn't load live weather (${e.message}). Try again later.</p>`;
+  }
 }
 
 // ─────────────────────────────────────────────────────────────
