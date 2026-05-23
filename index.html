@@ -654,5 +654,28 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
   <script src="tripdata.js"></script>
   <script src="app.js"></script>
+  <!-- Offline / online status -->
+  <div id="offline-banner" class="hidden">📴 You're offline — using cached version</div>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(() => console.log('%c[SW] Registered — offline support active', 'color:#22a447'))
+          .catch(err => console.warn('[SW] Registration failed:', err));
+      });
+    }
+    const offlineBanner = document.getElementById('offline-banner');
+    function syncOnline() {
+      if (!offlineBanner) return;
+      if (navigator.onLine) {
+        offlineBanner.classList.add('hidden');
+      } else {
+        offlineBanner.classList.remove('hidden');
+      }
+    }
+    window.addEventListener('online',  syncOnline);
+    window.addEventListener('offline', syncOnline);
+    syncOnline();
+  </script>
 </body>
 </html>

@@ -2069,3 +2069,20 @@ body.tour-active #map-section {
   transition: color 0.2s;
 }
 .insight-dismiss:hover { color: #e74c3c; }
+
+/* ─── Offline Banner ─── */
+#offline-banner {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: #f59e0b;
+  color: #1a1a1a;
+  text-align: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  z-index: 10000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  animation: bannerSlide 0.4s ease;
+}
+#offline-banner.hidden { display: none; }
+@keyframes bannerSlide { from { transform: translateY(-100%);} to { transform: translateY(0);} }
