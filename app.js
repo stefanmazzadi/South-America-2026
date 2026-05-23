@@ -2604,6 +2604,102 @@ function initStatsDashboard() {
 }
 
 // ─────────────────────────────────────────────────────────────
+// DAILY JOURNAL
+// ─────────────────────────────────────────────────────────────
+function initJournal() {
+  const strip   = document.getElementById('journal-strip');
+  const dateEl  = document.getElementById('je-date');
+  const statusEl= document.getElementById('je-status');
+  const moods   = document.querySelectorAll('.mood-btn');
+  const tags    = document.querySelectorAll('.tag-chip');
+  const text    = document.getElementById('je-text');
+  if (!strip || !dateEl) return;
+
+  // Date range: trip start → trip end (or +80 days)
+  const start = parseDate(TRIP.startDate || '2026-10-23');
+  const totalDays = 80;
+  const days = [];
+  for (let i = 0; i < totalDays; i++) {
+    const d = new Date(start);
+    d.setDate(d.getDate() + i);
+    days.push(d);
+  }
+  const isoKey = d => d.toISOString().slice(0, 10);
+
+  let entries = {};
+  try { entries = JSON.parse(localStorage.getItem('la_aventura_journal') || '{}'); } catch {}
+
+  let active = isoKey(days[0]);
+
+  function renderStrip() {
+    strip.innerHTML = days.map(d => {
+      const k = isoKey(d);
+      const e = entries[k];
+      const isActive = k === active;
+      return `
+        <div class="js-day ${isActive ? 'active':''} ${e ? 'has-entry':''}" data-k="${k}">
+          <div class="js-d-wk">${d.toLocaleDateString('en-US',{weekday:'short'})}</div>
+          <div class="js-d-num">${d.getDate()}</div>
+          <div class="js-d-mo">${d.toLocaleDateString('en-US',{month:'short'})}</div>
+          <div class="js-d-mood">${e?.mood || '·'}</div>
+        </div>`;
+    }).join('');
+    strip.querySelectorAll('.js-day').forEach(el => {
+      el.addEventListener('click', () => { active = el.dataset.k; loadEntry(); renderStrip(); el.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'}); });
+    });
+  }
+
+  function loadEntry() {
+    const e = entries[active] || { mood: '', tags: [], text: '' };
+    const d = new Date(active);
+    dateEl.textContent = d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+    moods.forEach(m => m.classList.toggle('active', m.dataset.mood === e.mood));
+    tags.forEach(t => t.classList.toggle('active', (e.tags || []).includes(t.dataset.tag)));
+    text.value = e.text || '';
+    statusEl.textContent = e.text || e.mood ? '✓ Saved' : '— new entry —';
+  }
+
+  function saveEntry() {
+    const sel = Array.from(tags).filter(t => t.classList.contains('active')).map(t => t.dataset.tag);
+    const mood = Array.from(moods).find(m => m.classList.contains('active'))?.dataset.mood || '';
+    if (!sel.length && !mood && !text.value.trim()) { delete entries[active]; }
+    else { entries[active] = { mood, tags: sel, text: text.value }; }
+    localStorage.setItem('la_aventura_journal', JSON.stringify(entries));
+    statusEl.textContent = '✓ Saved ' + new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+    renderStrip();
+    renderMoodBars();
+  }
+
+  moods.forEach(m => m.addEventListener('click', () => {
+    const wasActive = m.classList.contains('active');
+    moods.forEach(b => b.classList.remove('active'));
+    if (!wasActive) m.classList.add('active');
+    saveEntry();
+  }));
+  tags.forEach(t => t.addEventListener('click', () => { t.classList.toggle('active'); saveEntry(); }));
+
+  let dt;
+  text.addEventListener('input', () => { clearTimeout(dt); dt = setTimeout(saveEntry, 500); });
+
+  function renderMoodBars() {
+    const counts = {};
+    Object.values(entries).forEach(e => { if (e.mood) counts[e.mood] = (counts[e.mood] || 0) + 1; });
+    const moodList = ['😍','🤩','😊','🙂','😐','😩','🤒'];
+    const max = Math.max(1, ...Object.values(counts));
+    const bars = document.getElementById('mood-bars');
+    if (!bars) return;
+    bars.innerHTML = moodList.map(m => {
+      const c = counts[m] || 0;
+      return `<div class="mb-emoji">${m}</div><div class="mb-track"><div class="mb-fill" style="width:${(c/max)*100}%"></div></div><div class="mb-count">${c}</div>`;
+    }).join('');
+  }
+
+  renderStrip();
+  loadEntry();
+  renderMoodBars();
+}
+
+// ─────────────────────────────────────────────────────────────
 // MAIN INIT
 // ─────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -2639,6 +2735,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initAmbient();
   initCollapsible('stats-toggle-header', 'stats-body');
   initStatsDashboard();
+  initCollapsible('journal-toggle-header', 'journal-body');
+  initJournal();
 
   // Wire up the main-page export button
   document.getElementById('export-all-btn')?.addEventListener('click', exportAllData);

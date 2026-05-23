@@ -186,6 +186,51 @@
   </section>
 
   <!-- ═══════════════════════════════════════════
+       DAILY JOURNAL — calendar strip + mood + entries
+  ═══════════════════════════════════════════ -->
+  <section id="journal" class="section section-light anim-ready">
+    <div class="section-header collapsible-header" id="journal-toggle-header">
+      <div>
+        <h2 class="section-title">📓 Daily Journal <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
+        <p class="section-subtitle">Capture each day — mood, tags, memories</p>
+      </div>
+    </div>
+    <div id="journal-body" class="collapsed">
+      <div class="journal-strip" id="journal-strip"></div>
+      <div class="journal-editor" id="journal-editor">
+        <div class="je-head">
+          <div class="je-date" id="je-date">Pick a day above</div>
+          <div class="je-status" id="je-status"></div>
+        </div>
+        <div class="je-moods">
+          <button class="mood-btn" data-mood="😍" title="Amazing">😍</button>
+          <button class="mood-btn" data-mood="😊" title="Great">😊</button>
+          <button class="mood-btn" data-mood="🙂" title="Good">🙂</button>
+          <button class="mood-btn" data-mood="😐" title="Meh">😐</button>
+          <button class="mood-btn" data-mood="😩" title="Tough">😩</button>
+          <button class="mood-btn" data-mood="🤒" title="Sick">🤒</button>
+          <button class="mood-btn" data-mood="🤩" title="Wow">🤩</button>
+        </div>
+        <div class="je-tags">
+          <span class="tag-chip" data-tag="🏛️ Culture">🏛️ Culture</span>
+          <span class="tag-chip" data-tag="🍽️ Food">🍽️ Food</span>
+          <span class="tag-chip" data-tag="🏞️ Nature">🏞️ Nature</span>
+          <span class="tag-chip" data-tag="🚌 Travel day">🚌 Travel day</span>
+          <span class="tag-chip" data-tag="👥 People">👥 People</span>
+          <span class="tag-chip" data-tag="🎉 Party">🎉 Party</span>
+          <span class="tag-chip" data-tag="💤 Rest">💤 Rest</span>
+          <span class="tag-chip" data-tag="📸 Photos">📸 Photos</span>
+        </div>
+        <textarea id="je-text" rows="6" placeholder="What happened today?"></textarea>
+      </div>
+      <div class="mood-summary">
+        <h4>📈 Mood overview</h4>
+        <div class="mood-bars" id="mood-bars"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
        DESTINOS / ITINERARY CARDS
   ═══════════════════════════════════════════ -->
   <section id="destinos" class="section section-dark anim-ready">

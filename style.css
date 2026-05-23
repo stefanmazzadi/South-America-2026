@@ -615,6 +615,47 @@ body.light-mode .flip-back-row span { color: var(--text-dark); }
 .dist-table td { padding: 0.45rem 0.4rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--light); }
 .dist-table tr:hover td { background: rgba(255,255,255,0.02); }
 
+/* ── Daily Journal ─────────────────────────────────────── */
+.journal-strip { display: flex; gap: 6px; overflow-x: auto; padding: 0.5rem 0 1rem; scroll-snap-type: x mandatory; }
+.js-day { flex: 0 0 56px; scroll-snap-align: start; background: #fff; border: 1px solid var(--light-2); border-radius: 10px; padding: 0.4rem 0.3rem; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; }
+.js-day:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.js-day.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.js-day.has-entry::after { content: '•'; position: absolute; bottom: 0; right: 4px; color: var(--brazil); font-size: 1rem; line-height: 1; }
+body.dark-mode .js-day { background: var(--dark-3); color: var(--light); border-color: rgba(255,255,255,0.06); }
+.js-d-wk { font-size: 0.62rem; color: var(--text-muted); text-transform: uppercase; }
+.js-day.active .js-d-wk { color: rgba(255,255,255,0.85); }
+.js-d-num { font-family: var(--font-head); font-weight: 700; font-size: 1.2rem; line-height: 1; }
+.js-d-mo { font-size: 0.62rem; color: var(--text-muted); }
+.js-day.active .js-d-mo { color: rgba(255,255,255,0.85); }
+.js-d-mood { font-size: 0.95rem; margin-top: 0.15rem; }
+.journal-editor { background: #fff; border-radius: var(--radius); padding: 1.1rem 1.2rem; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.05); margin-bottom: 1rem; }
+body.dark-mode .journal-editor { background: var(--dark-2); border-color: rgba(255,255,255,0.05); }
+.je-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; }
+.je-date { font-family: var(--font-head); font-size: 1.15rem; color: var(--accent); font-weight: 700; }
+.je-status { font-size: 0.72rem; color: var(--text-muted); }
+.je-moods { display: flex; gap: 0.35rem; margin-bottom: 0.7rem; flex-wrap: wrap; }
+.mood-btn { font-size: 1.4rem; background: var(--light); border: 1px solid var(--light-2); border-radius: 999px; width: 42px; height: 42px; cursor: pointer; transition: transform 0.15s; padding: 0; }
+.mood-btn:hover { transform: scale(1.15); }
+.mood-btn.active { background: var(--accent); border-color: var(--accent); transform: scale(1.15); box-shadow: 0 4px 12px rgba(245,158,11,0.4); }
+body.dark-mode .mood-btn { background: var(--dark-3); border-color: rgba(255,255,255,0.06); }
+.je-tags { display: flex; gap: 0.3rem; margin-bottom: 0.7rem; flex-wrap: wrap; }
+.tag-chip { padding: 0.3rem 0.65rem; background: var(--light); border-radius: 999px; font-size: 0.78rem; cursor: pointer; border: 1px solid var(--light-2); transition: all 0.15s; user-select: none; }
+.tag-chip:hover { transform: translateY(-1px); }
+.tag-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+body.dark-mode .tag-chip { background: var(--dark-3); color: var(--light); border-color: rgba(255,255,255,0.06); }
+#je-text { width: 100%; padding: 0.75rem; border: 1px solid var(--light-2); border-radius: 8px; font-family: var(--font-body); font-size: 0.92rem; resize: vertical; min-height: 120px; }
+body.dark-mode #je-text { background: var(--dark-3); color: var(--light); border-color: rgba(255,255,255,0.06); }
+.mood-summary { background: #fff; border-radius: var(--radius); padding: 1rem 1.2rem; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.05); }
+body.dark-mode .mood-summary { background: var(--dark-2); border-color: rgba(255,255,255,0.05); }
+.mood-summary h4 { margin: 0 0 0.65rem; font-family: var(--font-head); font-size: 1rem; color: var(--text-dark); }
+body.dark-mode .mood-summary h4 { color: var(--light); }
+.mood-bars { display: grid; grid-template-columns: 30px 1fr 30px; gap: 8px; align-items: center; }
+.mb-emoji { font-size: 1.2rem; text-align: center; }
+.mb-track { background: rgba(0,0,0,0.06); border-radius: 4px; height: 12px; overflow: hidden; }
+body.dark-mode .mb-track { background: rgba(255,255,255,0.05); }
+.mb-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--peru)); transition: width 0.8s ease-out; }
+.mb-count { font-size: 0.78rem; color: var(--text-muted); text-align: right; font-weight: 600; }
+
 /* ── 3D Globe overlay ──────────────────────────────────── */
 #globe-container {
   position: absolute; inset: 0; z-index: 600;
