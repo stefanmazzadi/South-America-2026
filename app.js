@@ -1618,6 +1618,11 @@ function initCountdown() {
         return; // no need to keep ticking
       }
     }
+    // Confetti burst the moment the trip starts (diff just crossed 0)
+    if (diff <= 0 && diff > -2000 && !window._tripStartConfetti) {
+      window._tripStartConfetti = true;
+      fireConfetti('trip-start');
+    }
   }
 
   update();
@@ -1807,6 +1812,11 @@ function renderPackingList(tab) {
   if (countEl) countEl.textContent = `${done} / ${all.length} items packed`;
   if (pctEl)   pctEl.textContent   = pct + '%';
   if (barEl)   barEl.style.width   = pct + '%';
+  // Confetti once when crossing 50%
+  if (pct >= 50 && !window._packing50) {
+    window._packing50 = true;
+    fireConfetti('packing-half');
+  }
 
   listEl.innerHTML = '';
   items.forEach((item, idx) => {
@@ -1935,12 +1945,14 @@ function initMemories() {
       const leg     = document.getElementById('mem-leg').value;
       if (!url) return;
       const list = loadMemories();
+      const wasFirst = list.length === 0;
       list.unshift({ url, caption: caption || 'Memory', leg, date: new Date().toISOString() });
       saveMemories(list);
       document.getElementById('mem-url').value     = '';
       document.getElementById('mem-caption').value = '';
       renderMemories();
       showToast('Memory added to the wall! 📸', 'success');
+      if (wasFirst) fireConfetti('first-memory');
     });
   }
   document.getElementById('mem-lb-close')?.addEventListener('click', closeLightbox);
@@ -2044,7 +2056,7 @@ function initGlobe() {
     canvas.addEventListener('click', () => {
       _globeClickCount++;
       if (_globeClickCount === 5 && typeof confetti === 'function') {
-        confetti({ particleCount: 200, spread: 90, origin: { y: 0.5 } });
+        fireConfetti('easter');
         showToast?.('🎉 You found the secret! Adventure mode unlocked.', 'success', 3500);
         _globeClickCount = 0;
       }
@@ -2697,6 +2709,22 @@ function initJournal() {
   renderStrip();
   loadEntry();
   renderMoodBars();
+}
+
+// ─────────────────────────────────────────────────────────────
+// CONFETTI HELPER (canvas-confetti CDN)
+// ─────────────────────────────────────────────────────────────
+function fireConfetti(kind = 'default') {
+  if (typeof confetti !== 'function') return;
+  const presets = {
+    'trip-start':   { particleCount: 300, spread: 120, origin: { y: 0.6 }, scalar: 1.2 },
+    'packing-half': { particleCount: 120, spread: 80,  origin: { y: 0.7 } },
+    'first-memory': { particleCount: 100, spread: 60,  origin: { y: 0.7 } },
+    'under-budget': { particleCount: 180, spread: 90,  origin: { y: 0.6 }, colors: ['#22a447','#f59e0b','#5b9bd5'] },
+    'easter':       { particleCount: 200, spread: 90,  origin: { y: 0.5 } },
+    'default':      { particleCount: 80,  spread: 60,  origin: { y: 0.7 } },
+  };
+  confetti(presets[kind] || presets.default);
 }
 
 // ─────────────────────────────────────────────────────────────
