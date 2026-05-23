@@ -69,6 +69,7 @@
     <div id="countdown-widget" class="countdown-widget"></div>
 
     <button class="tour-play-btn" id="tour-play-btn">▶ Play Route</button>
+    <button class="story-mode-btn" id="story-mode-btn" title="Story Mode">📖 Story Mode</button>
 
     <div class="map-style-toggle" id="map-style-toggle">
       <button class="map-style-btn active" data-style="dark" title="Dark map">🌑</button>
@@ -663,6 +664,16 @@
     <p>🌎 <strong>South America 2026</strong> &nbsp;🇵🇪🇧🇷🇦🇷</p>
     <p class="footer-sub">Built with ❤️ by the planner</p>
   </footer>
+
+  <!-- Story Mode overlay -->
+  <div id="story-mode" class="hidden">
+    <button id="story-close" class="story-btn">✕</button>
+    <button id="story-prev" class="story-nav story-nav-prev">‹</button>
+    <button id="story-next" class="story-nav story-nav-next">›</button>
+    <button id="story-auto" class="story-btn story-auto">▶ Auto</button>
+    <div id="story-stage"></div>
+    <div id="story-progress"></div>
+  </div>
 
   <!-- Leaflet + App scripts -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

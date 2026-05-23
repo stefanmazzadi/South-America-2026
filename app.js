@@ -2952,6 +2952,102 @@ function renderInsights() {
 function initInsights() { renderInsights(); }
 
 // ─────────────────────────────────────────────────────────────
+// STORY MODE
+// ─────────────────────────────────────────────────────────────
+function initStoryMode() {
+  const btn   = document.getElementById('story-mode-btn');
+  const modal = document.getElementById('story-mode');
+  const stage = document.getElementById('story-stage');
+  const prog  = document.getElementById('story-progress');
+  if (!btn || !modal || !stage) return;
+
+  const flags = { peru: '🇵🇪', brazil: '🇧🇷', argentina: '🇦🇷' };
+  const names = { peru: 'Peru', brazil: 'Brazil', argentina: 'Argentina' };
+  let idx = 0;
+  let autoTimer = null;
+  const stops = TRIP.stops || [];
+
+  function buildCards() {
+    stage.innerHTML = stops.map((s, i) => `
+      <div class="story-card" data-i="${i}">
+        <div class="story-flag">${flags[s.leg] || '🌎'}</div>
+        <div class="story-country">${names[s.leg] || s.leg} · Stop ${i+1} of ${stops.length}</div>
+        <h2 class="story-city">${escapeHTML(s.city)}</h2>
+        <div class="story-meta">
+          <span><strong>${s.nights||'?'}</strong>nights</span>
+          <span><strong>${(s.start||'').slice(5)}</strong>arrive</span>
+          <span><strong>${(s.end||'').slice(5)}</strong>depart</span>
+        </div>
+        <ul class="story-activities">
+          ${(s.activities || []).slice(0,5).map(a => `<li>✦ ${escapeHTML(a)}</li>`).join('')}
+        </ul>
+      </div>
+    `).join('');
+    prog.innerHTML = stops.map((_,i)=>`<div class="story-dot" data-i="${i}"></div>`).join('');
+    prog.querySelectorAll('.story-dot').forEach(d => {
+      d.addEventListener('click', () => show(Number(d.dataset.i)));
+    });
+  }
+
+  function show(i) {
+    idx = (i + stops.length) % stops.length;
+    stage.querySelectorAll('.story-card').forEach((c, ci) => {
+      c.classList.toggle('active', ci === idx);
+      c.classList.toggle('exit-left', ci < idx);
+    });
+    prog.querySelectorAll('.story-dot').forEach((d, di) => {
+      d.classList.toggle('active', di === idx);
+    });
+  }
+
+  function open() {
+    buildCards();
+    modal.classList.remove('hidden');
+    show(0);
+    document.body.style.overflow = 'hidden';
+  }
+  function close() {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+    stopAuto();
+  }
+  function startAuto() {
+    stopAuto();
+    autoTimer = setInterval(() => show(idx + 1), 3500);
+    document.getElementById('story-auto').textContent = '⏸ Pause';
+  }
+  function stopAuto() {
+    if (autoTimer) clearInterval(autoTimer);
+    autoTimer = null;
+    const a = document.getElementById('story-auto');
+    if (a) a.textContent = '▶ Auto';
+  }
+
+  btn.addEventListener('click', open);
+  document.getElementById('story-close').addEventListener('click', close);
+  document.getElementById('story-prev').addEventListener('click', () => { stopAuto(); show(idx - 1); });
+  document.getElementById('story-next').addEventListener('click', () => { stopAuto(); show(idx + 1); });
+  document.getElementById('story-auto').addEventListener('click', () => {
+    autoTimer ? stopAuto() : startAuto();
+  });
+  document.addEventListener('keydown', e => {
+    if (modal.classList.contains('hidden')) return;
+    if (e.key === 'ArrowRight') { stopAuto(); show(idx + 1); }
+    if (e.key === 'ArrowLeft')  { stopAuto(); show(idx - 1); }
+    if (e.key === 'Escape')     close();
+  });
+  // Swipe
+  let touchX = null;
+  stage.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive:true });
+  stage.addEventListener('touchend', e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) { stopAuto(); show(idx + (dx < 0 ? 1 : -1)); }
+    touchX = null;
+  });
+}
+
+// ─────────────────────────────────────────────────────────────
 // MAIN INIT
 // ─────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -2990,7 +3086,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCollapsible('journal-toggle-header', 'journal-body');
   initJournal();
   initInsights();
-
+  initStoryMode();
   // Wire up the main-page export button
   document.getElementById('export-all-btn')?.addEventListener('click', exportAllData);
 
