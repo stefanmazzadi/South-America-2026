@@ -2728,6 +2728,137 @@ function fireConfetti(kind = 'default') {
 }
 
 // ─────────────────────────────────────────────────────────────
+// SMART INSIGHTS (rule-based "AI" trip tips)
+// ─────────────────────────────────────────────────────────────
+const INSIGHTS_DISMISSED_KEY = 'la_aventura_dismissed_insights';
+
+function generateInsights() {
+  const out = [];
+  const stops = (typeof TRIP !== 'undefined' && TRIP.stops) ? TRIP.stops : [];
+  const startDate = new Date('2026-10-23T00:00:00');
+  const today = new Date();
+  const daysUntil = Math.ceil((startDate - today) / 86400000);
+
+  // 1. Countdown
+  if (daysUntil > 0) {
+    out.push({ id:'countdown', icon:'⏳', html:`Only <strong>${daysUntil} days</strong> until you set foot in Lima. Start brushing up on your Spanish!` });
+  } else if (daysUntil > -80) {
+    out.push({ id:'on-trip', icon:'🌎', html:`You're <strong>${Math.abs(daysUntil)+1} days</strong> into the adventure. Soak it in!` });
+  }
+
+  // 2. Longest stop
+  if (stops.length) {
+    const longest = [...stops].sort((a,b)=>(b.nights||0)-(a.nights||0))[0];
+    if (longest) out.push({ id:'longest', icon:'🏖️', html:`Your longest stop is <strong>${longest.city}</strong> (${longest.nights} nights) — perfect time to slow down and explore deeply.` });
+  }
+
+  // 3. Total nights & countries
+  const totalNights = stops.reduce((s,x)=>s+(x.nights||0),0);
+  const countries = new Set(stops.map(s=>s.leg));
+  out.push({ id:'totals', icon:'📊', html:`<strong>${totalNights} nights</strong> across <strong>${countries.size} countries</strong> and <strong>${stops.length} cities</strong> — that's an epic itinerary.` });
+
+  // 4. Budget pulse
+  try {
+    const expenses = JSON.parse(localStorage.getItem('la_aventura_expenses')||'[]');
+    if (expenses.length) {
+      const spent = expenses.reduce((s,e)=>s+(e.amount||0),0);
+      const estimate = totalNights * 52; // avg
+      const pct = Math.round(spent/estimate*100);
+      if (pct < 80) {
+        out.push({ id:'budget-good', icon:'💰', html:`You've spent <strong>$${spent.toFixed(0)}</strong> — about <strong>${pct}%</strong> of your estimated budget. You're on pace!` });
+        // confetti once for under-budget
+        if (pct < 60 && !window._underBudgetFired) {
+          window._underBudgetFired = true;
+          if (typeof fireConfetti === 'function') fireConfetti('under-budget');
+        }
+      } else {
+        out.push({ id:'budget-warn', icon:'⚠️', html:`Heads up: you've used <strong>${pct}%</strong> of your budget. Consider reining in those caipirinhas 🍹` });
+      }
+    } else {
+      out.push({ id:'budget-empty', icon:'🧾', html:`No expenses logged yet. Track your first one to unlock budget insights.` });
+    }
+  } catch {}
+
+  // 5. Packing
+  try {
+    const pack = JSON.parse(localStorage.getItem('la_aventura_packing')||'{}');
+    const all = Object.values(pack).flat();
+    if (all.length) {
+      const done = all.filter(i=>i.checked).length;
+      const pct = Math.round(done/all.length*100);
+      out.push({ id:'packing', icon:'🎒', html:`Packing progress: <strong>${pct}%</strong> (${done}/${all.length}). ${pct===100?'You\'re ready to fly!':'Keep ticking those boxes.'}` });
+    }
+  } catch {}
+
+  // 6. Friend overlap
+  try {
+    const friends = JSON.parse(localStorage.getItem('la_aventura_friends')||'[]');
+    if (friends.length) {
+      out.push({ id:'friends', icon:'👥', html:`<strong>${friends.length} friend${friends.length>1?'s':''}</strong> joining segments of the trip — group adventures incoming!` });
+    }
+  } catch {}
+
+  // 7. Climate tip
+  out.push({ id:'climate-peru', icon:'☀️', html:`Late October in <strong>Peru</strong> is dry season — perfect for the Inca Trail. Bring layers for cold Cusco nights though.` });
+  out.push({ id:'climate-brazil', icon:'🌴', html:`November in <strong>Rio</strong> means warm Atlantic vibes and pre-summer beach days. Sunscreen is non-negotiable.` });
+  out.push({ id:'climate-arg', icon:'🍷', html:`December in <strong>Patagonia</strong> = peak hiking season. Long daylight hours mean more time on the trails.` });
+
+  // 8. Culture nudge
+  out.push({ id:'language', icon:'🗣️', html:`Knowing even basic <strong>Spanish/Portuguese</strong> opens doors. Check the Culture Hub for essential phrases.` });
+
+  // 9. Currency reminder
+  out.push({ id:'currency', icon:'💱', html:`The <strong>Argentine peso</strong> swings wildly. Use the live converter and bring USD cash for blue-market rates.` });
+
+  // 10. Photo nudge
+  out.push({ id:'photos', icon:'📸', html:`Pro tip: drop photos into the Memory Wall daily — your future self will thank you.` });
+
+  return out;
+}
+
+function renderInsights() {
+  const wrap = document.getElementById('insights-list');
+  if (!wrap) return;
+  const dismissed = JSON.parse(localStorage.getItem(INSIGHTS_DISMISSED_KEY)||'[]');
+  const insights = generateInsights().filter(i => !dismissed.includes(i.id));
+  if (!insights.length) {
+    wrap.innerHTML = `<p style="color:var(--text-muted);font-style:italic;margin-top:0.6rem;">You've dismissed all insights. <button id="insights-reset" class="btn-ghost" style="margin-left:0.4rem;">Reset</button></p>`;
+    document.getElementById('insights-reset')?.addEventListener('click', () => {
+      localStorage.removeItem(INSIGHTS_DISMISSED_KEY);
+      renderInsights();
+    });
+    return;
+  }
+  // Show up to 4 insights, rotated by day of year so they feel fresh
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0).getTime())/86400000);
+  const shown = [];
+  for (let i = 0; i < Math.min(4, insights.length); i++) {
+    shown.push(insights[(dayOfYear + i) % insights.length]);
+  }
+  wrap.innerHTML = shown.map(i => `
+    <div class="insight-card" data-id="${i.id}">
+      <span class="insight-icon">${i.icon}</span>
+      <div class="insight-body">${i.html}</div>
+      <button class="insight-dismiss" title="Dismiss">✕</button>
+    </div>
+  `).join('');
+  wrap.querySelectorAll('.insight-dismiss').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const card = e.target.closest('.insight-card');
+      const id = card.dataset.id;
+      const d = JSON.parse(localStorage.getItem(INSIGHTS_DISMISSED_KEY)||'[]');
+      d.push(id);
+      localStorage.setItem(INSIGHTS_DISMISSED_KEY, JSON.stringify(d));
+      card.style.transition = 'all 0.3s';
+      card.style.opacity = '0';
+      card.style.transform = 'translateX(20px)';
+      setTimeout(renderInsights, 300);
+    });
+  });
+}
+
+function initInsights() { renderInsights(); }
+
+// ─────────────────────────────────────────────────────────────
 // MAIN INIT
 // ─────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -2765,6 +2896,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initStatsDashboard();
   initCollapsible('journal-toggle-header', 'journal-body');
   initJournal();
+  initInsights();
 
   // Wire up the main-page export button
   document.getElementById('export-all-btn')?.addEventListener('click', exportAllData);
