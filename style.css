@@ -598,6 +598,23 @@ body.light-mode .flip-back-row span { color: var(--text-dark); }
 .flip-fly-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(245,158,11,0.4); }
 .flip-hint { text-align: center; font-size: 0.72rem; color: var(--text-muted); opacity: 0.7; margin-top: 0.5rem; font-style: italic; }
 
+/* ── Travel Stats Dashboard ────────────────────────────── */
+.stats-counters { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.7rem; margin-bottom: 1.5rem; }
+.stat-counter { background: linear-gradient(135deg, var(--dark-2), var(--dark-3)); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 1rem; text-align: center; transition: transform 0.2s; }
+.stat-counter:hover { transform: translateY(-3px); }
+.stat-c-num { font-family: var(--font-head); font-size: 2rem; font-weight: 700; color: var(--accent); line-height: 1; }
+.stat-c-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.3rem; }
+.stats-heatmap h4, .stats-distances h4 { font-family: var(--font-head); font-size: 1.05rem; color: var(--light); margin-bottom: 0.65rem; }
+.heatmap-grid { display: grid; gap: 6px; grid-template-columns: 110px 1fr 35px; align-items: center; margin-bottom: 1.5rem; }
+.hm-city { font-size: 0.82rem; color: var(--light); padding-right: 0.5rem; }
+.hm-bar-track { background: rgba(255,255,255,0.05); border-radius: 4px; height: 10px; overflow: hidden; }
+.hm-bar-fill { height: 100%; border-radius: 4px; transition: width 1s ease-out; }
+.hm-num { text-align: right; font-size: 0.78rem; color: var(--text-muted); font-weight: 600; }
+.dist-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.dist-table th { text-align: left; padding: 0.5rem 0.4rem; color: var(--text-muted); border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: 600; }
+.dist-table td { padding: 0.45rem 0.4rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--light); }
+.dist-table tr:hover td { background: rgba(255,255,255,0.02); }
+
 /* ── 3D Globe overlay ──────────────────────────────────── */
 #globe-container {
   position: absolute; inset: 0; z-index: 600;

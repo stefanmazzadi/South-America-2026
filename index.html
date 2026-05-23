@@ -163,6 +163,29 @@
   </section>
 
   <!-- ═══════════════════════════════════════════
+       STATS DASHBOARD — distances, heatmap, breakdown
+  ═══════════════════════════════════════════ -->
+  <section id="stats-dash" class="section section-dark anim-ready">
+    <div class="section-header collapsible-header" id="stats-toggle-header">
+      <div>
+        <h2 class="section-title">📊 Travel Stats <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
+        <p class="section-subtitle">Numbers, distances, time on the road</p>
+      </div>
+    </div>
+    <div id="stats-body" class="collapsed">
+      <div class="stats-counters" id="stats-counters"></div>
+      <div class="stats-heatmap">
+        <h4>🌎 Time per city (nights)</h4>
+        <div class="heatmap-grid" id="heatmap-grid"></div>
+      </div>
+      <div class="stats-distances">
+        <h4>✈️ Distance breakdown</h4>
+        <table class="dist-table"><thead><tr><th>From</th><th>→</th><th>To</th><th>Distance</th></tr></thead><tbody id="dist-table-body"></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
        DESTINOS / ITINERARY CARDS
   ═══════════════════════════════════════════ -->
   <section id="destinos" class="section section-dark anim-ready">

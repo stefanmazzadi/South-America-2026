@@ -2518,6 +2518,92 @@ function initAmbient() {
 }
 
 // ─────────────────────────────────────────────────────────────
+// TRAVEL STATS DASHBOARD
+// ─────────────────────────────────────────────────────────────
+function haversineKm(a, b) {
+  const R = 6371;
+  const toRad = d => d * Math.PI / 180;
+  const dLat = toRad(b[0] - a[0]);
+  const dLng = toRad(b[1] - a[1]);
+  const h = Math.sin(dLat/2)**2 + Math.cos(toRad(a[0])) * Math.cos(toRad(b[0])) * Math.sin(dLng/2)**2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+function initStatsDashboard() {
+  const counters  = document.getElementById('stats-counters');
+  const heatmap   = document.getElementById('heatmap-grid');
+  const distBody  = document.getElementById('dist-table-body');
+  if (!counters || !heatmap || !distBody) return;
+
+  const stops = TRIP.stops;
+  let totalKm = 0;
+  const segments = [];
+  for (let i = 0; i < stops.length - 1; i++) {
+    const d = haversineKm(stops[i].coords, stops[i+1].coords);
+    totalKm += d;
+    segments.push({ from: stops[i], to: stops[i+1], km: d });
+  }
+  const totalNights = stops.reduce((s, x) => s + x.nights, 0);
+  const countries   = new Set(stops.map(s => s.leg)).size;
+  const cities      = stops.length;
+  const flights     = segments.filter(s => s.from.leg !== s.to.leg).length;
+
+  // Counters with simple count-up animation
+  const counterDefs = [
+    { label: 'Cities',    val: cities,                fmt: n => n },
+    { label: 'Countries', val: countries,             fmt: n => n },
+    { label: 'Nights',    val: totalNights,           fmt: n => n },
+    { label: 'Total km',  val: Math.round(totalKm),   fmt: n => n.toLocaleString() },
+    { label: 'Flights',   val: flights,               fmt: n => n },
+    { label: 'Avg/city',  val: Math.round(totalNights / cities), fmt: n => `${n} nts` },
+  ];
+  counters.innerHTML = counterDefs.map((c, i) =>
+    `<div class="stat-counter"><div class="stat-c-num" data-target="${c.val}" data-fmt-idx="${i}">0</div><div class="stat-c-label">${c.label}</div></div>`
+  ).join('');
+
+  function animateCounters() {
+    counters.querySelectorAll('.stat-c-num').forEach(el => {
+      const target = parseInt(el.dataset.target, 10);
+      const def = counterDefs[parseInt(el.dataset.fmtIdx,10)];
+      const dur = 1200;
+      const t0 = performance.now();
+      function step(t) {
+        const p = Math.min(1, (t - t0) / dur);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = def.fmt(Math.round(target * eased));
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }
+  // Animate when section enters viewport
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) { animateCounters(); io.disconnect(); }
+    });
+  }, { threshold: 0.3 });
+  io.observe(counters);
+
+  // Heatmap of nights per city
+  const maxNights = Math.max(...stops.map(s => s.nights));
+  heatmap.innerHTML = stops.map(s => `
+    <div class="hm-city">${s.emoji||'📍'} ${s.city}</div>
+    <div class="hm-bar-track"><div class="hm-bar-fill" style="width:${(s.nights/maxNights)*100}%; background:${getLegColor(s.leg)}"></div></div>
+    <div class="hm-num">${s.nights}</div>
+  `).join('');
+
+  // Distance breakdown table
+  distBody.innerHTML = segments.map(s => `
+    <tr>
+      <td>${s.from.emoji||''} ${s.from.city}</td>
+      <td style="color:var(--accent)">→</td>
+      <td>${s.to.emoji||''} ${s.to.city}</td>
+      <td>${Math.round(s.km).toLocaleString()} km${s.from.leg !== s.to.leg ? ' ✈️' : ''}</td>
+    </tr>
+  `).join('') + `<tr><td colspan="3"><strong>Total</strong></td><td><strong>${Math.round(totalKm).toLocaleString()} km</strong></td></tr>`;
+}
+
+// ─────────────────────────────────────────────────────────────
 // MAIN INIT
 // ─────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -2551,6 +2637,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initCollapsible('culture-toggle-header', 'culture-body');
   initCulture();
   initAmbient();
+  initCollapsible('stats-toggle-header', 'stats-body');
+  initStatsDashboard();
 
   // Wire up the main-page export button
   document.getElementById('export-all-btn')?.addEventListener('click', exportAllData);
