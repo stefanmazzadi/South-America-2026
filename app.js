@@ -132,6 +132,11 @@ function populatePageStats() {
   const sd = document.getElementById('stat-days');      if (sd) sd.textContent = totalNights;
   const sc = document.getElementById('stat-countries'); if (sc) sc.textContent = countries;
   const si = document.getElementById('stat-cities');    if (si) si.textContent = stops.length;
+  const sb = document.getElementById('stat-budget-day');
+  if (sb) {
+    const cadAvg = Math.round(avgBudget * 1.38 / 5) * 5; // USD → CAD, rounded to $5
+    sb.textContent = `~$${cadAvg}`;
+  }
 
   // Map legend — compute first/last date per leg
   ['peru', 'brazil', 'argentina'].forEach(leg => {
