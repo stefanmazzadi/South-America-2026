@@ -2528,29 +2528,22 @@ body {
 /* ── PAGE SECTIONS ──────────────────────────────────────── */
 .page-section {
   display: none;
-  min-height: calc(100vh - 56px);
-  animation: pageFadeIn 0.28s ease;
 }
 .page-section.active {
   display: block;
 }
 
-@keyframes pageFadeIn {
-  from { opacity: 0; transform: translateX(12px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
-/* Map section fills available height */
+/* Map section fills the full available height */
 #map-section.page-section.active {
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 56px);
   height: calc(100vh - 56px);
 }
-#map-section.page-section.active .map-section {
+/* Make the Leaflet map container fill the flex column */
+#map-section.page-section.active #map {
   flex: 1;
-  height: auto;
   min-height: 0;
+  height: auto;
 }
 
 /* Stats bar shown only with home page */

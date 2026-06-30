@@ -1,159 +1,159 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🌎 South America 2026 🇵🇪🇧🇷🇦🇷</title>
+  <title>ðŸŒŽ South America 2026 ðŸ‡µðŸ‡ªðŸ‡§ðŸ‡·ðŸ‡¦ðŸ‡·</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#0d1117" />
-  <meta property="og:title" content="South America 2026 🌎" />
-  <meta property="og:description" content="80 days backpacking Peru, Brazil & Argentina — Oct 2026" />
+  <meta property="og:title" content="South America 2026 ðŸŒŽ" />
+  <meta property="og:description" content="80 days backpacking Peru, Brazil & Argentina â€” Oct 2026" />
   <meta property="og:url" content="https://stefanmazzadi.github.io/South-America-2026/" />
   <meta property="og:type" content="website" />
 </head>
 <body>
 <div id="ambient-bg"></div>
 
-  <!-- ═══════════════════════════════════════════
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        COLLAPSIBLE SIDE MENU
-  ═══════════════════════════════════════════ -->
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
   <aside id="sidebar" class="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-logo">
-        <span class="logo-globe sidebar-globe">🌎</span>
+        <span class="logo-globe sidebar-globe">ðŸŒŽ</span>
         <div class="logo-text">
           <span class="sidebar-title">South America 2026</span>
-          <small id="header-date-range">Oct 18 – Jan 5</small>
+          <small id="header-date-range">Oct 18 â€“ Jan 5</small>
         </div>
       </div>
-      <button id="sidebar-close" class="sidebar-close-btn" aria-label="Collapse menu" title="Collapse menu">‹</button>
+      <button id="sidebar-close" class="sidebar-close-btn" aria-label="Collapse menu" title="Collapse menu">â€¹</button>
     </div>
 
     <nav class="sidebar-nav" id="sidebar-nav">
       <a class="sidebar-nav-item active" data-section="map-section" href="#map-section">
-        <span class="sni-icon">🗺️</span><span class="sni-label">Home</span>
+        <span class="sni-icon">ðŸ—ºï¸</span><span class="sni-label">Home</span>
       </a>
       <a class="sidebar-nav-item" data-section="destinos" href="#destinos">
-        <span class="sni-icon">📍</span><span class="sni-label">Destinations</span>
+        <span class="sni-icon">ðŸ“</span><span class="sni-label">Destinations</span>
       </a>
       <a class="sidebar-nav-item" data-section="amigos" href="#amigos">
-        <span class="sni-icon">👫</span><span class="sni-label">Travel Buddies</span>
+        <span class="sni-icon">ðŸ‘«</span><span class="sni-label">Travel Buddies</span>
       </a>
       <a class="sidebar-nav-item" data-section="timeline-section" href="#timeline-section">
-        <span class="sni-icon">📅</span><span class="sni-label">Trip Timeline</span>
+        <span class="sni-icon">ðŸ“…</span><span class="sni-label">Trip Timeline</span>
       </a>
       <a class="sidebar-nav-item" data-section="stats-dash" href="#stats-dash">
-        <span class="sni-icon">📊</span><span class="sni-label">Travel Stats</span>
+        <span class="sni-icon">ðŸ“Š</span><span class="sni-label">Travel Stats</span>
       </a>
       <a class="sidebar-nav-item" data-section="budget" href="#budget">
-        <span class="sni-icon">💰</span><span class="sni-label">Budget Tracker</span>
+        <span class="sni-icon">ðŸ’°</span><span class="sni-label">Budget Tracker</span>
       </a>
       <a class="sidebar-nav-item" data-section="packing" href="#packing">
-        <span class="sni-icon">🎒</span><span class="sni-label">Packing List</span>
+        <span class="sni-icon">ðŸŽ’</span><span class="sni-label">Packing List</span>
       </a>
       <a class="sidebar-nav-item" data-section="culture" href="#culture">
-        <span class="sni-icon">🎭</span><span class="sni-label">Culture Hub</span>
+        <span class="sni-icon">ðŸŽ­</span><span class="sni-label">Culture Hub</span>
       </a>
       <a class="sidebar-nav-item" data-section="journal" href="#journal">
-        <span class="sni-icon">📓</span><span class="sni-label">Daily Journal</span>
+        <span class="sni-icon">ðŸ““</span><span class="sni-label">Daily Journal</span>
       </a>
     </nav>
 
     <div class="sidebar-footer">
       <a href="planner.html" class="sidebar-planner-link">
-        <span class="sni-icon">🗓</span><span class="sni-label">Plan Trip</span>
+        <span class="sni-icon">ðŸ—“</span><span class="sni-label">Plan Trip</span>
       </a>
-      <div class="sidebar-flags">🇵🇪 🇧🇷 🇦🇷</div>
+      <div class="sidebar-flags">ðŸ‡µðŸ‡ª ðŸ‡§ðŸ‡· ðŸ‡¦ðŸ‡·</div>
     </div>
   </aside>
 
   <!-- Mobile overlay -->
   <div id="sidebar-overlay" class="sidebar-overlay"></div>
 
-  <!-- ═══════════════════════════════════════════
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        MAIN WRAPPER
-  ═══════════════════════════════════════════ -->
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
   <div id="main-wrapper" class="main-wrapper">
 
     <!-- Topbar -->
     <header id="site-header" class="topbar">
-      <button id="sidebar-toggle" class="sidebar-toggle-btn" aria-label="Toggle menu" title="Toggle menu">☰</button>
+      <button id="sidebar-toggle" class="sidebar-toggle-btn" aria-label="Toggle menu" title="Toggle menu">â˜°</button>
       <div class="topbar-logo">
-        <span class="topbar-globe">🌎</span>
-        <span class="topbar-title">South America 2026 <span class="flag-noclip">🇵🇪🇧🇷🇦🇷</span></span>
+        <span class="topbar-globe">ðŸŒŽ</span>
+        <span class="topbar-title">South America 2026 <span class="flag-noclip">ðŸ‡µðŸ‡ªðŸ‡§ðŸ‡·ðŸ‡¦ðŸ‡·</span></span>
       </div>
       <div class="topbar-actions">
-        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">ðŸŒ™</button>
       </div>
     </header>
 
-    <!-- ═══════════════════════════════════════
+    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
          PAGE SECTIONS (one visible at a time)
-    ═══════════════════════════════════════ -->
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
     <main id="main-content" class="main-content">
 
 
-      <!-- ═══════════════════════════════════════
-           PAGE 1: HOME — MAP VIEW
-      ═══════════════════════════════════════ -->
+      <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+           PAGE 1: HOME â€” MAP VIEW
+      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
       <section id="map-section" class="page-section active map-section">
     <div id="map"></div>
 
     <div class="map-overlay-title" id="map-overlay-title">
-      <span>🌎</span>
-      <span id="map-overlay-stats">80 Days · 3 Countries · 19 Cities</span>
+      <span>ðŸŒŽ</span>
+      <span id="map-overlay-stats">80 Days Â· 3 Countries Â· 19 Cities</span>
     </div>
 
     <div id="countdown-widget" class="countdown-widget"></div>
 
-    <button class="tour-play-btn" id="tour-play-btn">▶ Play Route</button>
-    <button class="story-mode-btn" id="story-mode-btn" title="Story Mode">📖 Story Mode</button>
+    <button class="tour-play-btn" id="tour-play-btn">â–¶ Play Route</button>
+    <button class="story-mode-btn" id="story-mode-btn" title="Story Mode">ðŸ“– Story Mode</button>
 
     <div class="map-style-toggle" id="map-style-toggle">
-      <button class="map-style-btn active" data-style="dark" title="Dark map">🌑</button>
-      <button class="map-style-btn" data-style="light" title="Light map">☀️</button>
-      <button class="map-style-btn" data-style="satellite" title="Satellite">🛰️</button>
-      <button class="map-style-btn" id="globe-toggle-btn" title="3D globe view">🌐</button>
+      <button class="map-style-btn active" data-style="dark" title="Dark map">ðŸŒ‘</button>
+      <button class="map-style-btn" data-style="light" title="Light map">â˜€ï¸</button>
+      <button class="map-style-btn" data-style="satellite" title="Satellite">ðŸ›°ï¸</button>
+      <button class="map-style-btn" id="globe-toggle-btn" title="3D globe view">ðŸŒ</button>
     </div>
 
     <!-- 3D Globe overlay (hidden until toggled) -->
     <div id="globe-container" class="hidden">
       <div id="globe-canvas"></div>
-      <button id="globe-close-btn" title="Back to map">✕ Close 3D</button>
-      <div id="globe-hint">Drag to rotate · Scroll to zoom</div>
+      <button id="globe-close-btn" title="Back to map">âœ• Close 3D</button>
+      <div id="globe-hint">Drag to rotate Â· Scroll to zoom</div>
     </div>
 
     <div class="map-legend" id="map-legend">
-      <div class="legend-item" id="legend-peru"><span class="dot dot-peru"></span>Peru · Oct 18 – Nov 5</div>
-      <div class="legend-item" id="legend-brazil"><span class="dot dot-brazil"></span>Brazil · Nov 5 – Nov 30</div>
-      <div class="legend-item" id="legend-argentina"><span class="dot dot-argentina"></span>Argentina · Dec 1 – Jan 2</div>
+      <div class="legend-item" id="legend-peru"><span class="dot dot-peru"></span>Peru Â· Oct 18 â€“ Nov 5</div>
+      <div class="legend-item" id="legend-brazil"><span class="dot dot-brazil"></span>Brazil Â· Nov 5 â€“ Nov 30</div>
+      <div class="legend-item" id="legend-argentina"><span class="dot dot-argentina"></span>Argentina Â· Dec 1 â€“ Jan 2</div>
     </div>
 
-    <!-- Compact tour panel — overlaid on map during playback -->
+    <!-- Compact tour panel â€” overlaid on map during playback -->
     <div id="tour-panel" class="tour-panel hidden">
-      <div class="tp-emoji" id="tp-emoji">🏙️</div>
+      <div class="tp-emoji" id="tp-emoji">ðŸ™ï¸</div>
       <div class="tp-mid">
         <div class="tp-city" id="tp-city">Lima</div>
-        <div class="tp-sub" id="tp-sub">🇵🇪 Peru · Oct 18 – Oct 20 · 2 nights</div>
+        <div class="tp-sub" id="tp-sub">ðŸ‡µðŸ‡ª Peru Â· Oct 18 â€“ Oct 20 Â· 2 nights</div>
         <div class="tp-act" id="tp-act"></div>
       </div>
       <div class="tp-right">
         <div class="tp-num" id="tp-num">1 / 19</div>
         <div class="tp-controls">
-          <button class="tp-btn" id="tp-prev" title="Previous">◀</button>
-          <button class="tp-btn tp-btn-main" id="tp-pause" title="Pause">⏸</button>
-          <button class="tp-btn" id="tp-next" title="Next">▶</button>
-          <button class="tp-btn tp-btn-exit" id="tp-exit" title="Exit">✕</button>
+          <button class="tp-btn" id="tp-prev" title="Previous">â—€</button>
+          <button class="tp-btn tp-btn-main" id="tp-pause" title="Pause">â¸</button>
+          <button class="tp-btn" id="tp-next" title="Next">â–¶</button>
+          <button class="tp-btn tp-btn-exit" id="tp-exit" title="Exit">âœ•</button>
         </div>
       </div>
       <div class="tp-progress-bar"><div class="tp-fill" id="tp-fill"></div></div>
     </div>
   </section><!-- /map-section -->
 
-  <!-- STATS BAR — shown alongside Home / map page -->
+  <!-- STATS BAR â€” shown alongside Home / map page -->
   <section class="stats-bar" id="stats-bar">
     <div class="stat">
       <span class="stat-num" id="stat-days">80</span>
@@ -181,33 +181,33 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        PAGE 2: DESTINATIONS
-  ═══════════════════════════════════════ -->
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
   <section id="destinos" class="page-section section section-dark">
     <div class="section-header" id="destinos-toggle-header">
       <div>
-        <h2 class="section-title">📍 Destinations</h2>
-        <p class="section-subtitle">Full itinerary — city by city</p>
+        <h2 class="section-title">ðŸ“ Destinations</h2>
+        <p class="section-subtitle">Full itinerary â€” city by city</p>
       </div>
     </div>
     <div id="destinos-body">
       <div class="leg-tabs">
-        <button class="leg-tab active" data-leg="peru">🇵🇪 Peru</button>
-        <button class="leg-tab" data-leg="brazil">🇧🇷 Brazil</button>
-        <button class="leg-tab" data-leg="argentina">🇦🇷 Argentina</button>
+        <button class="leg-tab active" data-leg="peru">ðŸ‡µðŸ‡ª Peru</button>
+        <button class="leg-tab" data-leg="brazil">ðŸ‡§ðŸ‡· Brazil</button>
+        <button class="leg-tab" data-leg="argentina">ðŸ‡¦ðŸ‡· Argentina</button>
       </div>
       <div id="cards-container" class="cards-grid"></div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        PAGE 3: TRAVEL BUDDIES
-  ═══════════════════════════════════════ -->
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
   <section id="amigos" class="page-section section section-light">
     <div class="section-header" id="amigos-toggle-header">
       <div>
-        <h2 class="section-title">👫 Travel Buddies</h2>
+        <h2 class="section-title">ðŸ‘« Travel Buddies</h2>
         <p class="section-subtitle">Who's joining which leg?</p>
       </div>
     </div>
@@ -217,20 +217,20 @@
         <button class="btn-primary" id="add-friend-btn">+ Add Friend</button>
       </div>
       <div id="friend-form" class="friend-form hidden">
-        <h3>New Friend ✈️</h3>
+        <h3>New Friend âœˆï¸</h3>
         <div class="form-row">
           <input id="f-name" placeholder="Name (e.g. Marco)" />
           <input id="f-legs" placeholder="Legs joining (e.g. Peru, Brazil)" />
         </div>
         <div class="form-row">
-          <input id="f-dates" placeholder="Dates (e.g. Oct 25 – Nov 10)" />
+          <input id="f-dates" placeholder="Dates (e.g. Oct 25 â€“ Nov 10)" />
           <select id="f-color">
-            <option value="#ff6b6b">🔴 Red</option>
-            <option value="#ffd93d">🟡 Yellow</option>
-            <option value="#6bcb77">🟢 Green</option>
-            <option value="#4d96ff">🔵 Blue</option>
-            <option value="#c77dff">🟣 Purple</option>
-            <option value="#ff9f43">🟠 Orange</option>
+            <option value="#ff6b6b">ðŸ”´ Red</option>
+            <option value="#ffd93d">ðŸŸ¡ Yellow</option>
+            <option value="#6bcb77">ðŸŸ¢ Green</option>
+            <option value="#4d96ff">ðŸ”µ Blue</option>
+            <option value="#c77dff">ðŸŸ£ Purple</option>
+            <option value="#ff9f43">ðŸŸ  Orange</option>
           </select>
         </div>
         <input id="f-note" placeholder="Any note? (e.g. Joins in Cusco, flies home from Rio)" />
@@ -240,7 +240,7 @@
         </div>
       </div>
       <div class="friend-overlap-wrap" id="friend-overlap-wrap">
-        <h3 class="friend-overlap-title">📊 Trip Overlap Timeline</h3>
+        <h3 class="friend-overlap-title">ðŸ“Š Trip Overlap Timeline</h3>
         <div id="friend-overlap-chart" class="friend-overlap-chart">
           <p style="color:#94a3b8;font-size:0.85rem;text-align:center;padding:1rem">Add friends above to see the overlap chart</p>
         </div>
@@ -248,97 +248,97 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        PAGE 4: TRIP TIMELINE
-  ═══════════════════════════════════════ -->
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
   <section id="timeline-section" class="page-section section section-light">
     <div class="section-header" id="timeline-toggle-header">
       <div>
-        <h2 class="section-title">📅 Trip Timeline</h2>
+        <h2 class="section-title">ðŸ“… Trip Timeline</h2>
         <p class="section-subtitle">Click any day to see what's happening</p>
       </div>
     </div>
     <div id="timeline-body">
       <div id="timeline-container" class="timeline-container"></div>
       <div id="timeline-detail" class="timeline-detail hidden">
-        <button class="tl-close" id="tl-close">✕</button>
+        <button class="tl-close" id="tl-close">âœ•</button>
         <div id="tl-detail-content"></div>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        PAGE 5: TRAVEL STATS
-  ═══════════════════════════════════════ -->
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
   <section id="stats-dash" class="page-section section section-dark">
     <div class="section-header" id="stats-toggle-header">
       <div>
-        <h2 class="section-title">📊 Travel Stats</h2>
+        <h2 class="section-title">ðŸ“Š Travel Stats</h2>
         <p class="section-subtitle">Numbers, distances, time on the road</p>
       </div>
     </div>
     <div id="stats-body">
       <div class="stats-counters" id="stats-counters"></div>
       <div class="stats-heatmap">
-        <h4>🌎 Time per city (nights)</h4>
+        <h4>ðŸŒŽ Time per city (nights)</h4>
         <div class="heatmap-grid" id="heatmap-grid"></div>
       </div>
       <div class="stats-distances">
-        <h4>✈️ Distance breakdown</h4>
-        <table class="dist-table"><thead><tr><th>From</th><th>→</th><th>To</th><th>Distance</th></tr></thead><tbody id="dist-table-body"></tbody></table>
+        <h4>âœˆï¸ Distance breakdown</h4>
+        <table class="dist-table"><thead><tr><th>From</th><th>â†’</th><th>To</th><th>Distance</th></tr></thead><tbody id="dist-table-body"></tbody></table>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        PAGE 6: BUDGET TRACKER
-  ═══════════════════════════════════════ -->
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
   <section id="budget" class="page-section section section-light">
     <div class="section-header" id="budget-toggle-header">
       <div>
-        <h2 class="section-title">💰 Budget Tracker</h2>
+        <h2 class="section-title">ðŸ’° Budget Tracker</h2>
         <p class="section-subtitle">Estimated costs &amp; actual expenses per leg</p>
       </div>
     </div>
     <div id="budget-body">
       <div class="live-tools-strip">
         <div class="live-tool currency-converter">
-          <h4>💱 Live Currency</h4>
+          <h4>ðŸ’± Live Currency</h4>
           <div class="cc-row">
             <input type="number" id="cc-amount" value="100" min="0" step="1" />
             <select id="cc-from">
-              <option value="USD" selected>USD 🇺🇸</option>
-              <option value="EUR">EUR 🇪🇺</option>
-              <option value="PEN">PEN 🇵🇪</option>
-              <option value="BRL">BRL 🇧🇷</option>
-              <option value="ARS">ARS 🇦🇷</option>
+              <option value="USD" selected>USD ðŸ‡ºðŸ‡¸</option>
+              <option value="EUR">EUR ðŸ‡ªðŸ‡º</option>
+              <option value="PEN">PEN ðŸ‡µðŸ‡ª</option>
+              <option value="BRL">BRL ðŸ‡§ðŸ‡·</option>
+              <option value="ARS">ARS ðŸ‡¦ðŸ‡·</option>
             </select>
-            <span class="cc-arrow">→</span>
+            <span class="cc-arrow">â†’</span>
           </div>
           <div class="cc-results" id="cc-results">
-            <div class="cc-pill">🇵🇪 — PEN</div>
-            <div class="cc-pill">🇧🇷 — BRL</div>
-            <div class="cc-pill">🇦🇷 — ARS</div>
+            <div class="cc-pill">ðŸ‡µðŸ‡ª â€” PEN</div>
+            <div class="cc-pill">ðŸ‡§ðŸ‡· â€” BRL</div>
+            <div class="cc-pill">ðŸ‡¦ðŸ‡· â€” ARS</div>
           </div>
-          <div class="cc-credit" id="cc-credit">Loading rates…</div>
+          <div class="cc-credit" id="cc-credit">Loading ratesâ€¦</div>
         </div>
         <div class="live-tool world-clocks">
-          <h4>🕒 World Clocks</h4>
+          <h4>ðŸ•’ World Clocks</h4>
           <div class="wc-grid">
             <div class="wc-card" data-tz="America/Lima">
-              <div class="wc-flag">🇵🇪</div>
+              <div class="wc-flag">ðŸ‡µðŸ‡ª</div>
               <div class="wc-city">Lima</div>
               <div class="wc-time">--:--</div>
               <div class="wc-date">--</div>
             </div>
             <div class="wc-card" data-tz="America/Sao_Paulo">
-              <div class="wc-flag">🇧🇷</div>
-              <div class="wc-city">São Paulo</div>
+              <div class="wc-flag">ðŸ‡§ðŸ‡·</div>
+              <div class="wc-city">SÃ£o Paulo</div>
               <div class="wc-time">--:--</div>
               <div class="wc-date">--</div>
             </div>
             <div class="wc-card" data-tz="America/Argentina/Buenos_Aires">
-              <div class="wc-flag">🇦🇷</div>
+              <div class="wc-flag">ðŸ‡¦ðŸ‡·</div>
               <div class="wc-city">Buenos Aires</div>
               <div class="wc-time">--:--</div>
               <div class="wc-date">--</div>
@@ -376,26 +376,26 @@
         </table>
       </div>
       <div class="insights-panel">
-        <h3 class="budget-section-head">🧠 Smart Trip Insights</h3>
+        <h3 class="budget-section-head">ðŸ§  Smart Trip Insights</h3>
         <div id="insights-list"></div>
       </div>
       <div class="budget-expenses-section">
-        <h3 class="budget-section-head">🧾 Actual Expenses</h3>
+        <h3 class="budget-section-head">ðŸ§¾ Actual Expenses</h3>
         <div class="budget-add-form">
           <input id="exp-name" placeholder="Description (e.g. Hostel Lima)" />
           <input id="exp-amount" type="number" placeholder="Amount (USD)" min="0" />
           <select id="exp-leg">
-            <option value="peru">🇵🇪 Peru</option>
-            <option value="brazil">🇧🇷 Brazil</option>
-            <option value="argentina">🇦🇷 Argentina</option>
-            <option value="general">🌎 General</option>
+            <option value="peru">ðŸ‡µðŸ‡ª Peru</option>
+            <option value="brazil">ðŸ‡§ðŸ‡· Brazil</option>
+            <option value="argentina">ðŸ‡¦ðŸ‡· Argentina</option>
+            <option value="general">ðŸŒŽ General</option>
           </select>
           <select id="exp-cat">
-            <option value="accommodation">🏨 Accommodation</option>
-            <option value="food">🍽️ Food</option>
-            <option value="transport">🚌 Transport</option>
-            <option value="activities">🧗 Activities</option>
-            <option value="misc">📦 Misc</option>
+            <option value="accommodation">ðŸ¨ Accommodation</option>
+            <option value="food">ðŸ½ï¸ Food</option>
+            <option value="transport">ðŸšŒ Transport</option>
+            <option value="activities">ðŸ§— Activities</option>
+            <option value="misc">ðŸ“¦ Misc</option>
           </select>
           <button class="btn-primary" id="exp-add-btn">+ Add</button>
         </div>
@@ -405,22 +405,22 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        PAGE 7: PACKING LIST
-  ═══════════════════════════════════════ -->
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
   <section id="packing" class="page-section section section-light">
     <div class="section-header" id="packing-toggle-header">
       <div>
-        <h2 class="section-title">🎒 Packing List</h2>
-        <p class="section-subtitle">Check off what's packed — saved in your browser</p>
+        <h2 class="section-title">ðŸŽ’ Packing List</h2>
+        <p class="section-subtitle">Check off what's packed â€” saved in your browser</p>
       </div>
     </div>
     <div id="packing-body">
       <div class="packing-tabs" id="packing-tabs">
         <button class="pack-tab active" data-tab="general">General</button>
-        <button class="pack-tab" data-tab="peru">🇵🇪 Peru</button>
-        <button class="pack-tab" data-tab="brazil">🇧🇷 Brazil</button>
-        <button class="pack-tab" data-tab="argentina">🇦🇷 Argentina</button>
+        <button class="pack-tab" data-tab="peru">ðŸ‡µðŸ‡ª Peru</button>
+        <button class="pack-tab" data-tab="brazil">ðŸ‡§ðŸ‡· Brazil</button>
+        <button class="pack-tab" data-tab="argentina">ðŸ‡¦ðŸ‡· Argentina</button>
       </div>
       <div class="packing-progress-wrap">
         <div class="packing-progress-label">
@@ -431,48 +431,48 @@
       </div>
       <div id="packing-list" class="packing-list"></div>
       <div class="packing-add-form">
-        <input id="pack-new-item" placeholder="Add custom item…" />
+        <input id="pack-new-item" placeholder="Add custom itemâ€¦" />
         <button class="btn-primary" id="pack-add-btn">+ Add</button>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        PAGE 8: CULTURE HUB
-  ═══════════════════════════════════════ -->
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
   <section id="culture" class="page-section section section-light">
     <div class="section-header" id="culture-toggle-header">
       <div>
-        <h2 class="section-title">🎭 Culture Hub</h2>
-        <p class="section-subtitle">Phrases · Food · Music · Emergency · Climate — all in one place</p>
+        <h2 class="section-title">ðŸŽ­ Culture Hub</h2>
+        <p class="section-subtitle">Phrases Â· Food Â· Music Â· Emergency Â· Climate â€” all in one place</p>
       </div>
     </div>
     <div id="culture-body">
       <div class="culture-country-tabs">
-        <button class="culture-tab active" data-country="peru">🇵🇪 Peru</button>
-        <button class="culture-tab" data-country="brazil">🇧🇷 Brazil</button>
-        <button class="culture-tab" data-country="argentina">🇦🇷 Argentina</button>
+        <button class="culture-tab active" data-country="peru">ðŸ‡µðŸ‡ª Peru</button>
+        <button class="culture-tab" data-country="brazil">ðŸ‡§ðŸ‡· Brazil</button>
+        <button class="culture-tab" data-country="argentina">ðŸ‡¦ðŸ‡· Argentina</button>
       </div>
       <div class="culture-panel">
         <div class="cp-head">
-          <h3>📖 Essential Phrases</h3>
-          <button class="btn-ghost" id="phrases-shuffle">🔀 Shuffle</button>
+          <h3>ðŸ“– Essential Phrases</h3>
+          <button class="btn-ghost" id="phrases-shuffle">ðŸ”€ Shuffle</button>
         </div>
         <div class="phrase-grid" id="phrase-grid"></div>
       </div>
       <div class="culture-panel">
         <div class="cp-head">
-          <h3>🍽️ Foods to Try</h3>
+          <h3>ðŸ½ï¸ Foods to Try</h3>
           <span class="cp-sub" id="food-progress">0 / 0 tasted</span>
         </div>
         <div class="food-grid" id="food-grid"></div>
       </div>
       <div class="culture-panel">
-        <div class="cp-head"><h3>🎵 Sounds of the Region</h3></div>
+        <div class="cp-head"><h3>ðŸŽµ Sounds of the Region</h3></div>
         <div class="music-grid" id="music-grid"></div>
       </div>
       <div class="culture-panel">
-        <div class="cp-head"><h3>🚨 Emergency Info</h3></div>
+        <div class="cp-head"><h3>ðŸš¨ Emergency Info</h3></div>
         <div class="emergency-grid" id="emergency-grid"></div>
         <div class="emergency-personal">
           <h4>Your Personal Info (stored locally)</h4>
@@ -485,20 +485,20 @@
         </div>
       </div>
       <div class="culture-panel">
-        <div class="cp-head"><h3>🌡️ Seasonal Climate (Oct–Jan)</h3></div>
+        <div class="cp-head"><h3>ðŸŒ¡ï¸ Seasonal Climate (Octâ€“Jan)</h3></div>
         <div class="climate-grid" id="climate-grid"></div>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        PAGE 9: DAILY JOURNAL
-  ═══════════════════════════════════════ -->
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
   <section id="journal" class="page-section section section-light">
     <div class="section-header" id="journal-toggle-header">
       <div>
-        <h2 class="section-title">📓 Daily Journal</h2>
-        <p class="section-subtitle">Capture each day — mood, tags, memories</p>
+        <h2 class="section-title">ðŸ““ Daily Journal</h2>
+        <p class="section-subtitle">Capture each day â€” mood, tags, memories</p>
       </div>
     </div>
     <div id="journal-body">
@@ -509,38 +509,38 @@
           <div class="je-status" id="je-status"></div>
         </div>
         <div class="je-moods">
-          <button class="mood-btn" data-mood="😍" title="Amazing">😍</button>
-          <button class="mood-btn" data-mood="😊" title="Great">😊</button>
-          <button class="mood-btn" data-mood="🙂" title="Good">🙂</button>
-          <button class="mood-btn" data-mood="😐" title="Meh">😐</button>
-          <button class="mood-btn" data-mood="😩" title="Tough">😩</button>
-          <button class="mood-btn" data-mood="🤒" title="Sick">🤒</button>
-          <button class="mood-btn" data-mood="🤩" title="Wow">🤩</button>
+          <button class="mood-btn" data-mood="ðŸ˜" title="Amazing">ðŸ˜</button>
+          <button class="mood-btn" data-mood="ðŸ˜Š" title="Great">ðŸ˜Š</button>
+          <button class="mood-btn" data-mood="ðŸ™‚" title="Good">ðŸ™‚</button>
+          <button class="mood-btn" data-mood="ðŸ˜" title="Meh">ðŸ˜</button>
+          <button class="mood-btn" data-mood="ðŸ˜©" title="Tough">ðŸ˜©</button>
+          <button class="mood-btn" data-mood="ðŸ¤’" title="Sick">ðŸ¤’</button>
+          <button class="mood-btn" data-mood="ðŸ¤©" title="Wow">ðŸ¤©</button>
         </div>
         <div class="je-tags">
-          <span class="tag-chip" data-tag="🏛️ Culture">🏛️ Culture</span>
-          <span class="tag-chip" data-tag="🍽️ Food">🍽️ Food</span>
-          <span class="tag-chip" data-tag="🏞️ Nature">🏞️ Nature</span>
-          <span class="tag-chip" data-tag="🚌 Travel day">🚌 Travel day</span>
-          <span class="tag-chip" data-tag="👥 People">👥 People</span>
-          <span class="tag-chip" data-tag="🎉 Party">🎉 Party</span>
-          <span class="tag-chip" data-tag="💤 Rest">💤 Rest</span>
-          <span class="tag-chip" data-tag="📸 Photos">📸 Photos</span>
+          <span class="tag-chip" data-tag="ðŸ›ï¸ Culture">ðŸ›ï¸ Culture</span>
+          <span class="tag-chip" data-tag="ðŸ½ï¸ Food">ðŸ½ï¸ Food</span>
+          <span class="tag-chip" data-tag="ðŸžï¸ Nature">ðŸžï¸ Nature</span>
+          <span class="tag-chip" data-tag="ðŸšŒ Travel day">ðŸšŒ Travel day</span>
+          <span class="tag-chip" data-tag="ðŸ‘¥ People">ðŸ‘¥ People</span>
+          <span class="tag-chip" data-tag="ðŸŽ‰ Party">ðŸŽ‰ Party</span>
+          <span class="tag-chip" data-tag="ðŸ’¤ Rest">ðŸ’¤ Rest</span>
+          <span class="tag-chip" data-tag="ðŸ“¸ Photos">ðŸ“¸ Photos</span>
         </div>
         <textarea id="je-text" rows="6" placeholder="What happened today?"></textarea>
       </div>
       <div class="mood-summary">
-        <h4>📈 Mood overview</h4>
+        <h4>ðŸ“ˆ Mood overview</h4>
         <div class="mood-bars" id="mood-bars"></div>
       </div>
     </div>
   </section>
 
-  <!-- Trip Notes — accessible via direct link, not sidebar -->
+  <!-- Trip Notes â€” accessible via direct link, not sidebar -->
   <section id="notas" class="page-section section section-dark hidden">
     <div class="section-header" id="notes-toggle-header">
       <div>
-        <h2 class="section-title">📝 Trip Notes</h2>
+        <h2 class="section-title">ðŸ“ Trip Notes</h2>
         <p class="section-subtitle">Share ideas, reminders &amp; excitement with the crew</p>
       </div>
     </div>
@@ -552,17 +552,17 @@
           <textarea id="n-text" rows="4" placeholder="What's on your mind? Ideas, tips, must-do's..."></textarea>
           <div class="form-row">
             <select id="n-leg">
-              <option value="General">🌎 General</option>
-              <option value="Peru">🇵🇪 Peru</option>
-              <option value="Brazil">🇧🇷 Brazil</option>
-              <option value="Argentina">🇦🇷 Argentina</option>
+              <option value="General">ðŸŒŽ General</option>
+              <option value="Peru">ðŸ‡µðŸ‡ª Peru</option>
+              <option value="Brazil">ðŸ‡§ðŸ‡· Brazil</option>
+              <option value="Argentina">ðŸ‡¦ðŸ‡· Argentina</option>
             </select>
             <select id="n-type">
-              <option value="idea">💡 Idea</option>
-              <option value="reminder">⏰ Reminder</option>
-              <option value="food">🍽️ Food tip</option>
-              <option value="logistics">✈️ Logistics</option>
-              <option value="excitement">🎉 Hype!</option>
+              <option value="idea">ðŸ’¡ Idea</option>
+              <option value="reminder">â° Reminder</option>
+              <option value="food">ðŸ½ï¸ Food tip</option>
+              <option value="logistics">âœˆï¸ Logistics</option>
+              <option value="excitement">ðŸŽ‰ Hype!</option>
             </select>
           </div>
           <button class="btn-primary full-width" id="save-note-btn">Save Note</button>
@@ -570,15 +570,15 @@
         <div class="notes-list-area">
           <div class="notes-filter">
             <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="General">🌎 General</button>
-            <button class="filter-btn" data-filter="Peru">🇵🇪 Peru</button>
-            <button class="filter-btn" data-filter="Brazil">🇧🇷 Brazil</button>
-            <button class="filter-btn" data-filter="Argentina">🇦🇷 Argentina</button>
+            <button class="filter-btn" data-filter="General">ðŸŒŽ General</button>
+            <button class="filter-btn" data-filter="Peru">ðŸ‡µðŸ‡ª Peru</button>
+            <button class="filter-btn" data-filter="Brazil">ðŸ‡§ðŸ‡· Brazil</button>
+            <button class="filter-btn" data-filter="Argentina">ðŸ‡¦ðŸ‡· Argentina</button>
           </div>
           <div id="notes-list"></div>
           <div id="notes-empty" class="notes-empty">
-            <span>💬</span>
-            <p>No notes yet — be the first to add one!</p>
+            <span>ðŸ’¬</span>
+            <p>No notes yet â€” be the first to add one!</p>
           </div>
         </div>
       </div>
@@ -595,30 +595,30 @@
           <span>Export <code>tripdata.js</code> then push to GitHub.</span>
         </div>
         <div style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center">
-          <button id="export-all-btn" class="export-all-btn">⬇ Export tripdata.js</button>
-          <button id="share-card-btn" class="export-all-btn" style="background:linear-gradient(135deg,#5b9bd5,#22a447)">📸 Share Card</button>
+          <button id="export-all-btn" class="export-all-btn">â¬‡ Export tripdata.js</button>
+          <button id="share-card-btn" class="export-all-btn" style="background:linear-gradient(135deg,#5b9bd5,#22a447)">ðŸ“¸ Share Card</button>
         </div>
       </div>
     </div>
 
   </div><!-- /main-wrapper -->
 
-  <!-- ═══════════════════════════════════════════
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        GLOBAL MODALS & OVERLAYS (outside layout)
-  ═══════════════════════════════════════════ -->
+  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 
   <!-- Share Card Modal -->
   <div id="share-modal" class="share-modal hidden">
     <div class="share-modal-overlay" id="share-overlay"></div>
     <div class="share-modal-content">
-      <button class="share-close-btn" id="share-close">✕</button>
-      <h3 style="margin:0 0 1rem;font-family:var(--font-head)">📸 Your Trip Share Card</h3>
+      <button class="share-close-btn" id="share-close">âœ•</button>
+      <h3 style="margin:0 0 1rem;font-family:var(--font-head)">ðŸ“¸ Your Trip Share Card</h3>
       <div id="share-card-preview" class="share-card-preview">
         <div class="share-card">
           <div class="sc-header">
-            <div class="sc-flags">🇵🇪 🇧🇷 🇦🇷</div>
+            <div class="sc-flags">ðŸ‡µðŸ‡ª ðŸ‡§ðŸ‡· ðŸ‡¦ðŸ‡·</div>
             <h2 class="sc-title">South America 2026</h2>
-            <p class="sc-subtitle" id="sc-subtitle">80 Days · 3 Countries · 19 Cities</p>
+            <p class="sc-subtitle" id="sc-subtitle">80 Days Â· 3 Countries Â· 19 Cities</p>
           </div>
           <div class="sc-stats" id="sc-stats"></div>
           <div class="sc-footer">
@@ -628,24 +628,24 @@
         </div>
       </div>
       <div class="share-actions">
-        <button class="btn-primary" id="share-download-btn">⬇ Download PNG</button>
-        <button class="btn-secondary" id="share-copy-btn">📋 Copy Link</button>
+        <button class="btn-primary" id="share-download-btn">â¬‡ Download PNG</button>
+        <button class="btn-secondary" id="share-copy-btn">ðŸ“‹ Copy Link</button>
       </div>
     </div>
   </div>
 
   <!-- Story Mode overlay -->
   <div id="story-mode" class="hidden">
-    <button id="story-close" class="story-btn">✕</button>
-    <button id="story-prev" class="story-nav story-nav-prev">‹</button>
-    <button id="story-next" class="story-nav story-nav-next">›</button>
-    <button id="story-auto" class="story-btn story-auto">▶ Auto</button>
+    <button id="story-close" class="story-btn">âœ•</button>
+    <button id="story-prev" class="story-nav story-nav-prev">â€¹</button>
+    <button id="story-next" class="story-nav story-nav-next">â€º</button>
+    <button id="story-auto" class="story-btn story-auto">â–¶ Auto</button>
     <div id="story-stage"></div>
     <div id="story-progress"></div>
   </div>
 
   <!-- Offline banner -->
-  <div id="offline-banner" class="hidden">📴 You're offline — using cached version</div>
+  <div id="offline-banner" class="hidden">ðŸ“´ You're offline â€” using cached version</div>
 
   <!-- Leaflet + App scripts -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -658,7 +658,7 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js')
-          .then(() => console.log('%c[SW] Registered — offline support active', 'color:#22a447'))
+          .then(() => console.log('%c[SW] Registered â€” offline support active', 'color:#22a447'))
           .catch(err => console.warn('[SW] Registration failed:', err));
       });
     }
@@ -666,591 +666,6 @@
     function syncOnline() {
       if (!offlineBanner) return;
       offlineBanner.classList.toggle('hidden', navigator.onLine);
-    }
-    window.addEventListener('online',  syncOnline);
-    window.addEventListener('offline', syncOnline);
-    syncOnline();
-  </script>
-</body>
-</html>
-
-
-  <!-- ═══════════════════════════════════════════
-       TIMELINE
-  ═══════════════════════════════════════════ -->
-  <section id="timeline-section" class="section section-light anim-ready">
-    <div class="section-header" style="cursor:pointer;user-select:none" id="timeline-toggle-header">
-      <div>
-        <h2 class="section-title">📅 Trip Timeline <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
-        <p class="section-subtitle">Click any day to see what's happening</p>
-      </div>
-    </div>
-
-    <div id="timeline-body" class="collapsed">
-      <div id="timeline-container" class="timeline-container"></div>
-
-      <div id="timeline-detail" class="timeline-detail hidden">
-        <button class="tl-close" id="tl-close">✕</button>
-        <div id="tl-detail-content"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════
-       STATS DASHBOARD — distances, heatmap, breakdown
-  ═══════════════════════════════════════════ -->
-  <section id="stats-dash" class="section section-dark anim-ready">
-    <div class="section-header collapsible-header" id="stats-toggle-header">
-      <div>
-        <h2 class="section-title">📊 Travel Stats <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
-        <p class="section-subtitle">Numbers, distances, time on the road</p>
-      </div>
-    </div>
-    <div id="stats-body" class="collapsed">
-      <div class="stats-counters" id="stats-counters"></div>
-      <div class="stats-heatmap">
-        <h4>🌎 Time per city (nights)</h4>
-        <div class="heatmap-grid" id="heatmap-grid"></div>
-      </div>
-      <div class="stats-distances">
-        <h4>✈️ Distance breakdown</h4>
-        <table class="dist-table"><thead><tr><th>From</th><th>→</th><th>To</th><th>Distance</th></tr></thead><tbody id="dist-table-body"></tbody></table>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════
-       DAILY JOURNAL — calendar strip + mood + entries
-  ═══════════════════════════════════════════ -->
-  <section id="journal" class="section section-light anim-ready">
-    <div class="section-header collapsible-header" id="journal-toggle-header">
-      <div>
-        <h2 class="section-title">📓 Daily Journal <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
-        <p class="section-subtitle">Capture each day — mood, tags, memories</p>
-      </div>
-    </div>
-    <div id="journal-body" class="collapsed">
-      <div class="journal-strip" id="journal-strip"></div>
-      <div class="journal-editor" id="journal-editor">
-        <div class="je-head">
-          <div class="je-date" id="je-date">Pick a day above</div>
-          <div class="je-status" id="je-status"></div>
-        </div>
-        <div class="je-moods">
-          <button class="mood-btn" data-mood="😍" title="Amazing">😍</button>
-          <button class="mood-btn" data-mood="😊" title="Great">😊</button>
-          <button class="mood-btn" data-mood="🙂" title="Good">🙂</button>
-          <button class="mood-btn" data-mood="😐" title="Meh">😐</button>
-          <button class="mood-btn" data-mood="😩" title="Tough">😩</button>
-          <button class="mood-btn" data-mood="🤒" title="Sick">🤒</button>
-          <button class="mood-btn" data-mood="🤩" title="Wow">🤩</button>
-        </div>
-        <div class="je-tags">
-          <span class="tag-chip" data-tag="🏛️ Culture">🏛️ Culture</span>
-          <span class="tag-chip" data-tag="🍽️ Food">🍽️ Food</span>
-          <span class="tag-chip" data-tag="🏞️ Nature">🏞️ Nature</span>
-          <span class="tag-chip" data-tag="🚌 Travel day">🚌 Travel day</span>
-          <span class="tag-chip" data-tag="👥 People">👥 People</span>
-          <span class="tag-chip" data-tag="🎉 Party">🎉 Party</span>
-          <span class="tag-chip" data-tag="💤 Rest">💤 Rest</span>
-          <span class="tag-chip" data-tag="📸 Photos">📸 Photos</span>
-        </div>
-        <textarea id="je-text" rows="6" placeholder="What happened today?"></textarea>
-      </div>
-      <div class="mood-summary">
-        <h4>📈 Mood overview</h4>
-        <div class="mood-bars" id="mood-bars"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════
-       DESTINOS / ITINERARY CARDS
-  ═══════════════════════════════════════════ -->
-  <section id="destinos" class="section section-dark anim-ready">
-    <div class="section-header collapsible-header" id="destinos-toggle-header">
-      <div>
-        <h2 class="section-title">📍 Destinations <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
-        <p class="section-subtitle">Full itinerary — city by city</p>
-      </div>
-    </div>
-
-    <div id="destinos-body" class="collapsed">
-      <div class="leg-tabs">
-        <button class="leg-tab active" data-leg="peru">🇵🇪 Peru</button>
-        <button class="leg-tab" data-leg="brazil">🇧🇷 Brazil</button>
-        <button class="leg-tab" data-leg="argentina">🇦🇷 Argentina</button>
-      </div>
-
-      <div id="cards-container" class="cards-grid"></div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════
-       BUDGET TRACKER
-  ═══════════════════════════════════════════ -->
-  <section id="budget" class="section section-light anim-ready">
-    <div class="section-header collapsible-header" id="budget-toggle-header">
-      <div>
-        <h2 class="section-title">💰 Budget Tracker <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
-        <p class="section-subtitle">Estimated costs &amp; actual expenses per leg</p>
-      </div>
-    </div>
-    <div id="budget-body" class="collapsed">
-      <!-- ── Live tools strip: currency + world clocks ── -->
-      <div class="live-tools-strip">
-        <div class="live-tool currency-converter">
-          <h4>💱 Live Currency</h4>
-          <div class="cc-row">
-            <input type="number" id="cc-amount" value="100" min="0" step="1" />
-            <select id="cc-from">
-              <option value="USD" selected>USD 🇺🇸</option>
-              <option value="EUR">EUR 🇪🇺</option>
-              <option value="PEN">PEN 🇵🇪</option>
-              <option value="BRL">BRL 🇧🇷</option>
-              <option value="ARS">ARS 🇦🇷</option>
-            </select>
-            <span class="cc-arrow">→</span>
-          </div>
-          <div class="cc-results" id="cc-results">
-            <div class="cc-pill">🇵🇪 — PEN</div>
-            <div class="cc-pill">🇧🇷 — BRL</div>
-            <div class="cc-pill">🇦🇷 — ARS</div>
-          </div>
-          <div class="cc-credit" id="cc-credit">Loading rates…</div>
-        </div>
-
-        <div class="live-tool world-clocks">
-          <h4>🕒 World Clocks</h4>
-          <div class="wc-grid">
-            <div class="wc-card" data-tz="America/Lima">
-              <div class="wc-flag">🇵🇪</div>
-              <div class="wc-city">Lima</div>
-              <div class="wc-time">--:--</div>
-              <div class="wc-date">--</div>
-            </div>
-            <div class="wc-card" data-tz="America/Sao_Paulo">
-              <div class="wc-flag">🇧🇷</div>
-              <div class="wc-city">São Paulo</div>
-              <div class="wc-time">--:--</div>
-              <div class="wc-date">--</div>
-            </div>
-            <div class="wc-card" data-tz="America/Argentina/Buenos_Aires">
-              <div class="wc-flag">🇦🇷</div>
-              <div class="wc-city">Buenos Aires</div>
-              <div class="wc-time">--:--</div>
-              <div class="wc-date">--</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="budget-overview">
-        <div class="budget-total-card">
-          <div class="budget-total-label">Total Estimated</div>
-          <div class="budget-total-num" id="budget-total">$0</div>
-        </div>
-        <div class="budget-leg-bars" id="budget-leg-bars"></div>
-      </div>
-
-      <!-- Animated SVG charts -->
-      <div class="budget-charts">
-        <div class="bc-chart">
-          <h4 class="bc-title">Spending by Country</h4>
-          <svg id="bc-donut" viewBox="0 0 200 200" width="200" height="200"></svg>
-          <div id="bc-donut-legend" class="bc-legend"></div>
-        </div>
-        <div class="bc-chart">
-          <h4 class="bc-title">Budget Pace</h4>
-          <svg id="bc-pace" viewBox="0 0 320 120" preserveAspectRatio="xMidYMid meet"></svg>
-        </div>
-        <div class="bc-chart bc-chart-wide">
-          <h4 class="bc-title">Daily Spending Timeline</h4>
-          <svg id="bc-timeline" viewBox="0 0 600 140" preserveAspectRatio="xMidYMid meet"></svg>
-        </div>
-      </div>
-      <div class="budget-table-wrap">
-        <table class="budget-table">
-          <thead><tr><th>City</th><th>Nights</th><th>$/day</th><th>Subtotal</th></tr></thead>
-          <tbody id="budget-table-body"></tbody>
-          <tfoot><tr><td colspan="3"><strong>Total</strong></td><td id="budget-table-total"></td></tr></tfoot>
-        </table>
-      </div>
-
-      <!-- Smart Insights panel -->
-      <div class="insights-panel">
-        <h3 class="budget-section-head">🧠 Smart Trip Insights</h3>
-        <div id="insights-list"></div>
-      </div>
-
-      <div class="budget-expenses-section">
-        <h3 class="budget-section-head">🧾 Actual Expenses</h3>
-        <div class="budget-add-form">
-          <input id="exp-name" placeholder="Description (e.g. Hostel Lima)" />
-          <input id="exp-amount" type="number" placeholder="Amount (USD)" min="0" />
-          <select id="exp-leg">
-            <option value="peru">🇵🇪 Peru</option>
-            <option value="brazil">🇧🇷 Brazil</option>
-            <option value="argentina">🇦🇷 Argentina</option>
-            <option value="general">🌎 General</option>
-          </select>
-          <select id="exp-cat">
-            <option value="accommodation">🏨 Accommodation</option>
-            <option value="food">🍽️ Food</option>
-            <option value="transport">🚌 Transport</option>
-            <option value="activities">🧗 Activities</option>
-            <option value="misc">📦 Misc</option>
-          </select>
-          <button class="btn-primary" id="exp-add-btn">+ Add</button>
-        </div>
-        <div id="expenses-list" class="expenses-list"></div>
-        <div class="budget-actual-totals" id="budget-actual-totals"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════
-       CULTURE HUB — phrases, food, music, SOS, climate
-  ═══════════════════════════════════════════ -->
-  <section id="culture" class="section section-light anim-ready">
-    <div class="section-header collapsible-header" id="culture-toggle-header">
-      <div>
-        <h2 class="section-title">🎭 Culture Hub <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
-        <p class="section-subtitle">Phrases · Food · Music · Emergency · Climate — all in one place</p>
-      </div>
-    </div>
-    <div id="culture-body" class="collapsed">
-      <div class="culture-country-tabs">
-        <button class="culture-tab active" data-country="peru">🇵🇪 Peru</button>
-        <button class="culture-tab" data-country="brazil">🇧🇷 Brazil</button>
-        <button class="culture-tab" data-country="argentina">🇦🇷 Argentina</button>
-      </div>
-
-      <!-- Panel A · Phrasebook flashcards -->
-      <div class="culture-panel">
-        <div class="cp-head">
-          <h3>📖 Essential Phrases</h3>
-          <button class="btn-ghost" id="phrases-shuffle">🔀 Shuffle</button>
-        </div>
-        <div class="phrase-grid" id="phrase-grid"></div>
-      </div>
-
-      <!-- Panel B · Food tracker -->
-      <div class="culture-panel">
-        <div class="cp-head">
-          <h3>🍽️ Foods to Try</h3>
-          <span class="cp-sub" id="food-progress">0 / 0 tasted</span>
-        </div>
-        <div class="food-grid" id="food-grid"></div>
-      </div>
-
-      <!-- Panel C · Music -->
-      <div class="culture-panel">
-        <div class="cp-head"><h3>🎵 Sounds of the Region</h3></div>
-        <div class="music-grid" id="music-grid"></div>
-      </div>
-
-      <!-- Panel D · Emergency -->
-      <div class="culture-panel">
-        <div class="cp-head"><h3>🚨 Emergency Info</h3></div>
-        <div class="emergency-grid" id="emergency-grid"></div>
-        <div class="emergency-personal">
-          <h4>Your Personal Info (stored locally)</h4>
-          <div class="ep-form">
-            <input id="ep-blood" placeholder="Blood type (e.g. O+)" />
-            <input id="ep-allergies" placeholder="Allergies / meds" />
-            <input id="ep-insurance" placeholder="Travel insurance #" />
-            <input id="ep-contact" placeholder="Emergency contact" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Panel E · Climate strip -->
-      <div class="culture-panel">
-        <div class="cp-head"><h3>🌡️ Seasonal Climate (Oct–Jan)</h3></div>
-        <div class="climate-grid" id="climate-grid"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════
-       AMIGOS / FRIENDS PANEL
-  ═══════════════════════════════════════════ -->
-  <section id="amigos" class="section section-light anim-ready">
-    <div class="section-header collapsible-header" id="amigos-toggle-header">
-      <div>
-        <h2 class="section-title">👫 Travel Buddies <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
-        <p class="section-subtitle">Who's joining which leg?</p>
-      </div>
-    </div>
-
-    <div id="amigos-body" class="collapsed">
-    <div id="friends-container" class="friends-grid"></div>
-
-    <div class="add-area">
-      <button class="btn-primary" id="add-friend-btn">+ Add Friend</button>
-    </div>
-
-    <div id="friend-form" class="friend-form hidden">
-      <h3>New Friend ✈️</h3>
-      <div class="form-row">
-        <input id="f-name" placeholder="Name (e.g. Marco)" />
-        <input id="f-legs" placeholder="Legs joining (e.g. Peru, Brazil)" />
-      </div>
-      <div class="form-row">
-        <input id="f-dates" placeholder="Dates (e.g. Oct 25 – Nov 10)" />
-        <select id="f-color">
-          <option value="#ff6b6b">🔴 Red</option>
-          <option value="#ffd93d">🟡 Yellow</option>
-          <option value="#6bcb77">🟢 Green</option>
-          <option value="#4d96ff">🔵 Blue</option>
-          <option value="#c77dff">🟣 Purple</option>
-          <option value="#ff9f43">🟠 Orange</option>
-        </select>
-      </div>
-      <input id="f-note" placeholder="Any note? (e.g. Joins in Cusco, flies home from Rio)" />
-      <div class="form-actions">
-        <button class="btn-primary" id="save-friend-btn">Save</button>
-        <button class="btn-ghost" id="cancel-friend-btn">Cancel</button>
-      </div>
-    </div>
-
-    <!-- Friend overlap timeline -->
-    <div class="friend-overlap-wrap" id="friend-overlap-wrap">
-      <h3 class="friend-overlap-title">📊 Trip Overlap Timeline</h3>
-      <div id="friend-overlap-chart" class="friend-overlap-chart">
-        <p style="color:#94a3b8;font-size:0.85rem;text-align:center;padding:1rem">Add friends above to see the overlap chart</p>
-      </div>
-    </div>
-    </div>
-  </section>
-  ═══════════════════════════════════════════ -->
-  <section id="packing" class="section section-light anim-ready">
-    <div class="section-header collapsible-header" id="packing-toggle-header">
-      <div>
-        <h2 class="section-title">🎒 Packing List <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
-        <p class="section-subtitle">Check off what's packed — saved in your browser</p>
-      </div>
-    </div>
-    <div id="packing-body" class="collapsed">
-      <div class="packing-tabs" id="packing-tabs">
-        <button class="pack-tab active" data-tab="general">General</button>
-        <button class="pack-tab" data-tab="peru">🇵🇪 Peru</button>
-        <button class="pack-tab" data-tab="brazil">🇧🇷 Brazil</button>
-        <button class="pack-tab" data-tab="argentina">🇦🇷 Argentina</button>
-      </div>
-      <div class="packing-progress-wrap">
-        <div class="packing-progress-label">
-          <span id="pack-count">0 / 0 items packed</span>
-          <span id="pack-pct">0%</span>
-        </div>
-        <div class="packing-bar-track"><div class="packing-bar-fill" id="packing-bar-fill"></div></div>
-      </div>
-      <div id="packing-list" class="packing-list"></div>
-      <div class="packing-add-form">
-        <input id="pack-new-item" placeholder="Add custom item…" />
-        <button class="btn-primary" id="pack-add-btn">+ Add</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════
-       MEMORY WALL
-  ═══════════════════════════════════════════ -->
-  <section id="memories" class="section section-dark anim-ready">
-    <div class="section-header collapsible-header" id="memories-toggle-header">
-      <div>
-        <h2 class="section-title">📸 Memory Wall <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
-        <p class="section-subtitle">Photos, videos and moments from the road</p>
-      </div>
-    </div>
-    <div id="memories-body" class="collapsed">
-      <div class="memories-add-form">
-        <div class="mem-add-row">
-          <input id="mem-caption" placeholder="Caption (e.g. Sunset over Machu Picchu)" />
-          <select id="mem-leg">
-            <option value="peru">🇵🇪 Peru</option>
-            <option value="brazil">🇧🇷 Brazil</option>
-            <option value="argentina">🇦🇷 Argentina</option>
-          </select>
-        </div>
-        <div class="mem-add-row">
-          <input id="mem-url" placeholder="Image or video URL (or paste a data URL)" />
-          <button class="btn-primary" id="mem-add-btn">+ Add Memory</button>
-        </div>
-        <p class="mem-hint">Tip: paste an Imgur, Google Photos, or direct image URL. For local photos, use a free host like <strong>imgbb.com</strong>.</p>
-      </div>
-      <div class="memories-view-toggle">
-        <button class="mv-btn active" data-mode="grid">▦ Grid</button>
-        <button class="mv-btn" data-mode="slideshow">▶ Slideshow</button>
-      </div>
-      <div id="memory-grid" class="memory-grid"></div>
-      <!-- Lightbox -->
-      <div id="mem-lightbox" class="mem-lightbox hidden">
-        <div class="mem-lightbox-overlay" id="mem-lb-close"></div>
-        <div class="mem-lightbox-content">
-          <img id="mem-lb-img" src="" alt="" />
-          <p id="mem-lb-caption"></p>
-          <button class="mem-lb-close-btn" id="mem-lb-close-btn">✕ Close</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════
-       NOTAS / NOTES
-  ═══════════════════════════════════════════ -->
-  <section id="notas" class="section section-dark anim-ready">
-    <div class="section-header collapsible-header" id="notes-toggle-header">
-      <div>
-        <h2 class="section-title">📝 Trip Notes <span class="tl-toggle-icon" style="transform:rotate(180deg)">▲</span></h2>
-        <p class="section-subtitle">Share ideas, reminders &amp; excitement with the crew</p>
-      </div>
-    </div>
-
-    <div id="notes-body" class="collapsed">
-    <div class="notes-layout">
-      <!-- Add note form -->
-      <div class="note-form-card">
-        <h3>New Note</h3>
-        <input id="n-author" placeholder="Your name" />
-        <textarea id="n-text" rows="4" placeholder="What's on your mind? Ideas, tips, must-do's..."></textarea>
-        <div class="form-row">
-          <select id="n-leg">
-            <option value="General">🌎 General</option>
-            <option value="Peru">🇵🇪 Peru</option>
-            <option value="Brazil">🇧🇷 Brazil</option>
-            <option value="Argentina">🇦🇷 Argentina</option>
-          </select>
-          <select id="n-type">
-            <option value="idea">💡 Idea</option>
-            <option value="reminder">⏰ Reminder</option>
-            <option value="food">🍽️ Food tip</option>
-            <option value="logistics">✈️ Logistics</option>
-            <option value="excitement">🎉 Hype!</option>
-          </select>
-        </div>
-        <button class="btn-primary full-width" id="save-note-btn">Save Note</button>
-      </div>
-
-      <!-- Notes list -->
-      <div class="notes-list-area">
-        <div class="notes-filter">
-          <button class="filter-btn active" data-filter="all">All</button>
-          <button class="filter-btn" data-filter="General">🌎 General</button>
-          <button class="filter-btn" data-filter="Peru">🇵🇪 Peru</button>
-          <button class="filter-btn" data-filter="Brazil">🇧🇷 Brazil</button>
-          <button class="filter-btn" data-filter="Argentina">🇦🇷 Argentina</button>
-        </div>
-        <div id="notes-list"></div>
-        <div id="notes-empty" class="notes-empty">
-          <span>💬</span>
-          <p>No notes yet — be the first to add one!</p>
-        </div>
-      </div>
-    </div>
-    </div><!-- /notes-body -->
-  </section>
-
-  <!-- Back to top -->
-  <button id="back-to-top" class="back-to-top" aria-label="Back to top">↑</button>
-
-  <!-- ═══════════════════════════════════════════
-       EXPORT BANNER
-  ═══════════════════════════════════════════ -->
-  <section class="export-banner">
-    <div class="export-banner-inner">
-      <div class="export-banner-text">
-        <strong>Ready to share your updates?</strong>
-        <span>Captures your trip plan, travel buddies &amp; notes — save over <code>tripdata.js</code> then push to GitHub.</span>
-      </div>
-      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center">
-        <button id="export-all-btn" class="export-all-btn">⬇ Export tripdata.js</button>
-        <button id="share-card-btn" class="export-all-btn" style="background:linear-gradient(135deg,#5b9bd5,#22a447)">📸 Share Card</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- Share Card Modal -->
-  <div id="share-modal" class="share-modal hidden">
-    <div class="share-modal-overlay" id="share-overlay"></div>
-    <div class="share-modal-content">
-      <button class="share-close-btn" id="share-close">✕</button>
-      <h3 style="margin:0 0 1rem;font-family:var(--font-head)">📸 Your Trip Share Card</h3>
-      <div id="share-card-preview" class="share-card-preview">
-        <div class="share-card">
-          <div class="sc-header">
-            <div class="sc-flags">🇵🇪 🇧🇷 🇦🇷</div>
-            <h2 class="sc-title">South America 2026</h2>
-            <p class="sc-subtitle" id="sc-subtitle">80 Days · 3 Countries · 19 Cities</p>
-          </div>
-          <div class="sc-stats" id="sc-stats"></div>
-          <div class="sc-footer">
-            <span id="sc-dates"></span>
-            <span>la-aventura.app</span>
-          </div>
-        </div>
-      </div>
-      <div class="share-actions">
-        <button class="btn-primary" id="share-download-btn">⬇ Download PNG</button>
-        <button class="btn-secondary" id="share-copy-btn">📋 Copy Link</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════
-       FOOTER
-  ═══════════════════════════════════════════ -->
-  <footer class="site-footer">
-    <p>🌎 <strong>South America 2026</strong> &nbsp;🇵🇪🇧🇷🇦🇷</p>
-    <p class="footer-sub">Built with ❤️ by the planner</p>
-  </footer>
-
-  <!-- Memory Slideshow overlay -->
-  <div id="mem-slideshow" class="hidden">
-    <button id="mss-close" class="mss-btn">✕</button>
-    <button id="mss-prev" class="mss-nav mss-nav-prev">‹</button>
-    <button id="mss-next" class="mss-nav mss-nav-next">›</button>
-    <button id="mss-auto" class="mss-btn mss-auto">▶ Auto</button>
-    <img id="mss-image" src="" alt="" />
-    <div id="mss-caption"></div>
-    <div id="mss-counter"></div>
-  </div>
-
-  <!-- Story Mode overlay -->  <div id="story-mode" class="hidden">
-    <button id="story-close" class="story-btn">✕</button>
-    <button id="story-prev" class="story-nav story-nav-prev">‹</button>
-    <button id="story-next" class="story-nav story-nav-next">›</button>
-    <button id="story-auto" class="story-btn story-auto">▶ Auto</button>
-    <div id="story-stage"></div>
-    <div id="story-progress"></div>
-  </div>
-
-  <!-- Leaflet + App scripts -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-  <script src="https://unpkg.com/globe.gl@2.27.2/dist/globe.gl.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
-  <script src="tripdata.js"></script>
-  <script src="app.js"></script>
-  <!-- Offline / online status -->
-  <div id="offline-banner" class="hidden">📴 You're offline — using cached version</div>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-          .then(() => console.log('%c[SW] Registered — offline support active', 'color:#22a447'))
-          .catch(err => console.warn('[SW] Registration failed:', err));
-      });
-    }
-    const offlineBanner = document.getElementById('offline-banner');
-    function syncOnline() {
-      if (!offlineBanner) return;
-      if (navigator.onLine) {
-        offlineBanner.classList.add('hidden');
-      } else {
-        offlineBanner.classList.remove('hidden');
-      }
     }
     window.addEventListener('online',  syncOnline);
     window.addEventListener('offline', syncOnline);

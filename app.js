@@ -1506,11 +1506,11 @@ function showSection(sectionId) {
 window.showSection = showSection;
 
 function initSideNav() {
-  const sidebar        = document.getElementById('sidebar');
-  const overlay        = document.getElementById('sidebar-overlay');
-  const toggleBtn      = document.getElementById('sidebar-toggle');
-  const closeBtn       = document.getElementById('sidebar-close');
-  const isMobile       = () => window.innerWidth <= 768;
+  const sidebar   = document.getElementById('sidebar');
+  const overlay   = document.getElementById('sidebar-overlay');
+  const toggleBtn = document.getElementById('sidebar-toggle');
+  const closeBtn  = document.getElementById('sidebar-close');
+  const isMobile  = () => window.innerWidth <= 768;
 
   function openSidebar() {
     if (isMobile()) {
@@ -1519,7 +1519,6 @@ function initSideNav() {
     } else {
       sidebar.classList.remove('collapsed');
     }
-    toggleBtn.textContent = '☰';
   }
 
   function closeSidebar() {
@@ -1531,19 +1530,19 @@ function initSideNav() {
     }
   }
 
-  function toggleSidebar() {
+  // Hamburger always toggles sidebar open/close
+  toggleBtn.addEventListener('click', () => {
     if (isMobile()) {
       sidebar.classList.contains('mobile-open') ? closeSidebar() : openSidebar();
     } else {
       sidebar.classList.contains('collapsed') ? openSidebar() : closeSidebar();
     }
-  }
+  });
 
-  toggleBtn.addEventListener('click', toggleSidebar);
   closeBtn?.addEventListener('click', closeSidebar);
   overlay?.addEventListener('click', closeSidebar);
 
-  // Sidebar nav item clicks
+  // Close sidebar on mobile when a nav item is tapped
   document.querySelectorAll('.sidebar-nav-item').forEach(item => {
     item.addEventListener('click', (e) => {
       e.preventDefault();
@@ -3184,6 +3183,13 @@ function initMemoriesSlideshow() {
 // MAIN INIT
 // ─────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+  // Sidebar navigation FIRST — ensures layout works even if other inits fail
+  initSideNav();
+  initScrollEffect();
+  initThemeToggle();
+  initScrollAnimations();
+  initBackToTop();
+
   populatePageStats();
   initMap();
   buildTimeline();
@@ -3194,11 +3200,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initFriends();
   renderFriendOverlap();
   initNotes();
-  initSideNav();
-  initScrollEffect();
-  initThemeToggle();
-  initScrollAnimations();
-  initBackToTop();
   initCountdown();
   initCollapsible('budget-toggle-header', 'budget-body');
   initBudget();
