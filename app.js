@@ -632,7 +632,7 @@ function initTourMode() {
 
     // Expand the map to fullscreen
     document.body.classList.add('tour-active');
-    document.getElementById('map-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (window.showSection) window.showSection('map-section');
 
     // Hide other map chrome
     playBtn.classList.add('hidden');
@@ -1029,8 +1029,7 @@ function renderCards(leg) {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const [lat, lng] = btn.dataset.coords.split(',').map(parseFloat);
-      const mapSection = document.getElementById('map-section');
-      mapSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (window.showSection) window.showSection('map-section');
       setTimeout(() => {
         if (window._mapInstance) window._mapInstance.flyTo([lat, lng], 8, { duration: 1.5 });
       }, 600);
@@ -1451,24 +1450,118 @@ function initNotes() {
 }
 
 // ─────────────────────────────────────────────────────────────
-// MOBILE NAV
+// SIDEBAR NAVIGATION
 // ─────────────────────────────────────────────────────────────
-function initMobileNav() {
-  const hamburger = document.getElementById('hamburger');
-  const nav       = document.getElementById('mobile-nav');
-
-  hamburger.addEventListener('click', () => {
-    const isOpen = nav.classList.toggle('open');
-    hamburger.textContent = isOpen ? '✕' : '☰';
+function showSection(sectionId) {
+  // Hide all page sections
+  document.querySelectorAll('.page-section').forEach(s => {
+    s.classList.remove('active');
   });
+
+  // Show the target section
+  const target = document.getElementById(sectionId);
+  if (target) {
+    target.classList.add('active');
+    // Scroll target to top
+    target.scrollTop = 0;
+    const mc = document.getElementById('main-content');
+    if (mc) mc.scrollTop = 0;
+  }
+
+  // Stats bar only visible on home page
+  const statsBar = document.getElementById('stats-bar');
+  if (statsBar) {
+    statsBar.classList.toggle('active', sectionId === 'map-section');
+  }
+
+  // Update sidebar active state
+  document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.section === sectionId);
+  });
+
+  // Update ambient background
+  const p = AMBIENT_PALETTES[sectionId];
+  if (p) {
+    const root = document.documentElement;
+    root.style.setProperty('--amb1', p[0]);
+    root.style.setProperty('--amb2', p[1]);
+    root.style.setProperty('--amb1-light', p[2]);
+    root.style.setProperty('--amb2-light', p[3]);
+  }
+
+  // Trigger animations on visible .anim-ready elements
+  setTimeout(() => {
+    if (target) {
+      target.querySelectorAll('.anim-ready:not(.anim-visible)').forEach(el => {
+        el.classList.add('anim-visible');
+      });
+    }
+  }, 50);
+
+  // Invalidate Leaflet map size when navigating to home
+  if (sectionId === 'map-section' && window._mapInstance) {
+    setTimeout(() => window._mapInstance.invalidateSize(), 120);
+  }
+}
+window.showSection = showSection;
+
+function initSideNav() {
+  const sidebar        = document.getElementById('sidebar');
+  const overlay        = document.getElementById('sidebar-overlay');
+  const toggleBtn      = document.getElementById('sidebar-toggle');
+  const closeBtn       = document.getElementById('sidebar-close');
+  const isMobile       = () => window.innerWidth <= 768;
+
+  function openSidebar() {
+    if (isMobile()) {
+      sidebar.classList.add('mobile-open');
+      overlay.classList.add('active');
+    } else {
+      sidebar.classList.remove('collapsed');
+    }
+    toggleBtn.textContent = '☰';
+  }
+
+  function closeSidebar() {
+    if (isMobile()) {
+      sidebar.classList.remove('mobile-open');
+      overlay.classList.remove('active');
+    } else {
+      sidebar.classList.add('collapsed');
+    }
+  }
+
+  function toggleSidebar() {
+    if (isMobile()) {
+      sidebar.classList.contains('mobile-open') ? closeSidebar() : openSidebar();
+    } else {
+      sidebar.classList.contains('collapsed') ? openSidebar() : closeSidebar();
+    }
+  }
+
+  toggleBtn.addEventListener('click', toggleSidebar);
+  closeBtn?.addEventListener('click', closeSidebar);
+  overlay?.addEventListener('click', closeSidebar);
+
+  // Sidebar nav item clicks
+  document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const sectionId = item.dataset.section;
+      if (sectionId) {
+        showSection(sectionId);
+        if (isMobile()) closeSidebar();
+      }
+    });
+  });
+
+  // Activate home section on load
+  showSection('map-section');
 }
 
-function closeMobileNav() {
-  const nav = document.getElementById('mobile-nav');
-  nav.classList.remove('open');
-  const hamburger = document.getElementById('hamburger');
-  if (hamburger) hamburger.textContent = '☰';
-}
+// Legacy no-op stubs (replaced by initSideNav)
+function initMobileNav() {}
+function closeMobileNav() {}
 window.closeMobileNav = closeMobileNav;
 
 // ─────────────────────────────────────────────────────────────
@@ -1501,16 +1594,11 @@ function initThemeToggle() {
 }
 
 function initScrollAnimations() {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('anim-visible');
-        observer.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.08 });
-
-  document.querySelectorAll('.anim-ready').forEach(el => observer.observe(el));
+  // In page-based layout, animations are triggered via showSection().
+  // On first load, trigger immediately for the active (home) section.
+  document.querySelectorAll('#map-section .anim-ready').forEach(el => {
+    el.classList.add('anim-visible');
+  });
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -1550,30 +1638,19 @@ function showToast(message, type = 'info', duration = 3000) {
 })();
 
 function initBackToTop() {
+  // Back-to-top is handled by per-section scrolling in the sidebar layout.
   const btn = document.getElementById('back-to-top');
-  if (!btn) return;
-  let ticking = false;
-  window.addEventListener('scroll', () => {
-    if (!ticking) {
-      requestAnimationFrame(() => {
-        btn.classList.toggle('visible', window.scrollY > 300);
-        ticking = false;
-      });
-      ticking = true;
-    }
-  });
-  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  if (btn) btn.style.display = 'none';
 }
 
 function initScrollEffect() {
+  // Topbar shadow on main-content scroll
   const header = document.getElementById('site-header');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 60) {
-      header.style.boxShadow = '0 4px 24px rgba(0,0,0,0.5)';
-    } else {
-      header.style.boxShadow = 'none';
-    }
-  });
+  const mc     = document.getElementById('main-content');
+  if (!header || !mc) return;
+  mc.addEventListener('scroll', () => {
+    header.style.boxShadow = mc.scrollTop > 40 ? '0 4px 24px rgba(0,0,0,0.5)' : 'none';
+  }, { passive: true });
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -2598,32 +2675,15 @@ const AMBIENT_PALETTES = {
 };
 
 function initAmbient() {
+  // Ambient palette is now applied by showSection() on each navigation.
+  // Set initial palette for the home/map section.
   const root = document.documentElement;
-  const sections = Object.keys(AMBIENT_PALETTES).map(id => document.getElementById(id)).filter(Boolean);
-  if (!sections.length) return;
-
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(en => {
-      if (en.isIntersecting && en.intersectionRatio > 0.4) {
-        const p = AMBIENT_PALETTES[en.target.id];
-        if (p) {
-          root.style.setProperty('--amb1', p[0]);
-          root.style.setProperty('--amb2', p[1]);
-          root.style.setProperty('--amb1-light', p[2]);
-          root.style.setProperty('--amb2-light', p[3]);
-        }
-      }
-    });
-  }, { threshold: [0.4, 0.6] });
-  sections.forEach(s => io.observe(s));
-
-  // Parallax on map title
-  const mapTitle = document.getElementById('map-overlay-title');
-  if (mapTitle) {
-    window.addEventListener('scroll', () => {
-      const y = window.scrollY;
-      if (y < 800) mapTitle.style.transform = `translateY(${y * 0.3}px)`;
-    }, { passive: true });
+  const p = AMBIENT_PALETTES['map-section'];
+  if (p) {
+    root.style.setProperty('--amb1', p[0]);
+    root.style.setProperty('--amb2', p[1]);
+    root.style.setProperty('--amb1-light', p[2]);
+    root.style.setProperty('--amb2-light', p[3]);
   }
 }
 
@@ -3134,7 +3194,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initFriends();
   renderFriendOverlap();
   initNotes();
-  initMobileNav();
+  initSideNav();
   initScrollEffect();
   initThemeToggle();
   initScrollAnimations();
@@ -3144,8 +3204,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initBudget();
   initCollapsible('packing-toggle-header', 'packing-body');
   initPacking();
-  initCollapsible('memories-toggle-header', 'memories-body');
-  initMemories();
   initCollapsible('notes-toggle-header', 'notes-body');
   initShareCard();
   initTourMode();
@@ -3161,7 +3219,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initJournal();
   initInsights();
   initStoryMode();
-  initMemoriesSlideshow();
   // Wire up the main-page export button
   document.getElementById('export-all-btn')?.addEventListener('click', exportAllData);
 

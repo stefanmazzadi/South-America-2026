@@ -2257,3 +2257,382 @@ body.tour-active #map-section {
 .mss-nav:hover { background: var(--accent); border-color: var(--accent); }
 .mss-nav-prev { left: 1rem; }
 .mss-nav-next { right: 1rem; }
+
+/* ============================================================
+   SIDEBAR LAYOUT — Classic navigation panel
+   ============================================================ */
+
+/* ── APP SHELL: body becomes the flex root ─────────────── */
+body {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── SIDEBAR ────────────────────────────────────────────── */
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  height: 100vh;
+  background: var(--dark-2);
+  border-right: 1px solid var(--dark-3);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease, min-width 0.3s ease;
+  overflow: hidden;
+  flex-shrink: 0;
+  z-index: 200;
+}
+
+.sidebar.collapsed {
+  width: 0;
+  min-width: 0;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0.75rem 0.75rem 1rem;
+  border-bottom: 1px solid var(--dark-3);
+  flex-shrink: 0;
+  gap: 0.5rem;
+  min-width: 260px;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  overflow: hidden;
+  flex: 1;
+}
+
+.sidebar-globe {
+  font-size: 1.6rem;
+  animation: spin-slow 20s linear infinite;
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-family: var(--font-head);
+  font-size: 0.9rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--peru), var(--accent), var(--brazil));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  white-space: nowrap;
+  display: block;
+}
+
+.logo-text small {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.sidebar-close-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: transparent;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+.sidebar-close-btn:hover { background: var(--dark-3); color: var(--white); }
+
+/* ── SIDEBAR NAV ────────────────────────────────────────── */
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.6rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 260px;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: all 0.18s;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.sidebar-nav-item:hover {
+  background: var(--dark-3);
+  color: var(--white);
+}
+.sidebar-nav-item.active {
+  background: rgba(232, 131, 74, 0.18);
+  color: var(--peru);
+  font-weight: 600;
+}
+
+.sni-icon {
+  font-size: 1.05rem;
+  flex-shrink: 0;
+  width: 22px;
+  text-align: center;
+}
+
+.sni-label {
+  flex: 1;
+}
+
+/* ── SIDEBAR FOOTER ─────────────────────────────────────── */
+.sidebar-footer {
+  padding: 0.75rem 0.5rem;
+  border-top: 1px solid var(--dark-3);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 260px;
+}
+
+.sidebar-planner-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--peru);
+  background: rgba(232, 131, 74, 0.1);
+  border: 1px solid rgba(232, 131, 74, 0.25);
+  text-decoration: none;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+.sidebar-planner-link:hover {
+  background: rgba(232, 131, 74, 0.22);
+  color: var(--white);
+}
+
+.sidebar-flags {
+  padding: 0.35rem 0.85rem;
+  font-size: 1rem;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+}
+
+/* ── MOBILE OVERLAY ─────────────────────────────────────── */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+  z-index: 190;
+}
+.sidebar-overlay.active { display: block; }
+
+/* ── MAIN WRAPPER ───────────────────────────────────────── */
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+  height: 100vh;
+}
+
+/* ── TOPBAR ─────────────────────────────────────────────── */
+.topbar {
+  height: 56px;
+  min-height: 56px;
+  background: var(--dark-2);
+  border-bottom: 1px solid var(--dark-3);
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  gap: 0.75rem;
+  flex-shrink: 0;
+  z-index: 100;
+  position: relative;
+}
+
+.sidebar-toggle-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-size: 1.15rem;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s, color 0.2s;
+}
+.sidebar-toggle-btn:hover { background: var(--dark-3); color: var(--white); }
+
+.topbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  overflow: hidden;
+}
+
+.topbar-globe {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.topbar-title {
+  font-family: var(--font-head);
+  font-size: 1rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--peru), var(--accent), var(--brazil));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* ── MAIN CONTENT AREA ──────────────────────────────────── */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  background: var(--dark);
+}
+
+/* ── PAGE SECTIONS ──────────────────────────────────────── */
+.page-section {
+  display: none;
+  min-height: calc(100vh - 56px);
+  animation: pageFadeIn 0.28s ease;
+}
+.page-section.active {
+  display: block;
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateX(12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Map section fills available height */
+#map-section.page-section.active {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 56px);
+  height: calc(100vh - 56px);
+}
+#map-section.page-section.active .map-section {
+  flex: 1;
+  height: auto;
+  min-height: 0;
+}
+
+/* Stats bar shown only with home page */
+#stats-bar {
+  display: none;
+}
+#stats-bar.active {
+  display: flex;
+}
+
+/* Export banner at bottom of main wrapper */
+.export-banner {
+  flex-shrink: 0;
+  border-top: 1px solid var(--dark-3);
+}
+
+/* ── SECTION HEADERS (page-level, no longer collapsible at top) */
+.page-section > .section-header {
+  cursor: default;
+}
+
+/* ── LIGHT MODE SIDEBAR ─────────────────────────────────── */
+body.light-mode .sidebar {
+  background: #fffdf9;
+  border-color: var(--dark-3);
+}
+body.light-mode .sidebar-header {
+  border-color: var(--dark-3);
+}
+body.light-mode .sidebar-nav-item {
+  color: #64748b;
+}
+body.light-mode .sidebar-nav-item:hover {
+  background: var(--dark-3);
+  color: var(--text-dark);
+}
+body.light-mode .sidebar-nav-item.active {
+  background: rgba(232, 131, 74, 0.12);
+  color: var(--peru-dark);
+}
+body.light-mode .sidebar-footer {
+  border-color: var(--dark-3);
+}
+body.light-mode .topbar {
+  background: #fffdf9;
+  border-color: var(--dark-3);
+}
+body.light-mode .main-content {
+  background: var(--light);
+}
+
+/* ── MOBILE RESPONSIVE ──────────────────────────────────── */
+@media (max-width: 768px) {
+  body {
+    display: block;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 260px;
+    min-width: 260px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 200;
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .main-wrapper {
+    height: 100vh;
+  }
+
+  .page-section {
+    min-height: calc(100vh - 56px);
+  }
+
+  #map-section.page-section.active {
+    height: calc(100vh - 56px);
+  }
+}
